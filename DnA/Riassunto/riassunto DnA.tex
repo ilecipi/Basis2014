@@ -1,9 +1,30 @@
-\documentclass[12pt,a4paper]{book}
+\documentclass[a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
+\usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{color}
+\usepackage{listings}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
 \author{Sandro Marcon}
 \title{Riassunto DnA}
 \begin{document}
@@ -21,139 +42,78 @@ Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim_{x \rightarrow +\infty
 \section{Algoritmo di Karatsuba (pag 12)}
 Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguente:
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
-In questo modo abbiamo solo 3 multiplicazioni elementari aniché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
+In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
 \section{Maximum subarray (pag 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
-
-	A=array da 1, ... n
-	
-	max=0
-	
-	scan=0
-	
-	for (i=1; i$\leq$n; i++)$\{$
-	
-	\hspace{2em}	scan+=A[i]
-
-	\hspace{2em}	if scan $<$ 0
-
-	\hspace{2em}\hspace{2em}		scan=0
-
-	\hspace{2em}	if scan $>$ max 
-
-	\hspace{2em}\hspace{2em}		max=scan
-
-	$\}$			
-	
+\begin{lstlisting}
+//A=array da 1, ... n	
+max=0	
+scan=0
+for (i=1; i<=n; i++){	
+	scan+=A[i]
+	if scan $<$ 0
+		scan=0
+	if scan $>$ max 
+		max=scan
+}			
+\end{lstlisting}
 In questo modo il problema viene risolto in tempo lineare.	
 \chapter{Sort}
 Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato a) contenente n numeri (interi). In ogni caso con questi algoritmi è possibile ordinare qualsiasi oggetto appartenente ad un universo in cui vige un ordine totale.
 \section{Sortieren durch Auswahl (pag 82)}
-Selection sort consiste nel cercare ogni volta il minimo tra la posizione i e n. Una volta trovato esso viene scambiato con l'i-tesimo numero. Esempio:
-
-15	2	43	17	4
-
-2	15	43	17	4
-
-2	4	43	17	15
-
-2	4	15	17	43
-
-\paragraph{}
-Implementazione
-
+Selection sort consiste nel cercare ogni volta il minimo tra la posizione i e n. Una volta trovato esso viene scambiato con l'i-tesimo numero. 
+\subsubsection*{Esempio}
+\[\begin{array}{*{20}{c}}{15}&2&{43}&{17}&4\\2&{15}&{43}&{17}&4\\2&4&{43}&{17}&{15}\\2&4&{15}&{17}&{43}\end{array}\]
+\subsubsection*{Implementazione}
+\begin{lstlisting}
 int i,j, min, temp
-
 for i=1:n-1
-
-\hspace{2em} min=i
-
-\hspace{2em} for j=(i+1):n
-
-\hspace{2em} \hspace{2em} if a[j]$<$ a[min]
-
-\hspace{2em}\hspace{2em} \hspace{2em} min=j
-
-\hspace{2em} temp=a[min]
-
-\hspace{2em} a[min]=a[i]
-
-\hspace{2em} a[i]=temp
-
-\paragraph{}
-Analisi:
+	min=i
+	for j=(i+1):n
+		if a[j]$<$ a[min]
+			min=j
+	temp=a[min]
+	a[min]=a[i]
+	a[i]=temp
+\end{lstlisting}
+\subsubsection*{Analisi}
 
 Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) O(n) scambi. Da notare che per trovare il minimo sono necessari almeno n-1 confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
 \section{Sortieren durch Einfügen (pag 85)}
 In inglese si chiama insertion sort. Per induzione i numeri fino a i-1 sono già ordinati. Il principio consiste di piazzare l'i-tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
-
-2 15 / 43 17 4
-
-2 15 43 / 17 4
-
-2 15 17 43 / 4
-
-2 4 15 17 43 /
-
-\paragraph{}Implementazione
-
+\[\begin{array}{*{20}{c}}2&{15}&/&{43}&{17}&4\\2&{15}&{43}&/&{17}&4\\2&{15}&{17}&{43}&/&4\\2&4&{15}&{17}&{43}&/\end{array}\]
+\subsubsection*{Implementazione}
+\begin{lstlisting}
 int i,j,t
-
 for i=2:n
-
-\hspace{2em} j=i
-
-\hspace{2em} t=a[i]
-
-\hspace{2em} while a[j-1] $>$ t
-
-\hspace{2em} \hspace{2em} //scala a destra di una posizione
-
-\hspace{2em} \hspace{2em} a[j]=a[j-1]
-
-\hspace{2em} \hspace{2em} j=j-1
-
-\hspace{2em} a[j]=t
-
+	j=i
+	t=a[i]
+	while a[j-1] > t
+		//scala a destra di una posizione
+		a[j]=a[j-1]
+		j=j-1
+	a[j]=t
+\end{lstlisting}
 Si nota subito che se implementato così l'algoritmo può non fermarsi se t è il più piccolo numero. Serve quindi un elemento di stop, ad esempio inserendo a[0]=t prima del while loop.
 
-\paragraph{}
-Analisi:
+\subsubsection*{Analisi}
 
 Nel peggior caso $\Theta (n^2)$ comparazioni ed altrettanti spostamenti. Nel miglior caso $O(n^2)$ comparazioni e spostamenti. Il caso medio rispecchia il peggiore.
 
 \section{Bubblesort (pag 89)}
 Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento a[i] con a[i+1] (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
-
-15 2 43 17 4
-
-2 15 43 17 4
-
-2 15 17 43 4
-
-2 15 17 4 43
-
-2 15 4 17 43
-
-2 4 15 17 43
-
-\paragraph{}Implementazione:
-
+\[\begin{array}{*{20}{c}}{15}&2&{43}&{17}&4\\2&{15}&{43}&{17}&4\\2&{15}&{17}&{43}&4\\2&{15}&{17}&4&{43}\\2&{15}&4&{17}&{43}\\2&4&{15}&{17}&{43}\end{array}\]
+\subsubsection*{Implementazione}
+\begin{lstlisting}
 do
-
-\hspace{2em} flag=true
-
-\hspace{2em} for i=1:n-1
-
-\hspace{2em} if a[i] $>$ a[i+1] 
-
-\hspace{2em} \hspace{2em} swap(a[i],a[i+1])
-
-\hspace{2em} \hspace{2em} flag=false
-
+	flag=true
+	for i=1:n-1
+	if a[i] $>$ a[i+1] 
+		swap(a[i],a[i+1])
+		flag=false
 while (!flag)
-
-\paragraph{}Analisi:
+\end{lstlisting}
+\subsubsection*{Analisi}
 
 Nel miglior caso, se l'array è già ordinato, abbiamo n-1 paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
