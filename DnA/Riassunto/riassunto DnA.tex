@@ -122,7 +122,7 @@ Analisi:
 
 Nel peggior caso $\Theta (n^2)$ comparazioni ed altrettanti spostamenti. Nel miglior caso $O(n^2)$ comparazioni e spostamenti. Il caso medio rispecchia il peggiore.
 
-\section{Bubblesort}
+\section{Bubblesort (pag 89)}
 Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento a[i] con a[i+1] (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
 
 15 2 43 17 4
@@ -157,5 +157,70 @@ while (!flag)
 
 Nel miglior caso, se l'array è già ordinato, abbiamo n-1 paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
+\section{Quicksort (pag 92)}
+Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito "in situ", vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio l ed r, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati i e j) che partono rispettivamente alla posizione l e r. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$ a[i] ed a[j] vengono scambiati. Alla fine, quando i=j, l'elemento a[i] viene scambiato col pivot e viene richiamato l'algoritmo da l ad i-1 e da i+1 a r (il pivot si trova già alla posizione giusta). Di seguito un esempio:
 
+array: 5 7 3 1 6 4
+
+quicksort(array, 1, 6)
+
+5 7 3 1 6 (4) $\leftarrow$ pivot
+
+i\hspace{2em}       j 
+
+1 7 3 5 6 (4)
+
+\hspace{0.8em}  i j
+  
+1 3 7 5 6 (4)
+
+\hspace{1,3em}   i,j
+   
+1 3 (4) 5 6 7
+
+quicksort(array, 1, 2), quicksort(array, 3, 6)
+      
+\paragraph{}Implementazione
+
+quicksort(int[ ] a, int l, int r)
+
+\textbf{if} r $>$ l
+
+\hspace{2em} i=l-1
+
+\hspace{2em} j=r
+
+\hspace{2em} v=a[r] //pivot
+
+\hspace{2em} \textbf{while} (true)
+
+\hspace{2em} \hspace{2em} \textbf{do}
+
+\hspace{2em} \hspace{2em} \hspace{2em} i+=1
+
+\hspace{2em} \hspace{2em} \textbf{until} a[i] $\geq$ v
+
+\hspace{2em} \hspace{2em} \textbf{do}
+
+\hspace{2em} \hspace{2em} \hspace{2em} j-=1
+
+\hspace{2em} \hspace{2em} \textbf{until}  a[j] $\leq$ v
+
+\hspace{2em} \hspace{2em} \textbf{if} i$\geq$j
+
+\hspace{2em} \hspace{2em} \hspace{2em} break
+
+\hspace{2em} \hspace{2em} swap(i, j) //scambia a[i] con a[j]
+
+\hspace{2em} swap(i,r)
+
+\hspace{2em} quicksort(a, l, i-1)
+
+\hspace{2em} quicksort(a, i+1, r)
+      
+      
+\paragraph{}Analisi
+
+Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale se il pivot è sempre l'elemento maggiore o minore, quicksort impiega $O(n^2)$ comparazioni, poiché ad ogni ricorsione c'è un solo elemento in meno. In questo caso avverrebbero O(n) spostamenti. Nel miglior caso l'algoritmo impiega un tempo di $\Theta (n\log (n))$, poiché l'albero delle ricorsioni ha un'altezza logaritmica. Lo stesso ragionamento vale per il numero di spostamenti. A pagina 99 c'è una lunga dimostrazione per induzione che mostra che anche il caso medio ha lo stesso tempo del miglior caso. Nonostante l'algoritmo sia in situ, anche le ricorsioni occupano un determinato spazio nella memoria, vale a dire $\Omega (n)$ chiamate. Rendendo l'algoritmo semi-iterativo si possono ottenere solo $O(\log (n))$ chiamate. Si deve semplicemente richiamare in modo ricorsivo quicksort sul più piccolo sub-array, mentre si completa l'altra parte in modo iterativo (algoritmo illustrato a pagina 100). Alla pagina successiva è invece mostrato come fare a rendere quicksort totalmente iterativo (personalmente non ho capito molto). 
+            
 \end{document}
