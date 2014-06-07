@@ -63,7 +63,12 @@ Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato a) co
 \section{Sortieren durch Auswahl (pag 82)}
 Selection sort consiste nel cercare ogni volta il minimo tra la posizione i e n. Una volta trovato esso viene scambiato con l'i-tesimo numero. 
 \subsubsection*{Esempio}
-\[\begin{array}{*{20}{c}}{15}&2&{43}&{17}&4\\2&{15}&{43}&{17}&4\\2&4&{43}&{17}&{15}\\2&4&{15}&{17}&{43}\end{array}\]
+\[\begin{array}{*{20}{c}}
+{15}&2&{43}&{17}&4\\
+2&{15}&{43}&{17}&4\\
+2&4&{43}&{17}&{15}\\
+2&4&{15}&{17}&{43}
+\end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
 int i,j, min, temp
@@ -81,7 +86,12 @@ for i=1:n-1
 Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) O(n) scambi. Da notare che per trovare il minimo sono necessari almeno n-1 confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
 \section{Sortieren durch Einfügen (pag 85)}
 In inglese si chiama insertion sort. Per induzione i numeri fino a i-1 sono già ordinati. Il principio consiste di piazzare l'i-tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
-\[\begin{array}{*{20}{c}}2&{15}&/&{43}&{17}&4\\2&{15}&{43}&/&{17}&4\\2&{15}&{17}&{43}&/&4\\2&4&{15}&{17}&{43}&/\end{array}\]
+\[\begin{array}{*{20}{c}}
+2&{15}&/&{43}&{17}&4\\
+2&{15}&{43}&/&{17}&4\\
+2&{15}&{17}&{43}&/&4\\
+2&4&{15}&{17}&{43}&/
+\end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
 int i,j,t
@@ -102,7 +112,14 @@ Nel peggior caso $\Theta (n^2)$ comparazioni ed altrettanti spostamenti. Nel mig
 
 \section{Bubblesort (pag 89)}
 Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento a[i] con a[i+1] (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
-\[\begin{array}{*{20}{c}}{15}&2&{43}&{17}&4\\2&{15}&{43}&{17}&4\\2&{15}&{17}&{43}&4\\2&{15}&{17}&4&{43}\\2&{15}&4&{17}&{43}\\2&4&{15}&{17}&{43}\end{array}\]
+\[\begin{array}{*{20}{c}}
+{15}&2&{43}&{17}&4\\
+2&{15}&{43}&{17}&4\\
+2&{15}&{17}&{43}&4\\
+2&{15}&{17}&4&{43}\\
+2&{15}&4&{17}&{43}\\
+2&4&{15}&{17}&{43}
+\end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
 do
@@ -140,47 +157,74 @@ i\hspace{2em}       j
 
 quicksort(array, 1, 2), quicksort(array, 3, 6)
       
-\paragraph{}Implementazione
+\subsection*{Implementazione}
 
+\begin{lstlisting}
 quicksort(int[ ] a, int l, int r)
-
-\textbf{if} r $>$ l
-
-\hspace{2em} i=l-1
-
-\hspace{2em} j=r
-
-\hspace{2em} v=a[r] //pivot
-
-\hspace{2em} \textbf{while} (true)
-
-\hspace{2em} \hspace{2em} \textbf{do}
-
-\hspace{2em} \hspace{2em} \hspace{2em} i+=1
-
-\hspace{2em} \hspace{2em} \textbf{until} a[i] $\geq$ v
-
-\hspace{2em} \hspace{2em} \textbf{do}
-
-\hspace{2em} \hspace{2em} \hspace{2em} j-=1
-
-\hspace{2em} \hspace{2em} \textbf{until}  a[j] $\leq$ v
-
-\hspace{2em} \hspace{2em} \textbf{if} i$\geq$j
-
-\hspace{2em} \hspace{2em} \hspace{2em} break
-
-\hspace{2em} \hspace{2em} swap(i, j) //scambia a[i] con a[j]
-
-\hspace{2em} swap(i,r)
-
-\hspace{2em} quicksort(a, l, i-1)
-
-\hspace{2em} quicksort(a, i+1, r)
+	if r>l
+		i=l-1
+		j=r
+		v=a[r] //pivot
+		while (true)
+			do
+				i+=1
+			until a[i]>=v
+			do
+				j-=1
+			until  a[j]<=v
+			if i>=j
+				break
+			swap(i, j) //scambia a[i] con a[j]
+	 	swap(i,r)
+		quicksort(a, l, i-1)
+		quicksort(a, i+1, r)
+\end{lstlisting}    
       
-      
-\paragraph{}Analisi
+\subsection*{Analisi}
 
 Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale se il pivot è sempre l'elemento maggiore o minore, quicksort impiega $O(n^2)$ comparazioni, poiché ad ogni ricorsione c'è un solo elemento in meno. In questo caso avverrebbero O(n) spostamenti. Nel miglior caso l'algoritmo impiega un tempo di $\Theta (n\log (n))$, poiché l'albero delle ricorsioni ha un'altezza logaritmica. Lo stesso ragionamento vale per il numero di spostamenti. A pagina 99 c'è una lunga dimostrazione per induzione che mostra che anche il caso medio ha lo stesso tempo del miglior caso. Nonostante l'algoritmo sia in situ, anche le ricorsioni occupano un determinato spazio nella memoria, vale a dire $\Omega (n)$ chiamate. Rendendo l'algoritmo semi-iterativo si possono ottenere solo $O(\log (n))$ chiamate. Si deve semplicemente richiamare in modo ricorsivo quicksort sul più piccolo sub-array, mentre si completa l'altra parte in modo iterativo (algoritmo illustrato a pagina 100). Alla pagina successiva è invece mostrato come fare a rendere quicksort totalmente iterativo (personalmente non ho capito molto). 
             
+\subsection*{Varianti di quicksort}
+Per evitare un tempo di $O(n^2)$ nel caso di un array già ordinato sono state pensate alcune varianti dell'algoritmo, le quali concernono solamente la scelta del pivot. La prima è la cosiddetta 3-Median-Strategie (median of three values strategy), che consiste semplicemente nel prendere tre elementi campione, rispettivamente a destra, sinistra e nel mezzo, e scegliere come pivot il valore medio tra questi.
+L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo O(n) quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uglaui al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazone più dettagliata possono essere trovate a pagina 104.
+
+\section{Heapsort}
+Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa O(n) paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo "versickern" sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
+
+\[\begin{array}{*{20}{c}}
+{2}&1&{5}&{3}&4&8&7&6\\
+2&{1}&{5}&{6}&4&8&7&3\\
+2&{1}&{8}&{6}&4&5&7&3\\
+2&{6}&{8}&3&{4}&5&7&1\\
+8&{6}&7&{3}&{4}&5&2&1\\
+\end{array}\]
+
+\subsection*{Implementazione}
+\begin{lstlisting}
+//costruiamo l'heap
+for (i=n/2; i>=1; i--)
+	versickere(a,i,n) //array a da i a N
+//heapsort	
+for (i=n	; i>=2; i--)
+	swap(a[1],a[i])
+	versickere(a,1,i-1)
+\end{lstlisting}                                                                          
+Dove versickere è:
+\begin{lstlisting}
+versickere(int[] a, int i, int m)
+	int j
+	while 2*i<=m //a[i] ha un figlio a sinistra
+		j=2*i
+		if j<m //a[i] ha anche un figlio a destra
+			if a[j]<a[j+1]
+				j=j+1
+			//ora a[j] e' il figlio con un valore maggiore
+			if a[i]<a[j]
+				swap(a[i],a[j])
+				i=j //va avanti a restaurare
+			else
+				i=m //fine		
+\end{lstlisting}                                                                                                 
+\subsection*{Analisi}
+La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede n volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente "in situ". L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 \end{document}
