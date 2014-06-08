@@ -188,7 +188,7 @@ Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale 
 Per evitare un tempo di $O(n^2)$ nel caso di un array già ordinato sono state pensate alcune varianti dell'algoritmo, le quali concernono solamente la scelta del pivot. La prima è la cosiddetta 3-Median-Strategie (median of three values strategy), che consiste semplicemente nel prendere tre elementi campione, rispettivamente a destra, sinistra e nel mezzo, e scegliere come pivot il valore medio tra questi.
 L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo O(n) quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uglaui al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazone più dettagliata possono essere trovate a pagina 104.
 
-\section{Heapsort}
+\section{Heapsort (pag 106)}
 Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa O(n) paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo "versickern" sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
 
 \[\begin{array}{*{20}{c}}
@@ -227,4 +227,96 @@ versickere(int[] a, int i, int m)
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
 La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede n volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente "in situ". L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
+
+\section{Mergesort (pag 112)}
+Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
+
+\subsection*{Esempio}
+A=2, 1, 3, 9, 5, 4. Esso viene dunque diviso in due, vale a dire in $A_1 =2,1,3$ e $A_2 =9,5,4$. Per ricorsione essi vengono ordinati, quindi rimane da unire $A_1 =1,2,3$ e $A_2 =4,5,9$. Il passo merge prevede l'unione dei due insiemi, quindi si ottiene il risultato finale.
+
+\subsection*{Implementazione}
+\begin{lstlisting}
+mergesort (int[] a, int l, int r)
+	if l<r //altrimenti caso base: array rimane invariato
+		m=(l+r)/2 //posizione media
+		mergesort (a, l, m)
+		mergesort (a, m+1, r)
+		merge (a, l, m, r)
+		
+merge (int[] a, int l,m,r)
+	i=l
+	j=m+1
+	k=l
+	while (i<=m && j<=r)
+		if a[i]<a[j]
+			b[k]=a[i]
+			i++
+		else
+			b[k]=a[j]
+			j++
+		k++
+	if i>m //prima successione esautita
+		for h=j:r
+			b[k+h-j]=a[h]
+	else
+		for h=i:m
+			b[k+h-i]=a[h]
+	for h=l:r
+		a[h]=b[h] //salva nuovamente nell'array originale									
+\end{lstlisting}
+\subsection*{Analisi}
+Merge impiega sempre O(n) spostamenti e comparazioni. Dato che l'array viene sempre diviso in due, il metodo merge viene chiamato log(n) volte. In totale l'algoritmo impiega sempre $\Theta (n \log(n))$. L'unico problema è che serve sempre O(n) spazio extra per salvare l'array di supporto.
+\subsection*{Mergesort iterativo}
+L'algoritmo può anche essere reso totalmente iterativo. Esso si chiama "reines 2-Wege-Mergesort" (straight 2-way merge sort). L'idea è quella di unire tramite il metodo merge intervalli sempre più grandi (esattamente il doppio) fino ad avere l'intero array completamente ordinato. Esempio:
+\[\begin{array}{*{20}{c}}
+{2}&1&{3}&{9}&6&5\\
+1&{2|}&{3}&{9|}&5&{6|}\\
+1&{2}&{3}&{9|}&5&6\\
+1&{2}&{3}&5&{6}&{9|}\\
+\end{array}\]
+\begin{lstlisting}
+straightmergesort(int[] a, int l,r)
+	int size, ll, mm, rr
+	size=1
+	while size<r-l+1
+		rr=l-1 //gli elementi fino ad a[rr] incluso sono a posto
+		while rr+size<r //fino che tutti non sono elaborati
+			ll=rr+1 //bordo sinistro successione 1
+			mm=ll+size-1 //bordo desto successione 1
+			if mm+size<=r
+				rr=mm+size
+			else
+				rr=r
+			merge (a, ll, mm, rr)
+		size=2*size				
+\end{lstlisting}
+Le performance sono identiche a prima, ma il metodo è completamente iterativo.
+\subsection*{Mergesort naturale}
+L'unica differenza da straight 2-way merge sort è che al posto di unire successioni di lunghezza arbitraria sfruttiamo successioni già ordinate alla partenza. Ad esempio:
+\[\begin{array}{*{20}{c}}
+{2}&1&{3}&{6}&9&5\\
+{2|}&{1}&{3}&{6}&{9|}&{5}\\
+1&{2}&{3}&{6}&{9|}&{6|}\\
+1&{2}&{3}&5&{6}&{9|}\\
+\end{array}\]
+A livello di implementazione dobbiamo soltanto aggiungere la ricerca delle successioni già ordinate.
+\begin{lstlisting}
+straightmergesort(int[] a, int l,r)
+	int ll, mm, rr
+	do
+		rr=l-1
+		while rr<r
+			ll=rr+1
+			mm=ll	
+			while (mm<r && a[mm+1]>=a[mm])
+				mm++
+			if mm<r
+				while (rr<r && a[rr+1]>=a[rr])
+					rr++
+				merge (a, ll, mm, rr)
+			else
+				rr=mm
+	until ll=l								
+\end{lstlisting}
+In questo modo cambiano anche le performance dell'algoritmo. Compare difatti un best case, ad esempio quando l'input è già ordinato. In questo caso avremmo $\Theta (n)$ comparazioni e 0 spostamenti. Il caso medio ed il peggior caso rispecchiano invece straight merge sort, nonché le tempistiche della prima analisi.
 \end{document}
