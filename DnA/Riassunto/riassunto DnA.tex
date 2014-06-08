@@ -319,4 +319,41 @@ straightmergesort(int[] a, int l,r)
 	until ll=l								
 \end{lstlisting}
 In questo modo cambiano anche le performance dell'algoritmo. Compare difatti un best case, ad esempio quando l'input è già ordinato. In questo caso avremmo $\Theta (n)$ comparazioni e 0 spostamenti. Il caso medio ed il peggior caso rispecchiano invece straight merge sort, nonché le tempistiche della prima analisi.
+\section{Radixsort (pag 121)}
+Radixsort si basa sulla comparazione delle cifre dei rispettivi numeri. Noi tratteremo solo la forma duale, ma il tutto funziona con qualsiasi forma, compresa quella decimale. Ammettiamo sempre che esista una funzione z(i,k) che ritorna l'itesima cifra a partire dalla meno significativa del numero k. Ad esempio z(0,517)=7 e z(2, 517)=5.
+\subsection{Radix-exchange sort}
+L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui i-tesimo bit è 0 vanno a sinistra, mentre se è uno vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' (i-1)-tesimo bit e sulle due parti dell'array.
+\subsubsection*{Esempio}
+\[\begin{array}{*{20}{c}}
+{1011}&{0010}&{1101}&{0011}&{|3}\\
+{0011}&{0010;}&{1101}&{1011;}&{|2}\\
+{0011}&{0010;}&{1011;}&{1101;}&{|1}\\
+{0011}&{0010;}&{1011;}&{1101;}&{|0}\\
+{0010}&{0011}&{1011}&{1101}
+\end{array}\]
+\subsubsection*{Implementazione}
+\begin{lstlisting}
+radixexchangesort(int[] a, int l,r,b)
+	int i,j
+	if r>l
+		i=l-1
+		j=r+1
+		while (true)
+			do
+				i++
+			until
+				z(b, a[i])=1 || i>=j
+			do
+				j--
+			until
+				z(b, a[j])=0 || i>=j
+			if i>=j
+				break
+			swap (a[i], a[j])
+		if b>0
+			radixexchangesort(a, l, i-1, b-1)
+			radixexchangesort(a, i, r, b-1)						
+\end{lstlisting}
+\subsection*{Analisi}
+L'algoritmo viene richiamato al massimo b volte ed ogni volta impiega O(n) paragoni e movimenti. In totale impiega dunque O(bn) (tempo pseudo polinomiale). Se $b> \log (n)$ radixsort non è l'algoritmo adeguato al problema. 
 \end{document}
