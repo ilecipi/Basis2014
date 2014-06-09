@@ -9,6 +9,9 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\newenvironment{mytheorem}[1]{\subsubsection*{Theorem #1}}{\begin{flushright}$\blacksquare$\end{flushright}}
+
 \lstset{frame=tb,
   language=Java,
   aboveskip=3mm,
@@ -36,9 +39,9 @@ $$O(f)=\{ g|\exists a>0: \exists b>0: \forall N \in N : g(N)\leq af(N)+b \}$$
 $$\Omega (f)=\{ g|\exists c>0: \exists \mbox{ infinite n } : g(n) \geq cf(n) \}$$
 In entrambi i casi si tratta di classi di funzioni. Quando $f \in O(g)$ e $f \in \Omega (g)$ al contempo si dice che $f \in \Theta (g)$. Esistono ulteriori definizioni alternative, ad esempio quelle utilizzate nel Blatt 1. Il seguente teorema può essere utile (dimostrazione nel Blatt 1):
 \newtheorem{theorem}{Theorem}
-\begin{theorem}
-Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim_{x \rightarrow +\infty} \frac{f(n)}{g(n)} $ converge ad una costante $C\geq 0$ allora $f \in O(g)$.
-\end{theorem}
+\begin{mytheorem}{1}
+Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim\limits_{x \rightarrow +\infty} \frac{f(n)}{g(n)} $ converge ad una costante $C\geq 0$ allora $f \in O(g)$.
+\end{mytheorem}
 \section{Algoritmo di Karatsuba (pag 12)}
 Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguente:
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
@@ -51,23 +54,23 @@ max=0
 scan=0
 for (i=1; i<=n; i++){	
 	scan+=A[i]
-	if scan $<$ 0
+	if scan < 0
 		scan=0
-	if scan $>$ max 
+	if scan > max 
 		max=scan
 }			
 \end{lstlisting}
 In questo modo il problema viene risolto in tempo lineare.	
 \chapter{Sort}
-Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato a) contenente n numeri (interi). In ogni caso con questi algoritmi è possibile ordinare qualsiasi oggetto appartenente ad un universo in cui vige un ordine totale.
+Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato $a$) contenente $n$ numeri (interi). In ogni caso con questi algoritmi è possibile ordinare qualsiasi oggetto appartenente ad un universo in cui vige un ordine totale.
 \section{Sortieren durch Auswahl (pag 82)}
-Selection sort consiste nel cercare ogni volta il minimo tra la posizione i e n. Una volta trovato esso viene scambiato con l'i-tesimo numero. 
+Selection sort consiste nel cercare ogni volta il minimo tra la posizione $i$ e $n$. Una volta trovato esso viene scambiato con l'$i-$tesimo numero. 
 \subsubsection*{Esempio}
 \[\begin{array}{*{20}{c}}
-{15}&2&{43}&{17}&4\\
-2&{15}&{43}&{17}&4\\
-2&4&{43}&{17}&{15}\\
-2&4&{15}&{17}&{43}
+{}&{15}&2&{43}&{17}&4\\
+{\Rightarrow}&2&{15}&{43}&{17}&4\\
+{\Rightarrow}&2&4&{43}&{17}&{15}\\
+{\Rightarrow}&2&4&{15}&{17}&{43}
 \end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
@@ -83,14 +86,14 @@ for i=1:n-1
 \end{lstlisting}
 \subsubsection*{Analisi}
 
-Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) O(n) scambi. Da notare che per trovare il minimo sono necessari almeno n-1 confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
+Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) O(n) scambi. Da notare che per trovare il minimo sono necessari almeno $n-1$ confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
 \section{Sortieren durch Einfügen (pag 85)}
-In inglese si chiama insertion sort. Per induzione i numeri fino a i-1 sono già ordinati. Il principio consiste di piazzare l'i-tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
+In inglese si chiama insertion sort. Per induzione i numeri fino a $i-1$ sono già ordinati. Il principio consiste di piazzare l'$i-$tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
 \[\begin{array}{*{20}{c}}
-2&{15}&/&{43}&{17}&4\\
-2&{15}&{43}&/&{17}&4\\
-2&{15}&{17}&{43}&/&4\\
-2&4&{15}&{17}&{43}&/
+{}&2&{15}&/&{43}&{17}&4\\
+{\Rightarrow}&2&{15}&{43}&/&{17}&4\\
+{\Rightarrow}&2&{15}&{17}&{43}&/&4\\
+{\Rightarrow}&2&4&{15}&{17}&{43}&/
 \end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
@@ -104,59 +107,45 @@ for i=2:n
 		j=j-1
 	a[j]=t
 \end{lstlisting}
-Si nota subito che se implementato così l'algoritmo può non fermarsi se t è il più piccolo numero. Serve quindi un elemento di stop, ad esempio inserendo a[0]=t prima del while loop.
+Si nota subito che se implementato così l'algoritmo può non fermarsi se $t$ è il più piccolo numero. Serve quindi un elemento di stop, ad esempio inserendo $a[0]=t$ prima del while loop.
 
 \subsubsection*{Analisi}
 
 Nel peggior caso $\Theta (n^2)$ comparazioni ed altrettanti spostamenti. Nel miglior caso $O(n^2)$ comparazioni e spostamenti. Il caso medio rispecchia il peggiore.
 
 \section{Bubblesort (pag 89)}
-Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento a[i] con a[i+1] (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
+Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento $a[i]$ con $a[i+1]$ (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
 \[\begin{array}{*{20}{c}}
-{15}&2&{43}&{17}&4\\
-2&{15}&{43}&{17}&4\\
-2&{15}&{17}&{43}&4\\
-2&{15}&{17}&4&{43}\\
-2&{15}&4&{17}&{43}\\
-2&4&{15}&{17}&{43}
+{}&{15}&2&{43}&{17}&4\\
+{\Rightarrow}&2&{15}&{43}&{17}&4\\
+{\Rightarrow}&2&{15}&{17}&{43}&4\\
+{\Rightarrow}&2&{15}&{17}&4&{43}\\
+{\Rightarrow}&2&{15}&4&{17}&{43}\\
+{\Rightarrow}&2&4&{15}&{17}&{43}
 \end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
 do
 	flag=true
 	for i=1:n-1
-	if a[i] $>$ a[i+1] 
+	if a[i] > a[i+1] 
 		swap(a[i],a[i+1])
 		flag=false
 while (!flag)
 \end{lstlisting}
 \subsubsection*{Analisi}
 
-Nel miglior caso, se l'array è già ordinato, abbiamo n-1 paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
+Nel miglior caso, se l'array è già ordinato, abbiamo $n-1$ paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
 \section{Quicksort (pag 92)}
-Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito "in situ", vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio l ed r, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati i e j) che partono rispettivamente alla posizione l e r. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$ a[i] ed a[j] vengono scambiati. Alla fine, quando i=j, l'elemento a[i] viene scambiato col pivot e viene richiamato l'algoritmo da l ad i-1 e da i+1 a r (il pivot si trova già alla posizione giusta). Di seguito un esempio:
-
-array: 5 7 3 1 6 4
-
+Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito "in situ", vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
+\subsubsection*{Esempio}
+\begin{center}
+array: 5 7 3 1 6 4\\
 quicksort(array, 1, 6)
-
-5 7 3 1 6 (4) $\leftarrow$ pivot
-
-i\hspace{2em}       j 
-
-1 7 3 5 6 (4)
-
-\hspace{0.8em}  i j
-  
-1 3 7 5 6 (4)
-
-\hspace{1,3em}   i,j
-   
-1 3 (4) 5 6 7
-
-quicksort(array, 1, 2), quicksort(array, 3, 6)
-      
+\end{center}
+\[\begin{array}{*{20}{c}}{}&{}&{}&5&7&3&1&6&{(4)}& \leftarrow &{{\text{pivot}}}\\{}&{}&{}& \uparrow &{}&{}& \uparrow &{}&{}&{}&{}\\{}&{}&{}&i&{}&{}&j&{}&{}&{}&{}\\{}&{}& \Rightarrow &1&7&3&5&6&{(4)}&{}&{}\\{}&{}&{}&{}& \uparrow & \uparrow &{}&{}&{}&{}&{}\\{}&{}&{}&{}&i&j&{}&{}&{}&{}&{}\\{}&{}& \Rightarrow &1&3&7&5&6&{(4)}&{}&{}\\{}&{}&{}&{}&{}& \uparrow &{}&{}&{}&{}&{}\\{}&{}&{}&{}&{}&{i,j}&{}&{}&{}&{}&{}\\{}&{}& \Rightarrow &1&3&{(4)}&5&6&7&{}&{}\end{array}\]
+\begin{center}quicksort(array, 1, 2), quicksort(array, 3, 6)\end{center}
 \subsection*{Implementazione}
 
 \begin{lstlisting}
@@ -181,22 +170,21 @@ quicksort(int[ ] a, int l, int r)
 \end{lstlisting}    
       
 \subsection*{Analisi}
-
-Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale se il pivot è sempre l'elemento maggiore o minore, quicksort impiega $O(n^2)$ comparazioni, poiché ad ogni ricorsione c'è un solo elemento in meno. In questo caso avverrebbero O(n) spostamenti. Nel miglior caso l'algoritmo impiega un tempo di $\Theta (n\log (n))$, poiché l'albero delle ricorsioni ha un'altezza logaritmica. Lo stesso ragionamento vale per il numero di spostamenti. A pagina 99 c'è una lunga dimostrazione per induzione che mostra che anche il caso medio ha lo stesso tempo del miglior caso. Nonostante l'algoritmo sia in situ, anche le ricorsioni occupano un determinato spazio nella memoria, vale a dire $\Omega (n)$ chiamate. Rendendo l'algoritmo semi-iterativo si possono ottenere solo $O(\log (n))$ chiamate. Si deve semplicemente richiamare in modo ricorsivo quicksort sul più piccolo sub-array, mentre si completa l'altra parte in modo iterativo (algoritmo illustrato a pagina 100). Alla pagina successiva è invece mostrato come fare a rendere quicksort totalmente iterativo (personalmente non ho capito molto). 
+Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale se il pivot è sempre l'elemento maggiore o minore, quicksort impiega $O(n^2)$ comparazioni, poiché ad ogni ricorsione c'è un solo elemento in meno. In questo caso avverrebbero $O(n)$ spostamenti. Nel miglior caso l'algoritmo impiega un tempo di $\Theta (n\log (n))$, poiché l'albero delle ricorsioni ha un'altezza logaritmica. Lo stesso ragionamento vale per il numero di spostamenti. A pagina 99 c'è una lunga dimostrazione per induzione che mostra che anche il caso medio ha lo stesso tempo del miglior caso. Nonostante l'algoritmo sia in situ, anche le ricorsioni occupano un determinato spazio nella memoria, vale a dire $\Omega (n)$ chiamate. Rendendo l'algoritmo semi-iterativo si possono ottenere solo $O(\log (n))$ chiamate. Si deve semplicemente richiamare in modo ricorsivo quicksort sul più piccolo sub-array, mentre si completa l'altra parte in modo iterativo (algoritmo illustrato a pagina 100). Alla pagina successiva è invece mostrato come fare a rendere quicksort totalmente iterativo (personalmente non ho capito molto). 
             
 \subsection*{Varianti di quicksort}
 Per evitare un tempo di $O(n^2)$ nel caso di un array già ordinato sono state pensate alcune varianti dell'algoritmo, le quali concernono solamente la scelta del pivot. La prima è la cosiddetta 3-Median-Strategie (median of three values strategy), che consiste semplicemente nel prendere tre elementi campione, rispettivamente a destra, sinistra e nel mezzo, e scegliere come pivot il valore medio tra questi.
-L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo O(n) quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uglaui al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazone più dettagliata possono essere trovate a pagina 104.
+L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo $O(n)$ quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uguali al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazione più dettagliata possono essere trovate a pagina 104.
 
 \section{Heapsort (pag 106)}
-Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa O(n) paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo "versickern" sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
+Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa $O(n)$ paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo "versickern" sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
 
 \[\begin{array}{*{20}{c}}
-{2}&1&{5}&{3}&4&8&7&6\\
-2&{1}&{5}&{6}&4&8&7&3\\
-2&{1}&{8}&{6}&4&5&7&3\\
-2&{6}&{8}&3&{4}&5&7&1\\
-8&{6}&7&{3}&{4}&5&2&1\\
+{}&{2}&1&{5}&{3}&4&8&7&6\\
+{\Rightarrow}&2&{1}&{5}&{6}&4&8&7&3\\
+{\Rightarrow}&2&{1}&{8}&{6}&4&5&7&3\\
+{\Rightarrow}&2&{6}&{8}&3&{4}&5&7&1\\
+{\Rightarrow}&8&{6}&7&{3}&{4}&5&2&1\\
 \end{array}\]
 
 \subsection*{Implementazione}
@@ -226,13 +214,13 @@ versickere(int[] a, int i, int m)
 				i=m //fine		
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
-La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede n volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente "in situ". L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
+La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente "in situ". L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 
 \section{Mergesort (pag 112)}
 Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
 
 \subsection*{Esempio}
-A=2, 1, 3, 9, 5, 4. Esso viene dunque diviso in due, vale a dire in $A_1 =2,1,3$ e $A_2 =9,5,4$. Per ricorsione essi vengono ordinati, quindi rimane da unire $A_1 =1,2,3$ e $A_2 =4,5,9$. Il passo merge prevede l'unione dei due insiemi, quindi si ottiene il risultato finale.
+$A=\{2, 1, 3, 9, 5, 4\}$. Esso viene dunque diviso in due, vale a dire in $A_1 =\{2,1,3\}$ e $A_2 =\{9,5,4\}$. Per ricorsione essi vengono ordinati, quindi rimane da unire $A_1 =\{1,2,3\}$ e $A_2 =\{4,5,9\}$. Il passo merge prevede l'unione dei due insiemi, quindi si ottiene il risultato finale.
 
 \subsection*{Implementazione}
 \begin{lstlisting}
@@ -265,14 +253,14 @@ merge (int[] a, int l,m,r)
 		a[h]=b[h] //salva nuovamente nell'array originale									
 \end{lstlisting}
 \subsection*{Analisi}
-Merge impiega sempre O(n) spostamenti e comparazioni. Dato che l'array viene sempre diviso in due, il metodo merge viene chiamato log(n) volte. In totale l'algoritmo impiega sempre $\Theta (n \log(n))$. L'unico problema è che serve sempre O(n) spazio extra per salvare l'array di supporto.
+Merge impiega sempre $O(n)$ spostamenti e comparazioni. Dato che l'array viene sempre diviso in due, il metodo merge viene chiamato $\log(n)$ volte. In totale l'algoritmo impiega sempre $\Theta (n \log(n))$. L'unico problema è che serve sempre $O(n)$ spazio extra per salvare l'array di supporto.
 \subsection*{Mergesort iterativo}
 L'algoritmo può anche essere reso totalmente iterativo. Esso si chiama "reines 2-Wege-Mergesort" (straight 2-way merge sort). L'idea è quella di unire tramite il metodo merge intervalli sempre più grandi (esattamente il doppio) fino ad avere l'intero array completamente ordinato. Esempio:
 \[\begin{array}{*{20}{c}}
-{2}&1&{3}&{9}&6&5\\
-1&{2|}&{3}&{9|}&5&{6|}\\
-1&{2}&{3}&{9|}&5&6\\
-1&{2}&{3}&5&{6}&{9|}\\
+{}&{2}&1&{3}&{9}&6&5\\
+{\Rightarrow}&1&{2|}&{3}&{9|}&5&{6|}\\
+{\Rightarrow}&1&{2}&{3}&{9|}&5&6\\
+{\Rightarrow}&1&{2}&{3}&5&{6}&{9|}\\
 \end{array}\]
 \begin{lstlisting}
 straightmergesort(int[] a, int l,r)
@@ -294,10 +282,10 @@ Le performance sono identiche a prima, ma il metodo è completamente iterativo.
 \subsection*{Mergesort naturale}
 L'unica differenza da straight 2-way merge sort è che al posto di unire successioni di lunghezza arbitraria sfruttiamo successioni già ordinate alla partenza. Ad esempio:
 \[\begin{array}{*{20}{c}}
-{2}&1&{3}&{6}&9&5\\
-{2|}&{1}&{3}&{6}&{9|}&{5}\\
-1&{2}&{3}&{6}&{9|}&{6|}\\
-1&{2}&{3}&5&{6}&{9|}\\
+{}&{2}&1&{3}&{6}&9&5\\
+{\Rightarrow}&{2|}&{1}&{3}&{6}&{9|}&{5}\\
+{\Rightarrow}&1&{2}&{3}&{6}&{9|}&{6|}\\
+{\Rightarrow}&1&{2}&{3}&5&{6}&{9|}\\
 \end{array}\]
 A livello di implementazione dobbiamo soltanto aggiungere la ricerca delle successioni già ordinate.
 \begin{lstlisting}
@@ -320,16 +308,16 @@ straightmergesort(int[] a, int l,r)
 \end{lstlisting}
 In questo modo cambiano anche le performance dell'algoritmo. Compare difatti un best case, ad esempio quando l'input è già ordinato. In questo caso avremmo $\Theta (n)$ comparazioni e 0 spostamenti. Il caso medio ed il peggior caso rispecchiano invece straight merge sort, nonché le tempistiche della prima analisi.
 \section{Radixsort (pag 121)}
-Radixsort si basa sulla comparazione delle cifre dei rispettivi numeri. Noi tratteremo solo la forma duale, ma il tutto funziona con qualsiasi forma, compresa quella decimale. Ammettiamo sempre che esista una funzione z(i,k) che ritorna l'itesima cifra a partire dalla meno significativa del numero k. Ad esempio z(0,517)=7 e z(2, 517)=5.
+Radixsort si basa sulla comparazione delle cifre dei rispettivi numeri. Noi tratteremo solo la forma duale, ma il tutto funziona con qualsiasi forma, compresa quella decimale. Ammettiamo sempre che esista una funzione $z(i,k)$ che ritorna l'$i-$tesima cifra a partire dalla meno significativa del numero $k$. Ad esempio $z(0,517)=7$ e $z(2, 517)=5$.
 \subsection{Radix-exchange sort}
-L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui i-tesimo bit è 0 vanno a sinistra, mentre se è uno vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' (i-1)-tesimo bit e sulle due parti dell'array.
+L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui $i-$tesimo bit è 0 vanno a sinistra, mentre se è uno vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' $(i-1)-$tesimo bit e sulle due parti dell'array.
 \subsubsection*{Esempio}
 \[\begin{array}{*{20}{c}}
-{1011}&{0010}&{1101}&{0011}&{|3}\\
-{0011}&{0010;}&{1101}&{1011;}&{|2}\\
-{0011}&{0010;}&{1011;}&{1101;}&{|1}\\
-{0011}&{0010;}&{1011;}&{1101;}&{|0}\\
-{0010}&{0011}&{1011}&{1101}
+{}&{1011}&{0010}&{1101}&{0011}&{|3}\\
+{\Rightarrow}&{0011}&{0010;}&{1101}&{1011;}&{|2}\\
+{\Rightarrow}&{0011}&{0010;}&{1011;}&{1101;}&{|1}\\
+{\Rightarrow}&{0011}&{0010;}&{1011;}&{1101;}&{|0}\\
+{\Rightarrow}&{0010}&{0011}&{1011}&{1101}
 \end{array}\]
 \subsubsection*{Implementazione}
 \begin{lstlisting}
@@ -355,5 +343,5 @@ radixexchangesort(int[] a, int l,r,b)
 			radixexchangesort(a, i, r, b-1)						
 \end{lstlisting}
 \subsection*{Analisi}
-L'algoritmo viene richiamato al massimo b volte ed ogni volta impiega O(n) paragoni e movimenti. In totale impiega dunque O(bn) (tempo pseudo polinomiale). Se $b> \log (n)$ radixsort non è l'algoritmo adeguato al problema. 
+L'algoritmo viene richiamato al massimo $b$ volte ed ogni volta impiega $O(n)$ paragoni e movimenti. In totale impiega dunque $O(bn)$ (tempo pseudo polinomiale). Se $b> \log (n)$ radixsort non è l'algoritmo adeguato al problema. 
 \end{document}
