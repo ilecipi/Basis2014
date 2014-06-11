@@ -423,13 +423,13 @@ radixsort_sond(int[] a)
 Entrambe le implementazioni richiedono $O(l(m+n))$ passaggi e memoria di $O(n+m)$.
 \section{Untere Schranke (pag 153)}
 Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne radix sort) impiegano almeno $\Omega (n \log (n))$. 
-\begin{mytheorem}{2}
+\begin{mytheorem}{2.4}
 Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare n chiavi.
 \paragraph*{Dimostrazione}
 Per dimostrare questo teorema valutiamo tutte le possibili n! permutazioni di n chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo i:j rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono n! permutazioni possibili devono per forza esserci n! foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con k foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
 $$ log (k!) \geq \log ((\frac{n}{2})^{\frac{n}{2}}) = \frac{n}{2} \log (\frac{n}{2}) \in \Omega (n \log (n))$$
 \end{mytheorem}
-\begin{mytheorem}{2}
+\begin{mytheorem}{2.4.1}
 L'altezza massima e media di un albero binario con k chiavi è di almeno $ log_2 (k)$.
 \paragraph*{Dimostrazione}
 La prima parte è triviale, in quanto un albero di altezza t può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia T il più piccolo albero per cui l'ipotesi non regge. T ha k foglie, dunque $k \geq 2$ e T deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ folgie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di T, allora le loro altezze medie devono essere maggiori di $log_2(k_1)$ e rispettivamente $log_2 (k_2)$. Ovviamente l'altezza media di T deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
@@ -546,4 +546,55 @@ In questo modo una ricerca non impiega più che $\lceil log_2(n+1) \rceil \in O(
 Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico "Bernasconi" non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della m:
 $$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
 Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega O(n) paragoni.
+\section{Selbstanordnende lineare Liste (pag 180)}
+Ammettiamo di avere una lista contenente n chiavi. Per cercare e dunque accedere all'i-tesimo elemento impieghiamo i paragoni. Avrebbe senso spostare gli elementi più ricercati all'inizio della lista. Consideriamo pertanto alcune strategie: 
+\begin{itemize}
+\item Move to front: l'elemento ricercato viene spostato all'inizio della lista
+\item Transpose: l'elemento ricercato viene spostato una posizione all'indietro (scambiato con il vicino a sinistra)
+\item Frequency count: ad ogni elemento viene abbinato un contatore. Inizialmente esso è 0 ma ad ogni accesso aumenta di un'unità. La lista viene sempre ordinata in modo che ogni i contatori di frequeza (Häufigkeitszähler) siano ordinati in ordine decrescente. 
+\end{itemize}
+Qual'è la migliore strategia? Si può notare che la transpose strategy presenta alcuni problemi se si accede ogni volta ad elementi adiacenti in modo alternato, ad esempio n,  n-1, n, ... In generale move to front è la tecnica migliore, anche perché non necessita di spazio extra (per salvare gli indici).
+\begin{mytheorem}{3.2}
+Per qualsiasi algoritmo A di auto ordinamento di liste e per qualsiasi successione s di m operazioni d'accesso vale:
+$$ C_{MF}(s) \leq 2C_A(s)+X_A(s)-F_A(s)-m $$
+Dove C indica i costi delle operazioni, F il numero delle operazioni gratuite e X il numero delle operazioni a pagamento. In altre parole move to front non può essere più di due volte peggio di qualsiasi altro algoritmo. La dimostrazione per analisi ammortizzata si trova da pagina 183 a 186.
+\end{mytheorem}
+\chapter{Hashing}
+Al posto di salvare gli elementi in una lista e cercarli tramite comparazioni si può salvare ogni elemento ad un determinato indice e calcolare dove si trova in modo matematico. Questo è il principio di una hash table. La funzione che collega le chiavi all'indirizzo di allocamento (m posizioni possibili) è detta Hashfunktion (hash function):
+$$h: K \rightarrow \{0,..., m-1\}$$
+Questa funzione non deve essere forzatamente iniettiva, difatti due chiavi con $h(k)=h(k')$ sono dette sinonimi. Quando questo accade succede però anche una collisione, che vedremo come trattare. Per una tabella di grandezza m contenente n chiavi definiamo $\alpha = \frac{n}{m} $ come il fattore di utilizzazione (Belegungsfaktor, utilization factor). Una buona hash function deve essere facile da computare ed evitare il maggior numero possibile di collisioni.
+Nel nostro caso utilizziamo il cossiddeto Division-Rest-Methode, ma esistono anche altri metodi, quale la multiplicazione della chiave con un numero irrazionale. Comunque
+$$ h(k)=k \mbox{ mod }m$$
+Una buona scelta per m è che sia un numero primo.
+\section{Hashing perfetto ed universale}
+Se il numero di chiavi possibili è minore alla grandezza della tabella e già conosciuto in partenza possiamo costruire una funzione di hashing iniettiva che evita qualsiasi collisione. In questo caso si parla di hashing perfetto (perfektes Hashing).
+Nella maggior parte dei casi non sappiamo però se è possibile evitare collisioni. Sia H una collezione finita di hash functions. H si chiama universale se per ogni diversa coppia di chiavi x e y vale:
+$$ \frac{|\{h\in H: h(x)=h(y)\}|}{|H|} \leq \frac{1}{m}$$
+In altre parole H è universale se per ogni coppia di chiavi differenti al massimo la m-esima parte delle funzioni porta ad una collisione. La probabilità che due chiavi collidano con una funzione di H è dunque al massimo 1/m. Per una funzione h e due chiavi x e y definiamo:
+$$
+\delta (x,y,h) =
+\left\{
+\begin{array}{rl}
+1 & \mbox{ se h(x)=h(y) e } x\neq y  \\
+0 & \mbox{ altrimenti}
+\end{array}
+\right.
+$$
+Per un insieme di chiavi Y, rispettivamente di funzioni H:
+$$\delta (x,Y,h)= \sum_{y \in Y} \delta (x,y,h)$$
+$$\delta (x,y,H)= \sum_{h \in H} \delta (x,y,h)$$
+H è universale quando per due differenti chiavi x e y $\delta (x,y,H) \leq \frac{|H|}{m}$.
+Ammettiamo che vogliamo aggiungere la chiave x ad un'hash table universale in cui è già stata salvata una successione S di elementi. Calcoliamo quindi l'Erwartungswert (penso sia il numero di elementi che andrà a collidere con x, pf verificare):
+\begin{eqnarray}
+E[\delta (x,S,h)] &=& \frac{1}{|H|} \sum_{h \in H} \delta (x,S,h) \nonumber \\
+&=& \frac{1}{|H|} \sum_{y \in S} \delta (x,y,H) \nonumber \\
+&\leq & \frac{1}{|H|} \sum_{y \in S} \frac{|H|}{m} \nonumber \\
+&=& \frac{|S|}{m}
+\end{eqnarray}
+Adesso dimostriamo che esiste una classe di funzioni hashing universali (tramite esempio).
+\begin{mytheorem}{4.2}
+Sia $|K|=p$ un numero primo e $a \in \{1, ..., p-1\},b \in \{0, ..., p-1\}$. La funzione $h_{a,b}: K \rightarrow \{0, ..., m-1\}$ viene definita nel modo seguente:
+$$ h_{a,b}(x)=((ax+b) \mbox{ mod } p) \mbox{ mod } m$$
+La classe di funzioni $H=\{h_{a,b} : 1\leq a < p \mbox{ e } 0\leq b <p\}$ è una classe universale di hash functions. Dimostrazione a pagina 197.
+\end{mytheorem}
 \end{document}
