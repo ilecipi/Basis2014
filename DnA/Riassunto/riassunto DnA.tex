@@ -421,4 +421,129 @@ radixsort_sond(int[] a)
 \end{lstlisting}
 \subsection*{Analisi}
 Entrambe le implementazioni richiedono $O(l(m+n))$ passaggi e memoria di $O(n+m)$.
+\section{Untere Schranke (pag 153)}
+Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne radix sort) impiegano almeno $\Omega (n \log (n))$. 
+\begin{mytheorem}{2}
+Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare n chiavi.
+\paragraph*{Dimostrazione}
+Per dimostrare questo teorema valutiamo tutte le possibili n! permutazioni di n chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo i:j rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono n! permutazioni possibili devono per forza esserci n! foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con k foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
+$$ log (k!) \geq \log ((\frac{n}{2})^{\frac{n}{2}}) = \frac{n}{2} \log (\frac{n}{2}) \in \Omega (n \log (n))$$
+\end{mytheorem}
+\begin{mytheorem}{2}
+L'altezza massima e media di un albero binario con k chiavi è di almeno $ log_2 (k)$.
+\paragraph*{Dimostrazione}
+La prima parte è triviale, in quanto un albero di altezza t può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia T il più piccolo albero per cui l'ipotesi non regge. T ha k foglie, dunque $k \geq 2$ e T deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ folgie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di T, allora le loro altezze medie devono essere maggiori di $log_2(k_1)$ e rispettivamente $log_2 (k_2)$. Ovviamente l'altezza media di T deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
+\begin{eqnarray}
+ altezza media(T) &=&  \frac{k_1}{k}(\mbox{altezza media}(T_1)+1)+\frac{k_2}{k}(altezza media(T_2)+1)      \nonumber \\
+   &\geq & \frac{k_1}{k}(log_2(k_1)+1)+\frac{k_2}{k}(log_2(k_2)+1) \nonumber \\
+   &=&\frac{1}{k}(log_2(2k_1)+log_2(2k_2)) = f(k_1,k_2)
+\end{eqnarray}
+Secondo la condizione che $k_1+k_2=k$, f assume valore minimo quando $k_1=k_2=\frac{k}{2}$ quindi:
+$$ \mbox{altezza media}(T) \geq \frac{1}{k}(\frac{k}{2} log_2(k)+\frac{k}{2} log_2(k))=log_2 (k)$$
+Si incappa dunque in una contraddizione.
+\end{mytheorem}
+\chapter{Search}
+\section{Auswahlproblem (pag 168)}
+Il primo approcio nel cercare di trovare l'i-tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi i-1 elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
+\begin{lstlisting}
+int dividi(int l,r, pivot)
+	/* divide a[l], ... , a[r] in due gruppi
+	   a[l], ..., a[m-1] sono < pivot
+	   a[m], ..., a[m] sono >= pivot
+	   restituisce il valore di m */
+\end{lstlisting}
+Una volta trovato m abbiamo tre possibilità: la chiave si trova nel primo gruppo o nel secondo o l'abbiamo trovata.
+\begin{lstlisting}
+trova (int l,r,i)
+	int m,v
+	if r>l
+		scegliere pivot v
+		m=teile(l,r,v)
+		if i<=m-l
+			trova (l, m-1, i)
+		else
+			trova (m,r,i-m+l
+	else
+		//r=l, qundi i=1
+		//l'elemento si trova nella posizione a[l]	 			
+\end{lstlisting}
+Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece il pivot divide l'array in qn e (1-q)n elementi, con 0.5<q<1 impiega:
+\begin{eqnarray}
+T(n) &=& T(qn)+cn \nonumber \\
+& \leq & cn \sum_{i=0}^{+\infty} q^i = cn \frac{1}{1-q} \in O(n)
+\end{eqnarray}
+Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato "median of median strategy".
+\begin{enumerate}
+\item (caso base) se n<costante calcola l'i-tesimo più piccolo elemento direttamente.
+\item dividi gli n elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
+\item ordina questi gruppi (in tempo costante) e per ogni gruppo trova la mediana. Se il gruppo ha un numero pari di elementi scegli il più grosso degli elementi medi. 
+\item applica l'algoritmo ricorsivamente alle $\lceil \frac{n}{5} \rceil$ mediane per trovare la mediana delle mediane.
+\item utilizza quest'elemento come pivot e procedi normalmente.
+\end{enumerate}
+Questa strategia assicura che ci sono almeno 
+$$ 3(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2) \geq \frac{3n}{10} -6$$
+elementi più piccoli di v. Segue quindi che l'algoritmo deve essere richiamato al massimo $ \lceil \frac{7n}{10} + 6 \rceil$ volte ricorsivamente. Il tempo impiegato è dunque:
+$$ T(n) \leq T\lceil \frac{n}{5} \rceil +T \lceil \frac{7n}{10} +6 \rceil + an \leq ... \leq cn \in O(n) $$
+\section{Sequenzielle Suche (pag 173)}
+Ammettiamo che le n chiavi siano salvate in un array o in una lista. Il modo più semplice per sondare la sequenza è quello di controllare le n chiavi fino ad a trovare l'elemento desiderato. Per fare in modo che l'algoritmo si fermi iniziamo dal fondo e mettiamo uno stopper alla posizione 0.
+\begin{lstlisting}
+sequentialsearch (int k)
+	int i
+	a[0]=k //stopper
+	i=n+1
+	do
+		i--
+	while a[i] != k
+	if i != 0
+		//a[i] elemento ricercato
+	else
+		//non esiste nessun elemento k		
+\end{lstlisting} 
+Chiaramente l'algoritmo impiega 0 passaggi nel miglior caso e n nel peggiore. Nel caso medio:
+$$ \frac{1}{n} \sum_{i=1}^n i = \frac{n+1}{2} \in O(n) $$
+\section{Binäre Suche (pag 174)}
+La ricerca binaria si basa su divide and conquer. Ammettendo di avere un array ordinato si può descrivere l'algoritmo come segue:
+\begin{enumerate}
+\item se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento a[m] (posizione media).
+\item se k $<$ a[m] applica sulla sequenza a[1], ..., a[m-1] lo stesso procedimento.
+\item se k $\geq$ a[m] applica sulla sequenza a[m], ..., a[n] lo stesso procedimento.
+\item se k = a[m] l'elemento è stato trovato.
+\end{enumerate}
+\begin{lstlisting}
+binsearch(int l,r,k)
+	int m=(l+r)/2
+	if l > r
+		//ricerca conclusa senza successo
+	else
+		if k < a[m]
+			binsearch(l, m-1, k)
+		else if k > a[m]
+			binsearch(m+1, r, k)	
+		else
+			//a[m]=k, elemento trovato				
+\end{lstlisting}
+Un'altra variante iterativa è la seguente:
+\begin{lstlisting}
+binsearch(k)
+	int m,l,r
+	l=1
+	r=n
+	do
+		m=(l+r)/2
+		if k < a[m]
+			r=m-1
+		else
+			l=m+1
+	until
+		k=a[m] || l>r
+	if k=a[m]
+		binsearch=m
+	else
+		binsearch=0								
+\end{lstlisting}
+In questo modo una ricerca non impiega più che $\lceil log_2(n+1) \rceil \in O(n) $ passaggi.
+\section{Interpolationsuche (pag 179)}
+Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico "Bernasconi" non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della m:
+$$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
+Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega O(n) paragoni.
 \end{document}
