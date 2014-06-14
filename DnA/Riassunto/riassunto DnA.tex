@@ -597,4 +597,102 @@ Sia $|K|=p$ un numero primo e $a \in \{1, ..., p-1\},b \in \{0, ..., p-1\}$. La 
 $$ h_{a,b}(x)=((ax+b) \mbox{ mod } p) \mbox{ mod } m$$
 La classe di funzioni $H=\{h_{a,b} : 1\leq a < p \mbox{ e } 0\leq b <p\}$ è una classe universale di hash functions. Dimostrazione a pagina 197.
 \end{mytheorem}
+\section{Hashverfahren mit Verkettung der Überläufer (pag 198)}
+Penso sia anche chiamato separate chaining. In ogni caso si tratta di un metodo per gestire le collisioni. Quando due chiavi collidono esse vengono semplicemente salvate in una lista. Questo metodo può essere implementato in due modi differenti, rispettivamente separate Verkettung der Überläufer e direkte Verkettung der Überläufer. Nel primo caso gli elementi della Hashtabelle hanno due campi, uno per il valore e l'altro per il puntatore, mentre nel secondo caso c'è solo un puntatore e tutti gli elementi vengono salvati in una lista esterna. In questo caso la tabella presenta dimensioni più piccole, poiché in ogni voce è salvato solo un puntatore.
+\subsection*{Analisi}
+Poniamo che un indirizzo j abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n$' verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
+$$ C_n '=\frac{n}{m}=\alpha $$
+$$ C_n = 1+\frac{\alpha}{2} $$
+Nell'altro caso cambia solo il tempo della ricerca infruttuosa:
+$$C_n '=\alpha + e^{-\alpha} $$
+I principali vantaggi di "appendere" una lista alle voci dell'hash table sono quelli della facilità di eliminare una voce e che in questo modo è possibile avere un Belegungsfaktor maggiore delle dimensioni della tabella. Il più grande svantaggio è invece rappresentato dal fatto che serve spazio extra oltre alla tabella stessa.
+\section{Offene Hashverfahren}
+Attenzione: da non confondere con open hashing (in inglese si dice open addressing). Questo metodo consiste nel salvare le chiavi in voci libere presenti nella tabella. Si introduce pertanto una nuova funzione s in modo da creare una Sondierungsfolge per la ricerca di altri spazi liberi. Definiamo quindi una funzione s(j,k) in funzione del numero di collisioni e della chiave. k verrà dunque salvato alla posizione:
+$$(h(k)-s(j,k))\mbox{ mod }m$$
+Già a partire da questa definizione si può notare che l'allontanamento di una chiave è problematica. Ad esempio se k' collide con k esso verrà salvato in una voce differente. Eliminando k risulta dunque impossibile ritrovare k'. La soluzione a questo problema è quella di indicare k come eliminato senza però cancellarlo definitivamente finché non viene inserita una nuova chiave al suo posto.
+\subsection*{Vocabolario}
+\begin{itemize}
+\item Search(k): inizia dall'indirizzo i=h(k). Finché t[i] non è libero o l'elemento non è stato trovato vai avanti ed aumenta j. Se si giunge in una casella libera la ricerca è infruttuosa.
+\item Add(k): prima cerca k. Se è già stata inserita non fare nulla, altrimenti inseriscila nella prima posizione libera.
+\item Delete(k): cerca k e marca l'indirizzo i come eliminato. 
+\end{itemize}  
+\begin{lstlisting}
+//Array t
+//Array mark
+
+search(Dato ds)
+	int i,j
+	j=0 //collisioni
+	do
+		i=(h(ds.key)-s(j,ds.key)) mod m
+		j++
+	until
+		t[i].key==ds.key || mark[i]==free
+	if mark[i]=occupied
+		ds.item=t[i].item
+	else
+		print ("Ricerca infruttuosa")
+		
+add (Dato ds)
+	int i,j
+	j=0 //collisioni
+	do
+		i=(h(ds.key)-s(j,ds.key)) mod m
+		j++
+	until
+		mark[i] != occupied 
+		//ammettiamo che la chiave non sia stata inserita in precedenza
+	t[i]=ds
+	mark[i]=occupied
+	
+delete (int k)
+	int i,j
+	j=0 //collisioni
+	do
+		i=(h(ds.key)-s(j,ds.key)) mod m
+		j++
+	until
+		t[i].key==k || mark[i]==free
+	if mark[i]=occupied
+		mark[i]=deleted
+	else
+		print ("Chiave non presente")						
+\end{lstlisting}
+\subsection{Lineares Sondieren}
+$$ s(j,k)=j $$
+Abbastanza inefficiente, poiché grossi pezzi occupati tendono a crescere ancora di più, aumentando così il numero di collisioni.
+$$C_n '=\frac{1}{2} (1+\frac{1}{(1-\alpha)^2}) $$
+$$C_n =\frac{1}{2} (1+\frac{1}{(1-\alpha)}) $$
+\subsection{Quadratisches Sondieren}
+$$s(j,k)=\lceil \frac{j}{2} \rceil ^2(-1)^j$$
+In questo modo si riesce a sondare molto più velocemente, ma il fenomeno del sekundäre Häufung (secondary clustering) influenza l'efficienza. Due sinonimi hanno difatti la stessa sequenza dunrante la ricerca proprio come nel lineares Sondieren.
+$$C_n = 1+\ln ( \frac{1}{1-\alpha})-\frac{\alpha}{2}$$
+$$C_n '= \frac{1}{1-\alpha}-\alpha +\ln ( \frac{1}{1-\alpha})$$
+\subsection{Double hashing}
+$$s(j,k)=jh'(k) $$
+In cui h' è una seconda hash function. Per scegliere una buona funzione h' bisogna essere sicuri che il risultato non sia influenzato dal risultato della prima, quindi che abbiano probabilità disgiunte. Da ricordarsi che $h'(k) \neq 0$ e che non sia divisore di m. Normalmente i tempi sono i seguenti:
+$$ C_n '= \frac{1}{1-\alpha} $$
+$$ C_n = \frac{1}{\alpha} \ln (\frac{1}{1-\alpha})$$
+Grazie all'algoritmo di Brent è però possibile migliorare il tempo della ricerca con successo:
+\begin{lstlisting}
+//hh = la seconda hash function
+
+BrentEinfuegen (Datensatz ds)
+	int i, b, bb
+	i=h(ds.key)
+	while mark[i]=occupied
+		b=(i-hh(ds.key)) mod m
+		bb=(i-hh(t[i].key)) mod m
+		if mark[b]==free || mark[bb]=occupied
+			i=b
+		else
+			swap (da, t[i])
+			i=bb
+	t[i]=ds
+	mark[i]=occupied			
+\end{lstlisting}
+Grazie a questo algoritmo il tempo diventa il seguente:
+$$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
+\section{Dynamische Hashverfahren}
+//TODO: voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!
 \end{document}
