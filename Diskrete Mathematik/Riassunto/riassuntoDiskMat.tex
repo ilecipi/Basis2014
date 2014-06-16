@@ -1,10 +1,15 @@
 \documentclass[a4paper]{report}
-\usepackage{framed}
+\usepackage{framed}%Used for the definition environment
+\usepackage{enumerate}%Custom enumerates using \begin{enumerate}[yourListItem]
+\usepackage{multicol}
 
 
+
+%Environment for the definitions
 \newenvironment{definition}[1]{\begin{framed}\centerline{\textbf{Definition #1}}\noindent\hspace{-1.1mm}}{\end{framed}}
 
 \begin{document}
+\tableofcontents
 \chapter{Introduction and Motivation}
 \section{Discrete Mathematics and Computer Science}
 Discrete Mathematics is concerned with finite and countably infinite mathematical structures. There are at least three major reasons why discrete mathematics is of central importance in computer science
@@ -49,7 +54,141 @@ Certain proofs are too complex to be carried out and verified ``by hand''. A com
 A formal proof requires the formalization of the arguments and can lead to a deeper understanding (also for the author of the proof).
 \end{itemize}
 \subsection{The Role of Logic}
-%PAGE 10
+Logic defines the syntax of language for expressing statements and the semantics of such a language, defining which statements are true and which are false. A logical calculus allows to express and verify proofs in a purely syntactic fashion, for example by a computer. 
+\section{Propositions and Logical Formulas}
+\subsection{Propositions, True and False}
+\begin{definition}{2.2}
+A proposition is a (mathematical) statement that is either \emph{true} or \emph{false}. Alternative terms for ``proposition'' are assertion, claim or simply statement. 
+\end{definition}
+Statements like ``Bob loves Carol'', ``it is raining'', and ``birds can fly'' are NOT (mathematical) propositions, unless we assume that the validity of these statements is defined (outside of mathematics, e.g. by common sense) to be a fixed, constant value (true or false).
 
+\begin{definition}{2.3}
+A true proposition is often called a \emph{theorem}, a \emph{lemma}, or a \emph{corollary}
+\end{definition}
+There is no fixed naming convention, but the term ``theorem'' is usually used for an important result, whereas a lemma is an intermediate, often technical result, possibly used in several subsequent proofs. A corollary is a simple consequence (e.g. a special case) of a theorem or lemma.
+
+\subsection{Logical constants, Operators and Formulas}
+\begin{definition}{2.4}
+The Logical values (constants) ``true'' and ``false'' are usually denoted as 1 and 0, respectively. 
+\end{definition}
+\begin{definition}{2.5}
+\begin{enumerate}[i)]
+\item The \emph{negation} (Logical NOT) of a proposition $A$, denoted as $\lnot A$, is true if and only if $A$ is false.
+\item The \emph{conjunction} (Logical AND) of two propositions $A$ and $B$, denoted $A\land B$, is true if and only if both $A$ and $B$ are true.
+\item The \emph{disjunction} (Logical OR) of two propositions $A$ and $B$, denoted $A\lor B$, is true if and only if $A$ or $B$ (or both) are true
+\end{enumerate}
+\end{definition}
+\begin{multicols}{3}
+\null \vfill
+\begin{displaymath}
+\begin{array}{c||c}
+   A
+ & \lnot{}A \\
+\hline
+0 & 1 \\
+1 & 0 \\
+\end{array}
+\end{displaymath}
+\null \vfill
+\columnbreak
+\null \vfill
+\begin{displaymath}
+\begin{array}{c|c||c}
+   A
+ & B
+ & A\land{}B \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\end{array}
+\end{displaymath}
+\null \vfill
+\columnbreak
+\null \vfill
+\begin{displaymath}
+\begin{array}{c|c||c}
+   A
+ & B
+ & A\lor{}B \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+1 & 1 & 1 \\
+\end{array}
+\end{displaymath}
+\null \vfill
+\end{multicols}
+Logical operators can also be combined, in the usual way of combining functions. For example, if A, B and C are propositions, then
+\[ A\lor (B\land C)\] is also a proposition. Its function table is
+\begin{displaymath}
+\begin{array}{c|c|c||c}
+   A
+ & B
+ & C
+ & A\lor{}(B\land{}C) \\
+\hline
+0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 1 & 1 & 1 \\
+1 & 0 & 0 & 1 \\
+1 & 0 & 1 & 1 \\
+1 & 1 & 0 & 1 \\
+1 & 1 & 1 & 1 \\
+\end{array}
+\end{displaymath}
+\begin{definition}{2.6}
+A correctly formed expression involving propositional symbols (like $A,B,C,\dots$) and logical operators is called a \emph{formula} (of propositional logic)
+\end{definition}
+We introduce a new, derived logical operator: \emph{implication}, denoted as $A\to B$ and defined by\footnote{The symbol $:\Longleftrightarrow$ simply means that the left side (here $A\to B$) is defined to mean the right side (here $\lnot A\lor B$)}
+\begin{multicols}{2}
+\null\vfill
+\[A\to B:\Longleftrightarrow\lnot A\lor B\]
+\null\vfill
+\columnbreak
+\null\vfill
+\begin{displaymath}
+\begin{array}{c|c||c}
+   A
+ & B
+ &A\to B \\
+\hline
+0 & 0 & 1 \\
+0 & 1 & 1 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\end{array}
+\end{displaymath}
+\null\vfill
+\end{multicols}
+\subsubsection*{Example 2.2}
+Consider the following sentence: If you read the lecture note every week and do the exercises ($A$), then you will get a good grade in the exam ($B$). This is an example of an implication $A\to B$. Saying that $A\to B$ is true does not mean that $A$ is true and it is not excluded that $B$ is true even if $A$ is false, but it is excluded that $B$ is false when $A$ is true.\\
+
+\emph{Two-sided implication}, denoted $A\leftrightarrow B$, is defined as follows\footnote{Note that $A\equiv B$ holds if and only if $A\leftrightarrow B$ is true, but $A\equiv B$ itself is not a logical formula.}: 
+\begin{multicols}{2}
+\null\vfill
+\[A\leftrightarrow B:\Longleftrightarrow (A\to B)\land (B\to A)\]
+\null\vfill
+\columnbreak
+\null\vfill
+\begin{displaymath}
+\begin{array}{c|c||c}
+   A
+ & B
+ & A\leftrightarrow B \\
+\hline
+0 & 0 & 1 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\end{array}
+\end{displaymath}
+\null\vfill
+\end{multicols}
+Parenthesis can sometimes be dropped in a formula without changing its meaning, for example we can write $A\lor B\lor C$ instead of $A\lor (B\lor C)$ or $(A\lor B)\lor C$. Namely, $\land$ and $\lor$ bind stronger than $\to$ and $\leftrightarrow$. Also, $\lnot$ binds stronger than $\land$ and $\lor$. For example, we can write $A\lor \lnot B\to B\land C$ instead of $(A\lor (\lnot B))\to (B\land C)$
+\subsection{Formulas as Functions and Logical Equivalence}
 
 \end{document}
