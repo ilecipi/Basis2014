@@ -1,7 +1,7 @@
 \documentclass[a4paper, 9pt, DIV=24]{scrartcl}
 \usepackage[utf8]{inputenc}
 
-\usepackage[ngerman]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -133,7 +133,24 @@ Sei im Folgenden $\Omega, A \subseteq \R^d$.
 
 \clearpage
 \section{Mittleres}
-
+\subsection{Reellen Zahlen}
+\subsubsection{Ordnungsvollständigkeitaxiom}
+Seien $A, B \subset \R$ nicht leere Teilmengen, so dass $a\leq b, \forall a \in A, b \in B$ gilt. Dann $\exists c \in \R : a\leq c \leq b$.
+\subsubsection{Youngsche Ungleichung}
+$$\forall a, b \in R, \delta >0 \mbox{ gilt } 2|ab|\leq \delta a^2+\frac{b^2}{\delta}$$
+\subsubsection{Infimum und Supremum}
+Sei $X \subset \R$.
+\begin{itemize}
+\item X nach oben beschränkt falls $\exists c \in \R : x\leq c, \forall x \in X$.
+\item Ein Element $a \in X$ heisst Maximum falls $x\leq a, \forall x \in X$.
+\item Die kleinste obere Schranke heisst Supremum.
+\end{itemize}
+\subsubsection{Archimedisches Eigenschaft}
+\begin{itemize}
+\item Zu jeder Zahl $0 < b \in \R \exists n \in \N : b<n$
+\item Seien $x>0, y \in \R $ gegeben. Dann $\exists n \in Z : y<nx$
+\item $x,y,a \in \R (a\leq x \leq a+\frac{y}{n}, \forall n \in N) \rightarrow x=a$
+\end{itemize}
 \subsection{Zwischenwertsatz}
 \subsection{Folgen}
 \subsubsection{Definitionen}
