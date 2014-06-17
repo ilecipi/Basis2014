@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{color}
+\usepackage{todonotes}
 \usepackage{listings}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -46,6 +47,8 @@ Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim\limits_{x \rightarrow 
 \section{Algoritmo di Karatsuba (pag 12)}
 Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguente:
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
+oppure, scritto in un altro modo:
+\[ac*bd=100*ac+10*ac+10*bd+bd+10(a-b)(d-c)\]
 In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
 \section{Maximum subarray (pag 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
@@ -357,7 +360,7 @@ radixexchangesort(int[] a, int l,r,b)
 \subsection*{Analisi}
 L'algoritmo viene richiamato al massimo $b$ volte ed ogni volta impiega $O(n)$ paragoni e movimenti. In totale impiega dunque $O(bn)$ (tempo pseudo polinomiale). Se $b> \log (n)$ radixsort non è l'algoritmo adeguato al problema.
 \subsection{Fachverteilung}
-Questo algoritmo viene spesso anche chiamato bucket sort, poiché vengono utilizzati dei bucket per ordinare i numeri. L'idea di base è semplice: per ordinare una serie di numeri con m cifre si inizia ad ordinarli dividendoli in bucket rappresentanti la cifra, sempre da destra a sinistra, dal basso all'alto. Dopo uno step bisogna "raccogliere" nuovamente la sequenza dai bucket e rieseguire il procedimento con la cifra successiva. Dopo m step la sequenza è ordinata. L'algoritmo può praticamente essere diviso in due parti, dividere e raccogliere.
+Questo algoritmo viene spesso anche chiamato bucket sort, poiché vengono utilizzati dei bucket per ordinare i numeri. L'idea di base è semplice: per ordinare una serie di numeri con $m$ cifre si inizia ad ordinarli dividendoli in bucket rappresentanti la cifra, sempre da destra a sinistra, dal basso all'alto. Dopo uno step bisogna "raccogliere" nuovamente la sequenza dai bucket e rieseguire il procedimento con la cifra successiva. Dopo $m$ step la sequenza è ordinata. L'algoritmo può praticamente essere diviso in due parti, dividere e raccogliere.
 \subsubsection*{Esempio}
 Sequenza originale: 40, 13, 22, 54, 15, 28.Primo step:    
 \[\begin{array}{*{20}{c}}
@@ -372,7 +375,7 @@ La sequenza provvisoria diventa 40, 22, 13, 54, 15, 28. Secondo step:
 \end{array}\]
 Il risultato finale, letto da sinistra a destra e dal basso all'alto è quindi: 13, 15, 22, 28, 40, 54.
 \subsubsection*{Implementazione}
-Un approcio naiv sarebbe quello di creare m bucket di dimensione n, in modo che nel peggior caso tutti i valori starebbero in un solo bucket. Questo però comporterebbe a O(mn) spazio extra, quando realmente ne serve solo $\Theta (n)$ (ci sono sempre esattamente n elementi). Ci sono due possibili soluzioni al problema. La prima è di usare liste lineari dalla dimensione non fissa, la seconda è quella di sondare quanti elementi andranno in ciascun bucket e dividere un array di dimensione fissa in m scompartimenti tramite degli indici di divisione (Verteilungszahlen). Analizziamo dapprima la prima possibilità:
+Un approcio naiv sarebbe quello di creare $m$ bucket di dimensione $n$, in modo che nel peggior caso tutti i valori starebbero in un solo bucket. Questo però comporterebbe a $O(mn)$ spazio extra, quando realmente ne serve solo $\Theta (n)$ (ci sono sempre esattamente $n$ elementi). Ci sono due possibili soluzioni al problema. La prima è di usare liste lineari dalla dimensione non fissa, la seconda è quella di sondare quanti elementi andranno in ciascun bucket e dividere un array di dimensione fissa in $m$ scompartimenti tramite degli indici di divisione (Verteilungszahlen). Analizziamo dapprima la prima possibilità:
 \begin{lstlisting}
 radixsort_list(int[] a)
 	List<Integer>[] l=new List<Integer>[m]
@@ -424,27 +427,27 @@ Entrambe le implementazioni richiedono $O(l(m+n))$ passaggi e memoria di $O(n+m)
 \section{Untere Schranke (pag 153)}
 Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne radix sort) impiegano almeno $\Omega (n \log (n))$. 
 \begin{mytheorem}{2.4}
-Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare n chiavi.
+Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare $n$ chiavi.
 \paragraph*{Dimostrazione}
-Per dimostrare questo teorema valutiamo tutte le possibili n! permutazioni di n chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo i:j rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono n! permutazioni possibili devono per forza esserci n! foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con k foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
+Per dimostrare questo teorema valutiamo tutte le possibili $n!$ permutazioni di $n$ chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo $i:j$ rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono $n!$ permutazioni possibili devono per forza esserci $n!$ foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con $k$ foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
 $$ log (k!) \geq \log ((\frac{n}{2})^{\frac{n}{2}}) = \frac{n}{2} \log (\frac{n}{2}) \in \Omega (n \log (n))$$
 \end{mytheorem}
 \begin{mytheorem}{2.4.1}
-L'altezza massima e media di un albero binario con k chiavi è di almeno $ log_2 (k)$.
+L'altezza massima e media di un albero binario con $k$ chiavi è di almeno $ log_2 (k)$.
 \paragraph*{Dimostrazione}
-La prima parte è triviale, in quanto un albero di altezza t può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia T il più piccolo albero per cui l'ipotesi non regge. T ha k foglie, dunque $k \geq 2$ e T deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ folgie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di T, allora le loro altezze medie devono essere maggiori di $log_2(k_1)$ e rispettivamente $log_2 (k_2)$. Ovviamente l'altezza media di T deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
+La prima parte è triviale, in quanto un albero di altezza $t$ può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia $T$ il più piccolo albero per cui l'ipotesi non regge. $T$ ha $k$ foglie, dunque $k \geq 2$ e $T$ deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ foglie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di $T$, allora le loro altezze medie devono essere maggiori di $log_2(k_1)$ e rispettivamente $log_2 (k_2)$. Ovviamente l'altezza media di $T$ deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
 \begin{eqnarray}
  altezza media(T) &=&  \frac{k_1}{k}(\mbox{altezza media}(T_1)+1)+\frac{k_2}{k}(altezza media(T_2)+1)      \nonumber \\
    &\geq & \frac{k_1}{k}(log_2(k_1)+1)+\frac{k_2}{k}(log_2(k_2)+1) \nonumber \\
    &=&\frac{1}{k}(log_2(2k_1)+log_2(2k_2)) = f(k_1,k_2)
 \end{eqnarray}
-Secondo la condizione che $k_1+k_2=k$, f assume valore minimo quando $k_1=k_2=\frac{k}{2}$ quindi:
+Secondo la condizione che $k_1+k_2=k$, $f$ assume valore minimo quando $k_1=k_2=\frac{k}{2}$ quindi:
 $$ \mbox{altezza media}(T) \geq \frac{1}{k}(\frac{k}{2} log_2(k)+\frac{k}{2} log_2(k))=log_2 (k)$$
 Si incappa dunque in una contraddizione.
 \end{mytheorem}
 \chapter{Search}
 \section{Auswahlproblem (pag 168)}
-Il primo approcio nel cercare di trovare l'i-tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi i-1 elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
+Il primo approcio nel cercare di trovare l'$i-$tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi $i-1$ elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
 \begin{lstlisting}
 int dividi(int l,r, pivot)
 	/* divide a[l], ... , a[r] in due gruppi
@@ -452,7 +455,7 @@ int dividi(int l,r, pivot)
 	   a[m], ..., a[m] sono >= pivot
 	   restituisce il valore di m */
 \end{lstlisting}
-Una volta trovato m abbiamo tre possibilità: la chiave si trova nel primo gruppo o nel secondo o l'abbiamo trovata.
+Una volta trovato $m$ abbiamo tre possibilità: la chiave si trova nel primo gruppo o nel secondo o l'abbiamo trovata.
 \begin{lstlisting}
 trova (int l,r,i)
 	int m,v
@@ -467,25 +470,25 @@ trova (int l,r,i)
 		//r=l, qundi i=1
 		//l'elemento si trova nella posizione a[l]	 			
 \end{lstlisting}
-Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece il pivot divide l'array in qn e (1-q)n elementi, con 0.5<q<1 impiega:
+Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece il pivot divide l'array in $qn$ e $(1-q)n$ elementi, con $0.5<q<1$ impiega:
 \begin{eqnarray}
 T(n) &=& T(qn)+cn \nonumber \\
 & \leq & cn \sum_{i=0}^{+\infty} q^i = cn \frac{1}{1-q} \in O(n)
 \end{eqnarray}
 Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato "median of median strategy".
 \begin{enumerate}
-\item (caso base) se n<costante calcola l'i-tesimo più piccolo elemento direttamente.
-\item dividi gli n elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
+\item (caso base) se $n<$costante calcola l'$i-$tesimo più piccolo elemento direttamente.
+\item dividi gli $n$ elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
 \item ordina questi gruppi (in tempo costante) e per ogni gruppo trova la mediana. Se il gruppo ha un numero pari di elementi scegli il più grosso degli elementi medi. 
 \item applica l'algoritmo ricorsivamente alle $\lceil \frac{n}{5} \rceil$ mediane per trovare la mediana delle mediane.
 \item utilizza quest'elemento come pivot e procedi normalmente.
 \end{enumerate}
 Questa strategia assicura che ci sono almeno 
 $$ 3(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2) \geq \frac{3n}{10} -6$$
-elementi più piccoli di v. Segue quindi che l'algoritmo deve essere richiamato al massimo $ \lceil \frac{7n}{10} + 6 \rceil$ volte ricorsivamente. Il tempo impiegato è dunque:
+elementi più piccoli di $v$. Segue quindi che l'algoritmo deve essere richiamato al massimo $ \lceil \frac{7n}{10} + 6 \rceil$ volte ricorsivamente. Il tempo impiegato è dunque:
 $$ T(n) \leq T\lceil \frac{n}{5} \rceil +T \lceil \frac{7n}{10} +6 \rceil + an \leq ... \leq cn \in O(n) $$
 \section{Sequenzielle Suche (pag 173)}
-Ammettiamo che le n chiavi siano salvate in un array o in una lista. Il modo più semplice per sondare la sequenza è quello di controllare le n chiavi fino ad a trovare l'elemento desiderato. Per fare in modo che l'algoritmo si fermi iniziamo dal fondo e mettiamo uno stopper alla posizione 0.
+Ammettiamo che le $n$ chiavi siano salvate in un array o in una lista. Il modo più semplice per sondare la sequenza è quello di controllare le $n$ chiavi fino ad a trovare l'elemento desiderato. Per fare in modo che l'algoritmo si fermi iniziamo dal fondo e mettiamo uno stopper alla posizione 0.
 \begin{lstlisting}
 sequentialsearch (int k)
 	int i
@@ -499,15 +502,15 @@ sequentialsearch (int k)
 	else
 		//non esiste nessun elemento k		
 \end{lstlisting} 
-Chiaramente l'algoritmo impiega 0 passaggi nel miglior caso e n nel peggiore. Nel caso medio:
+Chiaramente l'algoritmo impiega 0 passaggi nel miglior caso e $n$ nel peggiore. Nel caso medio:
 $$ \frac{1}{n} \sum_{i=1}^n i = \frac{n+1}{2} \in O(n) $$
 \section{Binäre Suche (pag 174)}
 La ricerca binaria si basa su divide and conquer. Ammettendo di avere un array ordinato si può descrivere l'algoritmo come segue:
 \begin{enumerate}
-\item se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento a[m] (posizione media).
-\item se k $<$ a[m] applica sulla sequenza a[1], ..., a[m-1] lo stesso procedimento.
-\item se k $\geq$ a[m] applica sulla sequenza a[m], ..., a[n] lo stesso procedimento.
-\item se k = a[m] l'elemento è stato trovato.
+\item se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento $a[m]$ (posizione media).
+\item se $k < a[m]$ applica sulla sequenza $a[1],\dots, a[m-1]$ lo stesso procedimento.
+\item se $k \geq a[m]$ applica sulla sequenza $a[m],\dots, a[n]$ lo stesso procedimento.
+\item se $k = a[m]$ l'elemento è stato trovato.
 \end{enumerate}
 \begin{lstlisting}
 binsearch(int l,r,k)
@@ -543,34 +546,34 @@ binsearch(k)
 \end{lstlisting}
 In questo modo una ricerca non impiega più che $\lceil log_2(n+1) \rceil \in O(n) $ passaggi.
 \section{Interpolationsuche (pag 179)}
-Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico "Bernasconi" non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della m:
+Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico "Bernasconi" non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della $m$:
 $$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
-Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega O(n) paragoni.
+Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega $O(n)$ paragoni.
 \section{Selbstanordnende lineare Liste (pag 180)}
-Ammettiamo di avere una lista contenente n chiavi. Per cercare e dunque accedere all'i-tesimo elemento impieghiamo i paragoni. Avrebbe senso spostare gli elementi più ricercati all'inizio della lista. Consideriamo pertanto alcune strategie: 
+Ammettiamo di avere una lista contenente $n$ chiavi. Per cercare e dunque accedere all'$i-$tesimo elemento impieghiamo $i$ paragoni. Avrebbe senso spostare gli elementi più ricercati all'inizio della lista. Consideriamo pertanto alcune strategie: 
 \begin{itemize}
 \item Move to front: l'elemento ricercato viene spostato all'inizio della lista
 \item Transpose: l'elemento ricercato viene spostato una posizione all'indietro (scambiato con il vicino a sinistra)
-\item Frequency count: ad ogni elemento viene abbinato un contatore. Inizialmente esso è 0 ma ad ogni accesso aumenta di un'unità. La lista viene sempre ordinata in modo che ogni i contatori di frequeza (Häufigkeitszähler) siano ordinati in ordine decrescente. 
+\item Frequency count: ad ogni elemento viene abbinato un contatore. Inizialmente esso è 0 ma ad ogni accesso aumenta di un'unità. La lista viene sempre ordinata in modo che ogni $i$ contatori di frequenza (Häufigkeitszähler) siano ordinati in ordine decrescente. 
 \end{itemize}
-Qual'è la migliore strategia? Si può notare che la transpose strategy presenta alcuni problemi se si accede ogni volta ad elementi adiacenti in modo alternato, ad esempio n,  n-1, n, ... In generale move to front è la tecnica migliore, anche perché non necessita di spazio extra (per salvare gli indici).
+Qual'è la migliore strategia? Si può notare che la transpose strategy presenta alcuni problemi se si accede ogni volta ad elementi adiacenti in modo alternato, ad esempio $n,n-1,n,\dots$ In generale move to front è la tecnica migliore, anche perché non necessita di spazio extra (per salvare gli indici).
 \begin{mytheorem}{3.2}
-Per qualsiasi algoritmo A di auto ordinamento di liste e per qualsiasi successione s di m operazioni d'accesso vale:
+Per qualsiasi algoritmo $A$ di auto ordinamento di liste e per qualsiasi successione $s$ di $m$ operazioni d'accesso vale:
 $$ C_{MF}(s) \leq 2C_A(s)+X_A(s)-F_A(s)-m $$
-Dove C indica i costi delle operazioni, F il numero delle operazioni gratuite e X il numero delle operazioni a pagamento. In altre parole move to front non può essere più di due volte peggio di qualsiasi altro algoritmo. La dimostrazione per analisi ammortizzata si trova da pagina 183 a 186.
+Dove $C$ indica i costi delle operazioni, $F$ il numero delle operazioni gratuite e $X$ il numero delle operazioni a pagamento. In altre parole move to front non può essere più di due volte peggio di qualsiasi altro algoritmo. La dimostrazione per analisi ammortizzata si trova da pagina 183 a 186.
 \end{mytheorem}
 \chapter{Hashing}
-Al posto di salvare gli elementi in una lista e cercarli tramite comparazioni si può salvare ogni elemento ad un determinato indice e calcolare dove si trova in modo matematico. Questo è il principio di una hash table. La funzione che collega le chiavi all'indirizzo di allocamento (m posizioni possibili) è detta Hashfunktion (hash function):
+Al posto di salvare gli elementi in una lista e cercarli tramite comparazioni si può salvare ogni elemento ad un determinato indice e calcolare dove si trova in modo matematico. Questo è il principio di una hash table. La funzione che collega le chiavi all'indirizzo di allocamento ($m$ posizioni possibili) è detta Hashfunktion (hash function):
 $$h: K \rightarrow \{0,..., m-1\}$$
-Questa funzione non deve essere forzatamente iniettiva, difatti due chiavi con $h(k)=h(k')$ sono dette sinonimi. Quando questo accade succede però anche una collisione, che vedremo come trattare. Per una tabella di grandezza m contenente n chiavi definiamo $\alpha = \frac{n}{m} $ come il fattore di utilizzazione (Belegungsfaktor, utilization factor). Una buona hash function deve essere facile da computare ed evitare il maggior numero possibile di collisioni.
+Questa funzione non deve essere forzatamente iniettiva, difatti due chiavi con $h(k)=h(k')$ sono dette sinonimi. Quando questo accade succede però anche una collisione, che vedremo come trattare. Per una tabella di grandezza $m$ contenente $n$ chiavi definiamo $\alpha = \frac{n}{m} $ come il fattore di utilizzazione (Belegungsfaktor, utilization factor). Una buona hash function deve essere facile da computare ed evitare il maggior numero possibile di collisioni.
 Nel nostro caso utilizziamo il cossiddeto Division-Rest-Methode, ma esistono anche altri metodi, quale la multiplicazione della chiave con un numero irrazionale. Comunque
 $$ h(k)=k \mbox{ mod }m$$
-Una buona scelta per m è che sia un numero primo.
+Una buona scelta per $m$ è che sia un numero primo.
 \section{Hashing perfetto ed universale}
 Se il numero di chiavi possibili è minore alla grandezza della tabella e già conosciuto in partenza possiamo costruire una funzione di hashing iniettiva che evita qualsiasi collisione. In questo caso si parla di hashing perfetto (perfektes Hashing).
-Nella maggior parte dei casi non sappiamo però se è possibile evitare collisioni. Sia H una collezione finita di hash functions. H si chiama universale se per ogni diversa coppia di chiavi x e y vale:
+Nella maggior parte dei casi non sappiamo però se è possibile evitare collisioni. Sia $H$ una collezione finita di hash functions. $H$ si chiama universale se per ogni diversa coppia di chiavi $x$ e $y$ vale:
 $$ \frac{|\{h\in H: h(x)=h(y)\}|}{|H|} \leq \frac{1}{m}$$
-In altre parole H è universale se per ogni coppia di chiavi differenti al massimo la m-esima parte delle funzioni porta ad una collisione. La probabilità che due chiavi collidano con una funzione di H è dunque al massimo 1/m. Per una funzione h e due chiavi x e y definiamo:
+In altre parole $H$ è universale se per ogni coppia di chiavi differenti al massimo la $m-$esima parte delle funzioni porta ad una collisione. La probabilità che due chiavi collidano con una funzione di $H$ è dunque al massimo $1\over m$. Per una funzione $h$ e due chiavi $x$ e $y$ definiamo:
 $$
 \delta (x,y,h) =
 \left\{
@@ -580,11 +583,11 @@ $$
 \end{array}
 \right.
 $$
-Per un insieme di chiavi Y, rispettivamente di funzioni H:
+Per un insieme di chiavi $Y$, rispettivamente di funzioni $H$:
 $$\delta (x,Y,h)= \sum_{y \in Y} \delta (x,y,h)$$
 $$\delta (x,y,H)= \sum_{h \in H} \delta (x,y,h)$$
-H è universale quando per due differenti chiavi x e y $\delta (x,y,H) \leq \frac{|H|}{m}$.
-Ammettiamo che vogliamo aggiungere la chiave x ad un'hash table universale in cui è già stata salvata una successione S di elementi. Calcoliamo quindi l'Erwartungswert (penso sia il numero di elementi che andrà a collidere con x, pf verificare):
+$H$ è universale quando per due differenti chiavi $x$ e $y$: $\delta (x,y,H) \leq \frac{|H|}{m}$.
+Ammettiamo che vogliamo aggiungere la chiave $x$ ad un'hash table universale in cui è già stata salvata una successione $S$ di elementi. Calcoliamo quindi l'Erwartungswert (penso sia il numero di elementi che andrà a collidere con $x$, pf verificare):\todo{Verificare!}
 \begin{eqnarray}
 E[\delta (x,S,h)] &=& \frac{1}{|H|} \sum_{h \in H} \delta (x,S,h) \nonumber \\
 &=& \frac{1}{|H|} \sum_{y \in S} \delta (x,y,H) \nonumber \\
@@ -600,21 +603,21 @@ La classe di funzioni $H=\{h_{a,b} : 1\leq a < p \mbox{ e } 0\leq b <p\}$ è una
 \section{Hashverfahren mit Verkettung der Überläufer (pag 198)}
 Penso sia anche chiamato separate chaining. In ogni caso si tratta di un metodo per gestire le collisioni. Quando due chiavi collidono esse vengono semplicemente salvate in una lista. Questo metodo può essere implementato in due modi differenti, rispettivamente separate Verkettung der Überläufer e direkte Verkettung der Überläufer. Nel primo caso gli elementi della Hashtabelle hanno due campi, uno per il valore e l'altro per il puntatore, mentre nel secondo caso c'è solo un puntatore e tutti gli elementi vengono salvati in una lista esterna. In questo caso la tabella presenta dimensioni più piccole, poiché in ogni voce è salvato solo un puntatore.
 \subsection*{Analisi}
-Poniamo che un indirizzo j abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n$' verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
+Poniamo che un indirizzo $j$ abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n$' verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
 $$ C_n '=\frac{n}{m}=\alpha $$
 $$ C_n = 1+\frac{\alpha}{2} $$
 Nell'altro caso cambia solo il tempo della ricerca infruttuosa:
 $$C_n '=\alpha + e^{-\alpha} $$
 I principali vantaggi di "appendere" una lista alle voci dell'hash table sono quelli della facilità di eliminare una voce e che in questo modo è possibile avere un Belegungsfaktor maggiore delle dimensioni della tabella. Il più grande svantaggio è invece rappresentato dal fatto che serve spazio extra oltre alla tabella stessa.
 \section{Offene Hashverfahren}
-Attenzione: da non confondere con open hashing (in inglese si dice open addressing). Questo metodo consiste nel salvare le chiavi in voci libere presenti nella tabella. Si introduce pertanto una nuova funzione s in modo da creare una Sondierungsfolge per la ricerca di altri spazi liberi. Definiamo quindi una funzione s(j,k) in funzione del numero di collisioni e della chiave. k verrà dunque salvato alla posizione:
+Attenzione: da non confondere con open hashing (in inglese si dice open addressing). Questo metodo consiste nel salvare le chiavi in voci libere presenti nella tabella. Si introduce pertanto una nuova funzione $s$ in modo da creare una Sondierungsfolge per la ricerca di altri spazi liberi. Definiamo quindi una funzione $s(j,k)$ in funzione del numero di collisioni e della chiave. $k$ verrà dunque salvato alla posizione:
 $$(h(k)-s(j,k))\mbox{ mod }m$$
-Già a partire da questa definizione si può notare che l'allontanamento di una chiave è problematica. Ad esempio se k' collide con k esso verrà salvato in una voce differente. Eliminando k risulta dunque impossibile ritrovare k'. La soluzione a questo problema è quella di indicare k come eliminato senza però cancellarlo definitivamente finché non viene inserita una nuova chiave al suo posto.
+Già a partire da questa definizione si può notare che l'allontanamento di una chiave è problematica. Ad esempio se $k'$ collide con $k$ esso verrà salvato in una voce differente. Eliminando $k$ risulta dunque impossibile ritrovare $k'$. La soluzione a questo problema è quella di indicare $k$ come eliminato senza però cancellarlo definitivamente finché non viene inserita una nuova chiave al suo posto.
 \subsection*{Vocabolario}
 \begin{itemize}
-\item Search(k): inizia dall'indirizzo i=h(k). Finché t[i] non è libero o l'elemento non è stato trovato vai avanti ed aumenta j. Se si giunge in una casella libera la ricerca è infruttuosa.
-\item Add(k): prima cerca k. Se è già stata inserita non fare nulla, altrimenti inseriscila nella prima posizione libera.
-\item Delete(k): cerca k e marca l'indirizzo i come eliminato. 
+\item Search(k): inizia dall'indirizzo $i=h(k)$. Finché $t[i]$ non è libero o l'elemento non è stato trovato vai avanti ed aumenta $j$. Se si giunge in una casella libera la ricerca è infruttuosa.
+\item Add(k): prima cerca $k$. Se è già stata inserita non fare nulla, altrimenti inseriscila nella prima posizione libera.
+\item Delete(k): cerca $k$ e marca l'indirizzo $i$ come eliminato. 
 \end{itemize}  
 \begin{lstlisting}
 //Array t
@@ -670,7 +673,7 @@ $$C_n = 1+\ln ( \frac{1}{1-\alpha})-\frac{\alpha}{2}$$
 $$C_n '= \frac{1}{1-\alpha}-\alpha +\ln ( \frac{1}{1-\alpha})$$
 \subsection{Double hashing}
 $$s(j,k)=jh'(k) $$
-In cui h' è una seconda hash function. Per scegliere una buona funzione h' bisogna essere sicuri che il risultato non sia influenzato dal risultato della prima, quindi che abbiano probabilità disgiunte. Da ricordarsi che $h'(k) \neq 0$ e che non sia divisore di m. Normalmente i tempi sono i seguenti:
+In cui $h'$ è una seconda hash function. Per scegliere una buona funzione $h'$ bisogna essere sicuri che il risultato non sia influenzato dal risultato della prima, quindi che abbiano probabilità disgiunte. Da ricordarsi che $h'(k) \neq 0$ e che non sia divisore di $m$. Normalmente i tempi sono i seguenti:
 $$ C_n '= \frac{1}{1-\alpha} $$
 $$ C_n = \frac{1}{\alpha} \ln (\frac{1}{1-\alpha})$$
 Grazie all'algoritmo di Brent è però possibile migliorare il tempo della ricerca con successo:
