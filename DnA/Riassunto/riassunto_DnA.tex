@@ -7,6 +7,8 @@
 \usepackage{color}
 \usepackage{todonotes}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -697,5 +699,85 @@ BrentEinfuegen (Datensatz ds)
 Grazie a questo algoritmo il tempo diventa il seguente:
 $$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
 \section{Dynamische Hashverfahren}
-//TODO: voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!
+\todo{voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!?}
+\chapter{Bäume}
+A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
+\section{AVL-Tree (pag. 284)}
+Abbiamo visto che un albero binario naturale può degradare ad una lista. In tal caso la ricerca di un elemento richiede un tempo pari a $\Theta (n)$, poiché l'altezza dell'albero diventa n e non più log(n). Gli alberi AVL mantengono invece questa proprietà: essi sono difatti nominati balancierte Binärbäume (self-balancing binary trees). La condizione di base è difatti che per ogni nodo dell'albero l'altezza del figlio sinistro differisce da quello destro di al massimo 1. Può essere dimostrato che un albero AVL di altezza h contiene al minimo n elementi, dove:
+$$ n\geq F_{h+2} = 1,7171*1,618^h$$
+Quindi risolvendo secondo l'altezza:
+$$ h\leq 1,44 log_2 (n)+1 \in O(log(n))$$
+\subsection*{Suchen}
+È dunque chiaro che applicando la ricerca come in normali alberi binari ordinati si impiega sempre O(log(n)).
+\subsection*{Einfügen}
+Non è sempre detto che aggiungendo un elemento all'albero esso mantenga le sue proprietà AVL. Definiamo dunque:
+$$ bal(p)=\mbox{ Altezza del sottoalbero di destra - altezza sottoalbero di sinistra}$$
+Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura upin(p), dove p è il padre della nuova chiave. La condizione di uscita dal metodo upin è che bal(p) diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di O(log(n)) volte. Definiamo con pp il padre della chiave p. Ci sono due casi: p è il figlio sinistro di pp o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli "aggiornamenti" della variabile bal, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
+\begin{center}
+\includegraphics[scale=0.6]{singlerot.jpg}
+\includegraphics[scale=0.55]{doublerot.jpg}
+\end{center}
+\subsection*{Entfernen}
+\begin{enumerate}
+\item Se la chiave che si vuole allontanare non ha figli la si elimina direttamente e si chiama il metodo upout(p) al padre (analogo a upin)
+\item Se la chiave p ha un solo figlio q per forza q non può avere figli. q prende quindi la posizione di p, dopodiché viene chiamato upout(pp).
+\item Se p ha invece due figli si inverte la posizione di p con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 pag 293}. Anche in questo caso viene chiamato upout.
+\end{enumerate}
+Il metodo upout è analogo ad upin, cambia soltanto l'invariante (condizione d'uscita quando bal(pp)=1) e l'ordine delle rotazioni:
+\begin{center}
+\includegraphics[scale=0.5]{avldeletion.png}
+\end{center}
+\section{Splay tree (pag. 328)}
+Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione splay(x). Quest'ultima è definita nella seguente maniera:
+\begin{enumerate}
+\item Cerca x nell'albero. Sia p il nodo in cui finisce la ricerca, altrimenti il padre della foglia nel caso di una ricerca infruttuosa.
+\item Ripeti le seguenti operazioni di ordinamento (zig, zig-zig, zig-zag) finché p non diventa la radice.
+\end{enumerate}
+Non ci resta che elencare le operazioni:
+\begin{center}
+\includegraphics[scale=0.5]{splay.jpg}
+\end{center}
+\subsection*{Vocabolario}
+\begin{itemize}
+\item Inserisci(x): eseguire innanzitutto splay(x). Se la radice è x non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave y che è il precedente/successivo simmetrico di x. Piazza dunque x come radice ed y come figlio sinistro rispettivamente destro.
+\item Allontana(x): splay(x). Se la radice non è uguale ad x l'elemento non appartiene all'albero, altrimenti x si trova alla radice. Elimina dunque x e cerca la chiave più grande nel sottoalbero di sinistra (può essere fatto con splay($\infty$)). 
+\item Cerca(x): splay(x). Se la radice è x l'elemento è stato trovato, altrimenti no.
+\end{itemize}
+Un'analisi ammortizzata, descritta completamente nel capitolo 5.4.2, porta al seguente teorema.
+\begin{mytheorem}{5.1}
+L'esecuzione di qualsiasi sequenza di m operazioni, in cui compare al massimo n volte inserisci, su uno splay tree inizialmente vuoto costa $O(m\log (n))$. 
+\end{mytheorem}
+\section{Optimal binary search tree (pag. 377)}
+In questo caso abbiamo i seguenti valori (che non cambiano nel tempo) e vogliamo costruire un albero di ricerca ottimale:
+\begin{itemize}
+\item $S=\{k_1,k_2, ..., k_n \}$ insieme di n chiavi, dove $k_1<k_2<...<k_n$.
+\item $a_i$ la probabilità assoluta che venga cercato $k_i$.
+\item $I=(k_0,k_{n+1})$ intervallo in cui appartengono le chiavi.
+\item $b_j$ probabilità assoluta che venga cercato un $x \in (k_j, k_{j+1})$, quindi che non venga trovato.
+\end{itemize}
+Definiamo dunque il peso dell'albero come:
+$$W=\sum_i a_i + \sum_j b_j$$
+La gewichtete Pfadlänge \todo{trovare traduzione decente} è invece:
+$$ P= \sum_{i=1}^n (altezza(k_i)+1)a_i+\sum_{j=0}^n (altezza(foglia(k_i,k_{i+1}))b_j$$
+Un albero di ricerca ottimale T è formato da sottoalberi anch'essi ottimali: 
+$$ P(T)= P(T_l)+\mbox{peso della radice}+P(T_r)+W(T_l)+W(T_r)=P(T_l)+P(T_r)+W(T)$$
+Se T è una foglia P(T)=0. Dividiamo dunque I in sempre più grossi intervalli fino ad ottenere l'albero ottimale secondo i principi della programmazione dinamica. Siano:
+\begin{itemize}
+\item T(i,j) l'albero ottimale per l'intervallo $(k_i,k_{j+1})$.
+\item W(i,j) il peso di T(i,j), dunque $W(i,j)=b_i+a_{i+1}+...+a_j+b_j$.
+\item P(i,j) la gewichtete Pfadlänge die T(i,j).
+\end{itemize}
+Grazie alla formula precedente si può calcolare P(i,j) utilizzando l'indice l della radice di T(i,j) e i due sottoalberi T(i,l-1) e T(l,j). Definendo:
+$$W(i,i)=b_j$$
+$$W(i,j)=W(i,j-1)+a_j+b_j$$
+$$P(i,i)=0$$
+$$P(i,j)=W(i,j)+\min_{i<l\leq j} \{P(i,l-1)+P(l,j)\}$$
+e r(i,j) come gli indici delle radici di T(i,j) possiamo calcolare induttivamente su h=j-i (larghezza dell'albero) l'albero ottimale:
+\begin{itemize}
+\item h=j-i=0: T(i,i)=foglia ($k_i, k_{i+1}$). Poni W(i,i)=$b_i$, P(i,i)=0 e r(i,i) indefinito
+\item h=j-i=1 $\rightarrow$ j=i+1. Dunque T(i,i+1) ha $k_{i+1}$ come radice. 
+
+W(i,i+1)=W(i,i)+$a_{i+1}$+W(i+1,i+1), P(i,i+1)=W(i,i+1), r(i,i+1)=i+1
+\item $h\geq 2$: 
+\end{itemize}
 \end{document}
