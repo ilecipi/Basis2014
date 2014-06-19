@@ -5,6 +5,7 @@
 \usepackage{todonotes}
 \usepackage{enumerate}%used for custom enumerates
 \usepackage{amssymb}
+\usepackage{amsmath}
 %Colors for the listings
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -118,10 +119,263 @@ For example, when adding vectors (load $\to$ operation(s) $\to$ store)
 \item Actually an observation
 \item For a long time, CPU Architects improved sequential execution by exploiting Moore's Law and ILP
 \item More transistors $\to$ more performance
+\item Sequential programs were becoming exponentially faster with each new CPU
+\begin{itemize}
+\item (most) programmers did not worry about performance
+\item They waited for the next CPU model
 \end{itemize}
 \end{itemize}
-%2 - parallel architectures, page 30
+\item Architects hit walls 
+\begin{itemize}
+\item Power dissipation wall: Making CPU faster $\to$ expensive to cool
+\item Memory Wall: CPUs faster than memory access
+\item ILP Wall: Limits in inherent program's ILP, complexity
+\item \textbf{No longer affordable to increase sequential CPU performance}
+\end{itemize}
+\item Multicore processors
+\begin{itemize}
+\item Use transistors to add cores (instead of improving sequential performance)
+\item Expose parallelism to software
+\item Implication: Programmers need to write parallel programs to take advantage of new hardware
+\begin{itemize}
+\item Past: Parallel programming was performed by a few
+\item Now: Programmers need to worry about (parallel) performance
+\end{itemize}
+\end{itemize}
+\item Shared memory architectures \todo[inline]{Maybe add picture form slides, page 34 form 2 - parallel architectures; ADD PICTURES FOR EACH OF THE DIFFERENT TYPES OF SMA}
+\begin{itemize}
+\item SMT (Hyperthreading)
+\begin{itemize}
+\item Single core
+\item Multiple instruction streams (threads); Virtual (phony) cores
+\item Between ILP $\leftrightarrow$ multicore
+\begin{itemize}
+\item ILP: Multiple units for one instruction stream
+\item SMT: Multiple units for multiple instruction streams
+\end{itemize}
+\item Limited parallel performance
+\end{itemize}
+\item Multicores
+\begin{itemize}
+\item Single chip, multiple cores
+\item Dual-, Quad-, x8\dots
+\item Each core has its own hardware units; computations un parallel perform well
+\item Might share part of the cache hierarchy
+\end{itemize}
+\item SMP (Symmetric MultiProcessing)
+\begin{itemize}
+\item Multiple CPUs on the same system
+\item CPUs share memory: same cost to access memory
+\item CPU caches coordinate: Cache coherence protocol
+\end{itemize}
+\item NUMA (Non-Uniform Memory Access)
+\begin{itemize}
+\item Memory is distributed
+\item Local/Remote (fast/slow)
+\item Shared memory interface
+\end{itemize}
+\end{itemize}
+\item Flynn's Taxonomy 
+\todo[inline]{Add diagram from page 49 of 2 - parallel architectures}
+\item GPUs
+\begin{itemize}
+\item Graphical Processing Units 
+\begin{itemize}
+\item Scene description $\to$ pixels
+\item Highly data-parallel process
+\end{itemize}
+\item Massively parallel vector machines
+\item Not a standard component up until recently
+\item Started very specialized (rigid pipelines)
+\item Driven by game industry success
+\end{itemize}
+\item GP-GPUs
+\begin{itemize}
+\item General programming using GPUs (CUDA, OpenCL)
+\item Much research on ``how to execute X on a GPU''
+\item Generally GPUs are:
+\begin{itemize}
+\item Well suited for data parallel programs
+\item Not very well-suited for programs with random accesses
+\item People are rethinking algorithms
+\end{itemize}
+\item GPUs are, currently, something of a standard in the HPC (High Performance Computing) domain
+\end{itemize}
+\end{itemize}
 
+\section{Basic Concepts}
+\begin{itemize}
+\item Performance in sequential execution:
+\begin{itemize}
+\item Computational complexity
+\begin{itemize}
+\item Theoretical computer science
+\item Asymptotic behavior: big O notation ($\mathcal{O}$), or big $\Theta$
+\item How many steps does an algortithm take
+\item Complexity classes
+\end{itemize}
+\item Execution Time: The less time, the better
+\end{itemize}
+\item Sequential programs are much easier to write, but if we care about performance we have to write parallel programs
+\item Parallel Performance
+\begin{itemize}
+\item Sequential execution time: $T_1$
+\item Execution time $T_p$ on $p$ CPUs:
+\begin{itemize}
+\item $T_p=\frac{T_1}{p}$ (Perfection)
+\item $T_p>\frac{T_1}{p}$ (Performance Loss, what normally happens)
+\item $T_p<\frac{T_1}{p}$ (Sorcery!)
+\end{itemize}
+\end{itemize}
+\item (Parallel) Speedup
+\begin{itemize}
+\item (Parallel) speedup $S_p$ on $p$ CPUs: \[S_p=\frac{T_1}{T_p}\]
+\begin{itemize}
+\item $S_p=p\to$ linear speedup (Perfection)
+\item $S_p<p\to$ sublinear speedup (Performance loss)
+\item $S_p>p\to$ superlinear speedup (Sorcery!)
+\end{itemize}
+\item Efficiency: $\frac{S_p}{p}$
+\end{itemize}
+\item Scalability: How well a system reacts to increased load 
+\begin{itemize}
+\item In Parallel Programming
+\begin{itemize}
+\item Speedup when we increase processors
+\item What will happen if number of processors $\to\infty$
+\end{itemize}
+\end{itemize}
+\item Performance loss ($S_p<p$) happens because:
+\begin{itemize}
+\item Programs may not contain enough parallelism, e.g.:
+\begin{itemize}
+\item pipeline with 4 stages on a 32-CPU machine
+\item Some parts of the program might be sequential
+\end{itemize}
+\item Overheads introduced by parallelization; typically associated with coordination
+\item Architectural limitations, e.g. memory contention
+\end{itemize}
+\item Amdahl's Law
+\begin{itemize}
+\item $b$: sequential part (no speedup)
+\item $1-b$: parallel part (linear speedup)
+\end{itemize}
+\[{T_p} = {T_1}\left( {b + \frac{{1 - b}}{p}} \right)\hspace{10mm}{S_p} = \frac{p}{{1 + b\left( {p - 1} \right)}}\]
+\begin{itemize}
+\item Remarks About Amdahl's Law:
+\begin{itemize}
+\item It concerns maximum speedup (Optimistic approach). Architectural constrains will make factors worse
+\item Takeaway: \textbf{All non-parallel parts of a program (no matter how small) can cause problems!}
+\item Law of diminishing returns\footnote{The law of diminishing returns (also law of diminishing marginal returns or law of increasing relative cost) states that in all productive processes, adding more of one factor of production, while holding all others constant, will at some point yield lower per-unit returns [Taken from Wikipedia]}
+\end{itemize}
+\end{itemize}
+\item Gustafson's Law
+\begin{itemize}
+\item An Alternative (optimistic) view to Amdahl's Law
+\item Observations:
+\begin{itemize}
+\item Consider problem size
+\item Run-time, not problem size, is constant
+\item More processors allows to solve larger problems in the same time
+\item Parallel part of a program scales with the problem size
+\end{itemize}
+\item Formula:
+\begin{itemize}
+\item $b$: sequential part (no speedup)
+\begin{align*}
+T_1&=p(1-b)T_p+bT_p\\
+S_p&=p-b(p-1)
+\end{align*}
+\end{itemize}
+\end{itemize}
+\item Concurrency vs. Parallelism
+\begin{itemize}
+\item Concurrency is:
+\begin{itemize}
+\item A programming model
+\item Programming via independently executing tasks
+\item About structuring a program 
+\item A concurrent program does not have to be parallel
+\end{itemize}
+\item Parallelism:
+\begin{itemize}
+\item About execution
+\item Concurrent programming is suitable for parallelism
+\end{itemize}
+\end{itemize}
+\todo[inline]{Add views of different architectures} 
+\item Concerns in Parallel programming
+\begin{itemize}
+\item Expressing parallelism
+\begin{itemize}
+\item Work partitioning (Split up work for a single program into parallel tasks). Can be done:
+\begin{itemize}
+\item Manually (task parallelism): User explicitly expresses tasks
+\item Automatically by the system (e.g. in data parallelism): User expresses an operation and the system takes care of how to split it up 
+\end{itemize}
+\item Scheduling
+\begin{itemize}
+\item Assign task to processors (usually done by the system)
+\item goal: full utilization (no processor is ever idle)
+\end{itemize}
+\end{itemize}
+\item Managing state (data)
+\begin{itemize}
+\item Shared vs. distributed memory architectures (in the latter, data needs to be distributed)
+\item Which parallel tasks access which data, and how (e.g. READ or WRITE access)
+\item (Potentially) split up data. Ideal: each task exclusively accesses its own data
+\item Depending on the application:
+\begin{itemize}
+\item Tasks, then data
+\item Data, then tasks
+\end{itemize}
+\end{itemize}
+\item Controlling/Coordinating parallel tasks and data
+\begin{itemize}
+\item Distributed data
+\begin{itemize}
+\item No coordination (e.g. embarrassingly parallel)
+\item Messages
+\end{itemize}
+\item Shared data: controlling concurrent access
+\begin{itemize}
+\item Concurrent access may cause inconsistencies
+\item Mutual exclusion to ensure data consistency
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Coarse vs. Fine Granularity
+\begin{itemize}
+\item Fine granularity
+\begin{itemize}
+\item More portable (can be executed in machines with more processors)
+\item Better for scheduling 
+\item Parallel slackness (Expressed parallelism >> machine parallelism)
+\item BUT: if scheduling overhead is comparable to a single task $\to$ overhead dominates
+\end{itemize}
+\item Guidelines:
+\begin{itemize}
+\item As small as possible
+\item but, significantly bigger than scheduling overhead; system designers strive to make overheads small
+\end{itemize}
+\item Coordinating tasks:
+\begin{itemize}
+\item Enforcing ordering between tasks, e.g.:
+\begin{itemize}
+\item Task X uses result of task A
+\item Task X needs to wait for task A to finish
+\end{itemize}
+\item Example primitives:
+\begin{itemize}
+\item \emph{barrier}
+\item \emph{send()/receive()}
+\end{itemize}
+\item All tasks need to reach the barrier before they can proceed
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\section{Parallel programming models}
 
 
 %%=============== START OF MIDTERM 2, NEEDS REVISION ================

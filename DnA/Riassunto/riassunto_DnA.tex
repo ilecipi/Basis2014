@@ -714,8 +714,8 @@ Non è sempre detto che aggiungendo un elemento all'albero esso mantenga le sue 
 $$ bal(p)=\mbox{ Altezza del sottoalbero di destra - altezza sottoalbero di sinistra}$$
 Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura upin(p), dove p è il padre della nuova chiave. La condizione di uscita dal metodo upin è che bal(p) diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di O(log(n)) volte. Definiamo con pp il padre della chiave p. Ci sono due casi: p è il figlio sinistro di pp o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli "aggiornamenti" della variabile bal, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
 \begin{center}
-\includegraphics[scale=0.6]{singlerot.jpg}
-\includegraphics[scale=0.55]{doublerot.jpg}
+\includegraphics[scale=0.6]{Figures/singlerot.jpg}
+\includegraphics[scale=0.55]{Figures/doublerot.jpg}
 \end{center}
 \subsection*{Entfernen}
 \begin{enumerate}
@@ -725,7 +725,7 @@ Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo inna
 \end{enumerate}
 Il metodo upout è analogo ad upin, cambia soltanto l'invariante (condizione d'uscita quando bal(pp)=1) e l'ordine delle rotazioni:
 \begin{center}
-\includegraphics[scale=0.5]{avldeletion.png}
+\includegraphics[scale=0.5]{Figures/avldeletion.png}
 \end{center}
 \section{Splay tree (pag. 328)}
 Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione splay(x). Quest'ultima è definita nella seguente maniera:
@@ -735,7 +735,7 @@ Uno splay tree è un albero binario che può essere visto come una variante di m
 \end{enumerate}
 Non ci resta che elencare le operazioni:
 \begin{center}
-\includegraphics[scale=0.5]{splay.jpg}
+\includegraphics[scale=0.5]{Figures/splay.jpg}
 \end{center}
 \subsection*{Vocabolario}
 \begin{itemize}
