@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -777,7 +777,34 @@ e r(i,j) come gli indici delle radici di T(i,j) possiamo calcolare induttivament
 \item h=j-i=0: T(i,i)=foglia ($k_i, k_{i+1}$). Poni W(i,i)=$b_i$, P(i,i)=0 e r(i,i) indefinito
 \item h=j-i=1 $\rightarrow$ j=i+1. Dunque T(i,i+1) ha $k_{i+1}$ come radice. 
 
-W(i,i+1)=W(i,i)+$a_{i+1}$+W(i+1,i+1), P(i,i+1)=W(i,i+1), r(i,i+1)=i+1
-\item $h\geq 2$: 
+W(i,i+1)=W(i,i)+$a_{i+1}$+W(i+1,i+1)
+
+P(i,i+1)=W(i,i+1)
+
+r(i,i+1)=i+1
+\item $h\geq 2$: $W(i,j)=W(i,l-1)+W(l,j)+a_l$
+
+P(i,j)=P(i,l-1)+P(l,j)+W(i,j)
+
+r(i,j)=l
 \end{itemize}
+Il procedimento elencato sopra necessita di $\Theta (n^2)$ di spazio. I casi con h=0 o h=1 possono essere completati in O(n), per il caso h>1:
+\begin{lstlisting}
+for h=2:n
+	for i=0:(n-h)
+		j=i+h
+		/*trova la max l (i<l<=j) per cui
+		P(i,l-1)+P(l,j) diventa minimo*/
+		P(i,j)=P(i,l-1)+P(l,j)+W(i,j)
+		r(i,j)=l		
+\end{lstlisting}
+Questo procedimento richiede un tempo di:
+$$\sum_{h=2}^n \sum_{i=0}^{n-h} O(h+1)=\sum_{h=2}^n O((n-h+1)(h+1))= O(n^3)$$
+Un possibile miglioramento deriva dal principio di monotonia, cioè:
+$$r(i,j-1)\leq r(i,j) \leq r(i+1,j)$$
+In questo modo la ricerca di l avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. In questo modo si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
+In ogni caso non è sempre conveniente cercare un albero ottimale con questo algoritmo, a volte basta un albero quasi ottimale. Ad esempio nella serie 12 è stato calcolato un albero ottimale basandosi semplicemente sul fatto che la somma dei pesi di due sottoalberi sia minore della probabilità del nodo.
+\begin{center}
+\includegraphics[scale=0.3]{Figures/optimaltree.jpg}
+\end{center} 
 \end{document}
