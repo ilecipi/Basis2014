@@ -25,7 +25,7 @@ cd ../../
 cd "Diskrete Mathematik/Riassunto"
 for i in {1..3}
 do
-   pdflatex --interaction nonstopmode RiassuntoDiskMat.tex
+   pdflatex --interaction nonstopmode riassuntoDiskMat.tex
 done
 rm -f *.out *.log *.aux *.toc
 cd ../../
@@ -44,7 +44,7 @@ cd ../../
 cd "Parallele Programmierung/Riassunto"
 for i in {1..3}
 do
-   pdflatex --interaction nonstopmode RiassuntoPP.tex
+   pdflatex --interaction nonstopmode riassuntoPP.tex
 done
 rm -f *.out *.log *.aux *.toc
 cd ../../
