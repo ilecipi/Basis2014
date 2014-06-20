@@ -15,7 +15,7 @@ cd ../../
 cd "Digitaltechnik/RiassuntoDT"
 for i in {1..3}
 do
-   pdflatex --interaction nonstopmode RiassuntoDT.tex
+   pdflatex --interaction nonstopmode riassuntoDT.tex
 done
 rm -f *.out *.log *.aux *.toc
 cd ../../
