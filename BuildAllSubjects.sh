@@ -48,3 +48,13 @@ do
 done
 rm -f *.out *.log *.aux *.toc
 cd ../../
+
+
+#Render EPROG
+cd "EPROG/Riassunto"
+for i in {1..3}
+do
+   pdflatex --interaction nonstopmode riassuntoEPROG.tex
+done
+rm -f *.out *.log *.aux *.toc
+cd ../../

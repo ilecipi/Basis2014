@@ -1,0 +1,165 @@
+\documentclass[a4paper]{article}
+\usepackage{todonotes}
+
+
+\begin{document}
+
+\section{Introduction}
+\subsection{Basic definitions}
+\begin{itemize}
+\item Feature
+\begin{itemize}
+\item Command: No return value, but does modify objects. On the synctactical level, it is an instruction
+\item Query: Returns a value, but does not modify any objects. The syntax equivalent is the expression.
+\begin{itemize}
+\item Functions get their results through computation
+\item Attributes are values directly stored in memory
+\end{itemize}
+For queries, there is the uniform access principle, which states that it doesn't matter to the client whether a query is implemented as a function or attribute. Features should be accessible to clients the same way whether implemented by storage or by computation.
+\item Creation Procedure: Commands to initiate objects, can be several. There is also a \textsl{default\_create}, which is inherited by all classes, and does nothing by default. 
+\end{itemize}
+\item Feature Calls
+\begin{itemize}
+\item Unqualified calls: Feature calls which apply to the current object
+\item Qualified calls: Feature calls which apply to a certain object, causing this object to become the current object. 
+\end{itemize}
+\item Class clauses
+\begin{itemize}
+\item Indexing
+\item Inheritance
+\item Creation
+\item Feature
+\item Invariant
+\end{itemize}
+\item Specimen: A syntactic element, such as a class name or an instruction, but no delimiters. The type of a specimen is its construct. See Describing syntax\todo{Add reference}
+\item Abstract syntax tree: Shows the syntax structure with all its specimens, but obviously without any delimiters, A tree has nodes, each one of the following kind:
+\begin{itemize}
+\item Root: Node with no incoming branch.
+\item Leaf: Node without outgoing branches
+\item Internal node: Neither of the former
+\end{itemize}
+\item Basic elements of a program text:
+\begin{itemize}
+\item Terminals
+\begin{itemize}
+\item Identifiers: Names chosen by the programmer
+\item Keywords
+\item Special symbols, such as a period
+\end{itemize}
+\end{itemize}
+\item Describing a program
+\begin{itemize}
+\item Semantic rules: Define the effect of programming, satisfying the syntax rules
+\item Syntax rules: Define how to make up specimens out of tokens satisfying the lexical rules
+\item Lexical rules: Define how to make up tokens out of characters
+\end{itemize}
+\item Syntax: The way you write a program; characters grouped into words, grouped into bigger structures. 
+\item Semantics: The effect you expect from this program at runtime
+\item Identifier: Name chosen by the programmer to represent certain program elements, such as classes, features or runtime values. If it denotes a runtime value, it is called an identity or variable if it can change its value. During execution, an entity may become attached to an object. 
+\item Executing a system consists of creating a root object, which in an instance of a designated class from the system, the root class, using a designated creation procedure, called its root procedure.
+\end{itemize}
+\subsection{Variables}
+\begin{itemize}
+\item Types
+\begin{itemize}
+\item Reference types: Entities with a reference value
+\item Expanded types: Entities with an object as a value
+\item A type is one of:
+\begin{itemize}
+\item A non-generic class
+\item A generic derivation, i.e. the name of a class followed by a list of types, the actual generic parameters, in brackets
+\end{itemize}
+\end{itemize}
+\item Setters: It is possible to make assignments such as $x.att:=val$, which is shorthand for $x.set\_att(val)$
+\item Effect of an assignment
+\begin{itemize}
+\item Reference types: Reference assignment
+\item Expanded types: Value copy
+\end{itemize}
+\item Variable copy
+\begin{itemize}
+\item Shallow object duplication (creates a new object): $b:=a.twin$
+\item Deep object duplication (creates a new object): $b:=a.deep\_twin$
+\item Shallow field-by-field copy (does not create an object): $b.copy(a)$
+\end{itemize}
+\end{itemize}
+\todo[inline]{Maybe add the objet creation diagram??}
+
+\subsection{Interface}
+\begin{itemize}
+\item A client of a software mechanism is a system of any kind - such as a software element or a human - that uses it. For its client, the mechanism is a supplier
+\item Interface: The description of techniques enabling clients to use these mechanisms. For example: GUIs (Graphical User Interface), command line interfaces (shell, bash,\dots), or APIs
+\item An object can be an instance of a class, if the class is the generating class of the object
+\end{itemize}
+
+\subsection{Information Hiding}
+\begin{itemize}
+\item For its clients, an attribute may be:
+\begin{itemize}
+\item Secret
+\item Read-only
+\item Read, but partially write restricted (only certain things are allowed to be written)
+\item Writing one or more classes in curly brackets after the keyword \textsl{feature} exports these 
+features only to these classes and its descendants. If no class is listed, the features 
+are exported to \textsl{ANY}. 
+\end{itemize}
+Information hiding only applies to use by clients using dot or infix notation. Unqualified calls are not subject to information hiding. 
+\end{itemize}
+
+\subsection{Control structures}
+\todo[inline]{Requires a lot of work}
+\begin{itemize}
+\item Sequence or compound
+\item Loop
+\begin{itemize}
+\item Loop invariant
+\begin{itemize}
+\item Satisfied \textbf{after} initialization, after the \textsl{from} clause
+\item Preserved by every loop iteration executed with the exit condition not satisfied. So in the end, the loop invariant \underline{and} the exit condition hold!
+\end{itemize}
+\item Loop variant
+\begin{itemize}
+\item Non-negative (i.e. $\geq$ 0) integer expression, right after initialization
+\item Decreases while remaining non-negative for every iteration of the body with exit condition not satisfied. 
+\end{itemize}
+\end{itemize}
+\item Conditional
+\end{itemize}
+
+\subsection{Contracts}
+\begin{itemize}
+\item Contracts are made of assertions, each containing an assertion tag and a condition (a Boolean expression)
+\item Precondition
+\begin{itemize}
+\item Property that a feature imposes on every client
+\item If there is no \textsl{require} clause, is treated as one, with one only being true.
+\end{itemize}
+\item Postcondition
+\begin{itemize}
+\item Property that a feature guarantees every client 
+\item Can make use of keyword \textsl{old}\todo{Check for an explanation of this keyword}
+\end{itemize}
+\item Class invariant
+\begin{itemize}
+\item The invariant expresses consistency requirements between queries of a class
+\end{itemize}
+\end{itemize}
+
+\subsection{Miscellaneous}
+\begin{itemize}
+\item Semistrict operators
+\begin{itemize}
+\item Let us define the order of expression evaluation
+\item \textbf{and then} is the semistrict version of \textbf{and}. Use it if a condition only makes sense when another is true.
+\item \textbf{or else} is the semistrict version of \textbf{or}. Use it if a condition only makes sense when another is false
+\item\textbf{implies} is always semstrict!
+\end{itemize}
+\end{itemize}
+
+\section{Describing syntax}
+
+
+
+
+
+\end{document}
