@@ -50,7 +50,7 @@ Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim\limits_{x \rightarrow 
 Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguente:
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
 oppure, scritto in un altro modo:
-\[ac*bd=100*ac+10*ac+10*bd+bd+10(a-b)(d-c)\]
+\[ab*cd=100*a*c+10*a*c+10*b*d+b*d+10(a-b)(d-c)\]
 In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
 \section{Maximum subarray (pag 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
