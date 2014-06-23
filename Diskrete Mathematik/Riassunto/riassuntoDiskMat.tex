@@ -2,11 +2,18 @@
 \usepackage{framed}%Used for the definition environment
 \usepackage{enumerate}%Custom enumerates using \begin{enumerate}[yourListItem]
 \usepackage{multicol}
-
+\usepackage{amssymb}
+\usepackage{amsmath}
 
 
 %Environment for the definitions
 \newenvironment{definition}[1]{\begin{framed}\centerline{\textbf{Definition #1}}\noindent\hspace{-1.1mm}}{\end{framed}}
+\newtheorem{lemma}{Lemma}[chapter]
+
+%Custom commands
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+
 
 \begin{document}
 \tableofcontents
@@ -190,5 +197,153 @@ Consider the following sentence: If you read the lecture note every week and do 
 \end{multicols}
 Parenthesis can sometimes be dropped in a formula without changing its meaning, for example we can write $A\lor B\lor C$ instead of $A\lor (B\lor C)$ or $(A\lor B)\lor C$. Namely, $\land$ and $\lor$ bind stronger than $\to$ and $\leftrightarrow$. Also, $\lnot$ binds stronger than $\land$ and $\lor$. For example, we can write $A\lor \lnot B\to B\land C$ instead of $(A\lor (\lnot B))\to (B\land C)$
 \subsection{Formulas as Functions and Logical Equivalence}
+$(A\land (\lnot B))\lor (B\land(\lnot C))$ is a formula, and corresponds to a function $\{ 0,1\}^3\to\{ 0,1\}$.
+\begin{definition}{2.7}
+The symbol $\top$ denote a function that is the constant 1 (true), and $\perp$ denotes the function that is constant 0 (false).
+\end{definition}
+\begin{definition}{2.8}
+Two Formulas $F$ and $G$ (in propositional logic) are called \emph{equivalent}, denoted as $F\Longleftrightarrow G$ (or also F$\equiv$ G), if they correspond to the same function (table).
+\end{definition}
+For example, it is easy to see that $\land$ and $\lor$ are commutative and associative, i.e. for any formulas $F,G,$ and $H$ we have 
+\[F\land G\Longleftrightarrow G\land F \text{ and }  F\lor G\Longleftrightarrow G\lor F\]
+as well as
+\[ F\land (G\land H)\Longleftrightarrow (F\land G)\land H\Longleftrightarrow F\land G\land H\]
+similarly 
+\[ F\lor (G\lor H)\Longleftrightarrow (F\lor G)\lor H\Longleftrightarrow F\lor G\lor H\]
+We also have 
+\[\lnot( \lnot (F))\Longleftrightarrow F   \]
+
+\subsection{Tautologies and Satisfiability}
+\begin{definition}{2.9}
+A formula $F$ (in propositional logic) is called a \emph{tautology} if it is true for all truth assignments of the involved propositional symbols. For example, the formulas $A\lor(\lnot A)$ and $(A\land (A\to B)\to B$ are tautologies
+\end{definition}
+
+\begin{definition}{2.10}
+A formula $F$ (in propositional logic) is called \emph{satisfiable} if it is true for at least one truth assignment of the involved propositional symbols, and it is called \emph{unsatisfiable} otherwise
+\end{definition}
+
+
+\subsubsection*{Lemma 2.1}
+{$F$ is a tautology if and only if $\lnot F$ is unsatisfiable.}
+\subsection{The Symbols $\Longrightarrow$ and $\Longleftrightarrow$}
+\begin{definition}{2.11}
+One writes $F\Longrightarrow G$ (or $F\Rightarrow G$)(The length of the arrow is completely irrelevant) to say that $F$ implies $G$, i.e. that $F\to G$ is a tautology
+\end{definition}
+As mentioned earlier, one writes $F\Longleftrightarrow G$ if $F$ and $G$ imply each other, i.e. if $F$ and $G$ are equivalent. $F\Longleftrightarrow G$ is also expressed as ``$F$ if and only if $G$''.\\
+
+To state $F\Longrightarrow G$ is the same as to state ``$F\to G$ is a tautology''. Note that $F\Longrightarrow G$ and $F\Longleftrightarrow G$ are not logical formulas since $\Longrightarrow$ and $\Longleftrightarrow$ are not allowed symbols in the syntax of logic. 
+\subsubsection*{Theorem 2.2}
+Implication is transitive: if $F\Longrightarrow G$ and $G\Longrightarrow H$, then $F\Longrightarrow H$\\
+
+The theorem implies that, more generally, if one proves a statement $F_1$ as well as implications $F_1\Longrightarrow F_2, F_2\Longrightarrow F_3,\dots F_{n-1}\Longrightarrow F_n$, then one has proved $F_n$.
+
+\section{Quantifiers and Predicate Logic}
+The extension of propositional logic is called \emph{predicate logic} and is substantially more involved than propositional logic. 
+\subsection{Predicates}
+Let us consider a set $U$ as the universe in which we want to reason. For example, $U$ could not be the set $\N$ of natural numbers, the set $\R$ of real numbers, the set $\{ 0,1\}*$ of finite-length bit-strings, or a finite set like $\{ 0,1,2,3,4,5,6\}$.
+
+\begin{definition}{2.12}
+A $k-$ary predicate $P$ on $U$ is a function $U^k\to\{ 0,1\}$
+\end{definition}
+A $k-$ary predicate $P$ assigns to each list $( x_1,\dots,x_k)$ of $k$ elements of $U$ the value $P(x_1,\dots, x_k)$ which is either true (1) or false (0).
+
+\subsection{Definition of $\exists$ and $\forall$}
+\begin{definition}{2.13}
+For a universe $U$ and predicate $P(x)$ we define the following logical statements
+\begin{itemize}
+\item $\forall x P(x)$ is the statement that $P(x)$ is true for all $x\in U$
+\item $\exists x P(x)$ is the statement that $P(x)$ is true for some $x\in U$, i.e. there exists an $x\in U$ for which $P(x)$ is true. 
+\end{itemize}
+\end{definition}
+Sometimes one uses an abbreviated notation in which one specifies a condition for the variable $x$ directly. For example, we can write $\forall x\geq 5(x^2\geq 25)$ instead of $\forall x (x\geq 5)\to (x^2\geq 25)$.
+
+\subsection{Nested Quantifiers}
+Quantifiers can also be nested. For example, if $P(x)$ and $Q(x,y)$ are predicates, then \[\forall x(P(x)\lor\exists y  Q(y,x))\] is a logical formula.\\
+
+\noindent\textbf{Check out multiple examples on page 19 about nested quantifiers}
+
+\subsection{Tautologies and Satisfiability}
+A formula is \emph{satisfiable} if, informally there is an interpretation that makes the formula true. Moreover, a formula is a \emph{tautology} if it is true for all interpretations, i.e. for all choices of the universe and for all interpretations of the predicates. For example:
+\[\forall x ((P(x)\land Q(x))\to (P(x)\lor Q(x)))\]
+is a tautology. As mentioned in section 2.2.5, we write $F\Longrightarrow G$ to mean that $F\to G$ is a tautology.\\
+
+If the universe is fixed and there are no unspecified parts like predicate symbols, then a formula can trivially only be a tautology or unsatisfiable. 
+
+\subsection{Some Rules}
+We list a few useful rules for predicate logic
+\begin{itemize}
+\item $\forall x P(x)\land\forall x Q(x)\Longleftrightarrow \forall x(P(x)\land Q(x))$
+\item $\exists x(P(x)\land Q(x))\Longrightarrow \exists x P(x)\land \exists x Q(x)$
+\item $(\exists x P(x)\land \exists x Q(x))\to (\exists x(P(x)\land Q(x)))$ is not a tautology
+\item $\lnot\forall xP(x)\Longleftrightarrow\exists x\lnot P(x)$
+\item $\lnot\exists xP(x)\Longleftrightarrow\forall x\lnot P(x)$
+\end{itemize}
+
+\section{Some Proof Patterns and Techniques}
+What is to be proven (e.g. a statement called a theorem) is given by a logical formula $F$, or by a sentence in natural language that could be made precise as (and hence stands for) a logical formula $F$. Typically $F$ is a proposition, i.e. it is either true or false, and for formulas in predicate logic the universe is understood. 
+\subsection{Modus Ponens}
+The following theorem states than in order to prove $G$ one can try to identify a formula $F$ such that one can prove both $F$ as well as $F\to G$. The proof is similar to the proof of theorem 2.2, using the fact that the propositional formula 
+\[\left((A\land (A\to B)) \right)\to B\]
+is a tautology. 
+\subsubsection*{Theorem 2.3}
+If $F$ and $F\to G$ are tautologies, then $G$ is also a tautology. 
+
+\subsection{Direct Proof of an Implication}
+\begin{definition}{2.14}
+A \emph{direct proof} of an implication $F\to G$ works by assuming $F$ and then deriving $G$ (from $F$), where the derivation can possibly involve several proof steps. 
+\end{definition}
+\subsection{Indirect Proof of an Implication}
+\begin{definition}{2.15}
+An \emph{indirect proof} of an implication $F\to G$ works by assuming $\lnot G$ and deriving $\lnot F$, i.e. by proving $\lnot G\to \lnot F$
+\end{definition}
+This is correct because $F\to G$ id logically equivalent to $\lnot G\to\lnot F$, i.e. \[F\to G\Longleftrightarrow \lnot G\to\lnot F\]
+
+\subsection{Proofs by Contradiction}
+The following theorem states that in order to prove $F$ one can try to identify a formula $G$ such that one can prove both $\lnot G$ as well as $\lnot F\to G$. The proof is similar to the proof of Theorem 2.2, using the fact that the propositional formula 
+\[\left( (\lnot A\to B)\land \lnot B\right)\to A\]
+is a tautology.
+\subsubsection*{Theorem 2.4}
+If $\lnot F\to G$ and $\lnot G$ are tautologies, then $F$ is also a tautology (or: If $\lnot F \to\perp$ is a tautology, then $F$ is also a tautology. \\
+
+Such proof usually works by assuming $\lnot F$, and deriving from this assumption a formula $H$ and also its negation $\lnot H$, which is a contradiction. In other words, one proves $\lnot F\to H$ as well as $\lnot F\to \lnot H$, and hence also $\lnot F\to (H\land\lnot H)$, i.e. the formula $G$ of the theorem is $G=H\land \lnot H$
+
+\subsection{Existence Proofs}
+\begin{definition}{2.16}
+An existence proof is the proof of a statement of the form $\exists x P(x)$
+\end{definition}
+There are constructive existence proofs, which demonstrate an $a$ for which $P(a)$ is true, as well as non-constructive existence proofs which simply show the existence of an $a$ for which $P(a)$ is true, without exhibiting such an $a$.
+
+\subsection{Inexistence Proofs}
+\begin{definition}{2.17}
+An inexistence proof is a proof of a statement of the form $\lnot \exists x P(x)$
+\end{definition}
+To prove the inexistence, one can use \[\lnot\exists x P(x)\Longleftrightarrow \forall x\lnot P(x)\]
+
+\subsection{Proofs by Counterexample}
+\begin{definition}{2.18}
+A proof by counterexample is a proof of a statement of the form $\lnot\forall x P(x)$ for some fixed predicate $P$, using \[\lnot \forall x P(x)\Longleftrightarrow \exists x\lnot P(x)\]
+An $a$ for which $\lnot P(a)$ is true is called a counterexample
+\end{definition}
+
+\subsection{Proofs by Induction}
+A proof by induction consists in two steps:
+\begin{enumerate}
+\item \textbf{Basis Step}: Prove $P(0)$
+\item \textbf{Induction Step}: Prove $\forall n(P(n)\to P(n+1))$
+\end{enumerate}
+\subsubsection*{Theorem 2.5}
+For every predicate $P$ on $\N$ we have \[P(0)\land\forall n(P(n)\to P(n+1))\Longrightarrow \forall n P(n)\]
+
+\subsubsection*{Fact 2.1}
+The natural numbers are well-ordered, i.e. every nonempty set of natural numbers has a least element\footnote{The well-ordering principle could be stated more formally as \[\exists n P(n)\Longrightarrow \exists m \left( P(m)\land \forall k <m\lnot P(k)\right)\] but we will not need this formula.}
+
+\chapter{Sets, Relations and Functions}
+
+
+
+
+
+
+
 
 \end{document}
