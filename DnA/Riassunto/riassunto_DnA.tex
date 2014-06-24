@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
+\usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -807,4 +807,136 @@ In ogni caso non è sempre conveniente cercare un albero ottimale con questo alg
 \begin{center}
 \includegraphics[scale=0.3]{Figures/optimaltree.jpg}
 \end{center} 
+\section{Binary Heap}
+Abbiamo già in parte visto questa struttura per Heapsort. La sua principale caratteristica è che una chiave $k_i \leq k_{\lfloor\frac{1}{2} \rfloor}, 2\leq i\leq n$. In questo caso si tratta di un max Heap, se la relazione è al contrario si tratta di un min Heap. 
+\paragraph*{Vocabolario}
+A seguire l'implementazione di un min heap. Poniamo che le chiavi siano salvate in un array di dimensioni sufficienti. Salviamo inoltre la variabile n, che indica il numero di elementi presenti nell'array.
+\begin{itemize}
+\item Min: ritorna A[1]
+\item Inserisci(x): incrementiamo n di uno e piazziamo x alla posizione A[n]. Per restaurare le proprietà dell'heap (x può essere minore del suo predecessore) chiamiamo bottom-up(i).
+\item Delete(i): chiamiamo replace(i,A[n]). Dopodiché la chiave A[n] compare due volte, quindi riduciamo la dimensione dell'heap di uno. 
+\item Replace(i,k): poniamo k'=A[i]. Innanzitutto A[i]=k, poi dobbiamo distinguere due casi: se k<k' chiamiamobottom-up(i), altrimenti shift-down(i). Da ricordarsi che shift-down(i) altro non è che versickere(i,n) trattato nel capitolo "Sort". In ogni caso è analogo a bottom-up(i).
+\end{itemize}
+\begin{lstlisting}
+bottom-up(int i)
+	while i>=2
+		int j=i/2
+		if A[j]<=A[i]
+			break
+		else
+			swap(A[i],A[j])
+			i=j	
+\end{lstlisting}
+\paragraph*{Analisi}
+Ogni operazione del vocabolario può essere effettuata in tempo logaritmico.
+\chapter{Manipolazioni di dati}
+\section{Priority Queue (pag 404)}
+Le priority queue (in tedesco dette Vorrangswarteschlangen) sono semplicemente delle code in cui ad ogni elemento è abbinata una priorità. Ad esempio chi ha il numero più basso passa prima di chi ha il numero più alto. Esse possono essere implementate in due differenti modi.
+\paragraph*{Heap}
+Il primo e più efficiente metodo è quello di usare un heap come una coda prioritaria. È possibile estrarre il minimo in tempo costante, inserire e rimuovere elementi in tempo logaritmico. L'unico problema è unire due heap. Questo può essere effettuato demolendo le strutture precedenti e creando un nuovo albero in O(n+k) passi.
+\paragraph*{Lista}
+Il metodo più intuitivo è forse quello di usare una semplice lista. Per unire due liste basta puntare il puntatore dell'ultimo elemento al primo della nuova lista. L'aggiunta di un nuovo elemento avviene in tempo costante, inserendolo o all'inizio o alla fine, mentre per rimuovere un elemento è necessario cercarlo in tutta la lista (quindi O(n)). La ricerca del minimo avviene anch'essa come nel caso della ricerca del massimo in un array, quindi in O(n). Una possibile variante è quella di ordinare gli elementi in ordine crescente. In questo caso il minimo può essere trovato in tempo costante, ma per inserire, rimuovere ed unire due liste si impiegherebbe O(n).
+\section{Fibonacci heap (pag 420)}
+I Fibonacci heap (anche chiamati F-Heap) sono collezioni di heap con insiemi di chiavi disgiunti. Le radici degli alberi sono collegate da una doppia lista lineare circolare. Ogni nodo ha un puntatore sul padre e su uno dei suoi figli. Inoltre i figli sono uniti da una doppia lista circolare. Il puntatore dell'heap indica direttamente l'elemento minimo, quindi la radice con il valore più piccolo.
+\begin{lstlisting}
+class HeapNode<Comparable>
+	//parametri salvati
+	HeapNode<E> destro, sinistro
+	HeapNode<E> padre, figlio
+	Comparable chiave
+	int rango, marcato
+\end{lstlisting}
+\begin{center}
+\includegraphics[scale=0.5]{Figures/fheap.jpg}
+\end{center}
+\subsection*{Vocabolario}
+\paragraph*{Insert(x)} costruisci un F-Heap h' formato dalla sola chiave x ed uniscilo con h tramite meld(h').
+\paragraph*{Min} il minimo è indicato dal puntatore dell'heap.
+\paragraph*{Meld(h')} inserisci la radice di h' nella lista di radici di h. L'elemento più piccolo tra il minimo di h e quello di h' diventa l'elemento minimo del nuovo F-Heap.
+Chiaramente le precedenti operazioni possono essere eseguite in tempo costante. 
+\paragraph*{DeleteMin} I figli del minimo vengono inseriti nella lista delle radici, dopodiché il minimo viene rimosso. In seguito coppie di heap dallo stesso rango r vengono uniti in un heap dal rango r+1 (rendendo la radice più grande figlia di quella più piccola) finché nella Wurzelliste non rimangono più heap dallo stesso rango. Richiede O(log(n)).
+\paragraph*{Decrease-key(x,k)} Diminuiamo il valore della chiave x con k.
+\begin{lstlisting}
+FIB-HEAP-DECREASE-KEY(H,x,k) 
+	if k > key[x]
+		//error "new key is greater than current key"
+	key[x]=k
+	y=p[x] //padre di x
+	if y!=null && key[x] < key[y]
+		CUT(H,x,y)
+		CASCADING-CUT(H,y)
+	if key[x] < key[min[H]]
+		min[H]=x //il minimo dell'heap diventa x
+
+CUT(H,x,y)
+	/*
+	1  remove x from the child list of y, decrementing degree[y]
+
+	2  add x to the root list of H
+	*/
+	p[x]=null
+	mark[x]=false
+
+CASCADING-CUT(H,y)
+	z=p[y]
+	if z!=null
+		if mark[y] == false
+			mark[y]= true
+		else 
+			CUT(H,y,z)
+			CASCADING-CUT(H,z)
+\end{lstlisting}
+Praticamente se incontriamo un nodo già marcato (ha già perso un figlio in precedenza), lo tagliamo ed aggiungiamo nella lista delle radici finché non incontriamo un nodo non marcato o raggiungiamo la radice stessa. In questo caso abbiamo un tempo ammortizzato costante.
+\paragraph*{Delete(x)} per eliminare la chiave x la cambiamo con un valore più basso del minimo dell'heap tramite $decrease-key(x,-\infty)$ e poi eliminiamo il minimo. Otteniamo così un tempo ammortizzato pari a deleteMin, quindi logaritmico.
+\todo{capire analisi}
+\section{Union-Find-Strukturen (pag 428)}
+Queste speciali strutture servono a manipolare delle classi di equivalenza, vale a dire formate da una relazione di equivalenza o semplicemente delle partizioni (guarda matematica discreta). Le operazioni di vocabolario sono:
+\begin{itemize}
+\item make-set(e,i): inserisce un nuovo insieme i con un unico elemento e. i è il nome dell'insieme, mentre si suppone che e non appartenga a nessun altro insieme (si tratta di partizioni).
+\item find(x): restituisce il nome della partizione che contiene x.
+\item union(i,j,k): i due insiemi i e j vengono uniti in un insieme k per poi essere eliminati dalla collezione.
+\end{itemize}
+Una possibile rappresentazione di un set è quella di un albero non ordinato. Ogni elemento ha un puntatore sul padre, mentre la radice punta su se stessa e contiene il nome dell'insieme. Una collezione è dunque un array di elementi abbinato ad un altro array p, contenente il padre degli elementi. Ad esempio:
+\[\begin{array}{*{20}{c}}
+{x}&{:}&a&{b}&{c}&d&e&f\\
+{p[x]}&{:}&{a}&{a}&{a}&{b}&b&f\\
+\end{array}\]
+Questi array rappresentano la seguente collezione:
+\begin{center}
+\includegraphics[scale=0.4]{Figures/ufs.png}
+\end{center}
+Per evitare che un set degeneri ad una lista ci sono due soluzioni: l'unione in base alla grandezza o all'altezza. In entrambi i casi l'idea è di rendere l'albero più piccolo un sottoalbero di quello più grande. Necessitiamo dunque di un altro array in cui viene salvata la grandezza. Per semplicità adottiamo una nomenclatura diretta, vale a dire che un insieme porta il nome del suo primo elemento (radice).
+\begin{lstlisting}
+int[] size, p //di grandezza n
+//elementi da 1 a n
+
+make-set(x)
+	p[x]=x
+	size[x]=1
+
+union(e,f)
+	if size[e]<size[f]
+		swap(e,f)
+	p[f]=e
+	size[e]+=size[f]
+	
+int find(x)
+	int y=x
+	while p[y]!=y //non si tratta di una radice
+		y=p[y]
+	return y			
+\end{lstlisting}
+\begin{mytheorem}{6.3}
+Il processo "unione per grandezza" (Vereinigung nach Grösse) conserva la seguente caratteristica: un albero di altezza h ha almeno $2^h$ nodi.
+\paragraph*{Dimostrazione}
+Ammettiamo che dobbiamo unire gli alberi $T_1 \mbox{ e } T_2$ e che il primo sia più grande del secondo, quindi $g(T_1)\geq g(T_2)$. Secondo l'ipotesi $T_i \mbox{ ha almeno } 2^{h_i}$ nodi. 
+\begin{itemize}
+\item Caso 1: $altezza(T_1 \cup T_2)=max\{h_1,h_2\}$
+Quindi l'altezza dell'unione è per forza almeno $2^{altezza(T_1 \cup T_2)}$.
+\item Caso 2: l'altezza del $max\{h_1,h_2\}$ è cresciuta di uno. Questo è possibile solo se $altezza(T_1 \cup T_2)=h_2+1$. Quindi:
+$$g(T_1)\geq g(T_2) \geq 2^{h_2} $$
+$$g(T_1 \cup T_2)=g(T_1)+g(T_2) \geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2)}$$
+\end{itemize}
+\end{mytheorem}
+Come diretta conseguenza find(x) impiega al massimo log(n) passi. Le altre operazioni sono fattibili in tempo costante.
 \end{document}
