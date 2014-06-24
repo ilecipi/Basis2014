@@ -55,12 +55,21 @@ $2^1=2$& is $2\leq 3$?&yes&1&3-2=1\\
 $2^0=1$& is $1\leq 1$?&yes&1&1-1=0; done!\\
 \end{tabular}\\
 $\Rightarrow 47_{10}$ to binary is $0101111_2$ 
-\item Binary values and range\\
-\begin{tabularx}{15cm}{X|X|X|X|}
-{}& How many values? & Range? & Example: 3-digit number\\\hline
-$N-$digit decimal number & $10^N$ & $\lbrack 0,10^{N}-1\rbrack$ & $10^3=1000$ possible values, range:$\lbrack 0,999\rbrack$\\
-$N-$bit binary number & $2^N$ & $\lbrack 0,2^{N}-1\rbrack$ & $2^3=8$ possible values, range:$\lbrack 0,7\rbrack=\lbrack 000_2\text{ to }111_2\rbrack$\\
-\end{tabularx}
+\item Binary values and range
+\begin{itemize}
+\item $N-$digit decimal number
+\begin{itemize}
+\item How many values: $10^N$
+\item Range: $\lbrack 0,10^{N}-1\rbrack$
+\item Example (3-digit number): $10^3=1000$ possible values, range:$\lbrack 0,999\rbrack$
+\end{itemize}
+\item $N-$bit binary number
+\begin{itemize}
+\item How many values: $2^N$
+\item Range: $\lbrack 0,2^{N}-1\rbrack$
+\item Example (3-digit number): $2^3=8$ possible values, range:$\lbrack 0,7\rbrack=\lbrack 000_2\text{ to }111_2\rbrack$
+\end{itemize}
+\end{itemize}
 \item Hexadecimal (Base-16) Numbers\\
 \begin{tabular}{c|c|c|c|c|c|c}
 Decimal & Hexadecimal & Binary&{}&Decimal & Hexadecimal & Binary\\\hline
