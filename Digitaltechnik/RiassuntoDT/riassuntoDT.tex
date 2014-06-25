@@ -2,7 +2,8 @@
 
 \usepackage{amsmath}
 \usepackage{tabularx}
-
+\usepackage{todonotes}
+\usepackage{showframe}
 \begin{document}
 
 %\title{Title}
@@ -230,6 +231,132 @@ $2^7$&$2^6$&$2^5$&$2^4$&$2^3$&$2^2$&$2^1$&$2^0$&{}&Two's Compl.&Unsigned\\\hline
 \item Engineering is not a religion: Use what works best for you
 \item Keep it simple and stupid: Engineers' job is to manage complexity
 \end{itemize}
-%Page 13 of slides
+\item Building blocks for microchips
+\begin{itemize}
+\item Conductors: Metals (Aluminium, Copper)
+\item Insulators: Glass (SiO$_2$), Air
+\item Semiconductors: Silicon (Si), Germanium (Ge)
+\end{itemize}
+\item N-type Doping: Add extra electron (negatively charged), zone becomes negatively charged\todo{Maybe add a definition or a better explanation}
+\item P-type Doping: Remove electron, zone becomes positively charged
+\item Semiconductors:
+\begin{itemize}
+\item You can ``Engineer'' its properties, i.e.
+\begin{itemize}
+\item Make it P type by injecting type-III elements (b, Ga, In)
+\item Make it N type by injecting elements from type-V (P, As)
+\end{itemize}
+\item You can combine P and N regions to each other, from a pure semiconductor
+\item Allows you to make interesting electrical devices (Diodes, Transistors, Thrystors)
+\end{itemize}
+\item pMOS is a P type transistor, nMOS an N type transistors; combined they are a CMOS
+\item CMOS (Properties)
+\begin{itemize}
+\item No input current: Capacitive input, no resistive path from the input
+\item No current when output is at logic levels: Little static power, current is needed only when switching
+\item Electrical properties determined directly by geometry: A transistor that is 2 times larger drives twice the current
+\item Very simple to manufacture: pMOS and nMOS can be manufactures on the same substrate
+\end{itemize}
+\item CMOS Gate Structure
+\begin{itemize}
+\item The general form used to construct any inverting logic, such as: NOT, NAND, NOR
+\begin{itemize}
+\item The networks may consist of transistors in series or parallel
+\item When transistors are in parallel, the network is ON if either transistor is ON
+\item When transistors are in series, the network is ON only if all transistors are ON
+\end{itemize}
+\item In a proper logic gate: One of the networks should be ON and the other OFF at any given time
+\item Use the rule of conduction complements:
+\begin{itemize}
+\item When nMOS transistors are in series, the pMOS transistor must be in parallel
+\item When nMOS transistors are in parallel, the pMOS transistors must be in series
+\end{itemize}
+\end{itemize}
+\todo[inline]{Add picture on slide 34, 03 - EEPerspective}
+\item Logic Gates
+\begin{itemize}
+\item Perform logic functions: Inversion (NOT), AND, OR, NAND, NOR, etc.
+\item Single input: NOT gate, buffer
+\item Two-input: AND, OR, XOR, NAND, NOR, XNOR\\
+\includegraphics[scale=0.27]{Figures/commonLogicGates.jpg}
+\item Multiple-Input:
+\begin{itemize}
+\item 3, 4, or even more input AND, OR, XOR gates
+\item Compound gates
+\begin{itemize}
+\item AND-OR
+\item OR-AND
+\item AND-OR-INVERT
+\item OR-AND-INVERT
+\end{itemize}
+\item Other cells: Multiplexers and Adders
+\end{itemize}
+\end{itemize}
+\item Logic Levels
+\begin{itemize}
+\item Define ranges of discrete voltages to represent 1 and 0 (i.e. 0 for ground and 1 for 5V ($V_{DD}$)) and allow for noise.
+\end{itemize}
+\item Noise: Is anything that degrades the signal (i.e. resistance, power supply noise, etc.)
+\item Moore's Law
+\begin{itemize}
+\item \emph{``Number of transistors that can be manufactured doubles roughly every 18 months.''} - Gordon Moore, 1965
+\end{itemize}
+\item How do we keep Moore's Law:
+\begin{itemize}
+\item Manufacturing smaller structures: some structures are already a few atoms in size
+\item Developing materials with better properties
+\item Optimizing the manufacturing steps
+\item New technologies
+\end{itemize}
+\item Power consumption
+\begin{itemize}
+\item Power = Energy consumed per unit time
+\item Two types of power consumption:
+\begin{enumerate}
+\item Dynamic power consumption: Power to charge transistor gate capacitances \[P_{\text{dynamic}}=\frac{1}{2}CV_{DD}^2f\]
+\item Static power consumption: Power consumed when no gates are switching, caused by the leakage current \[P_{\text{static}}=I_{DD}V_{DD}\]
+\end{enumerate}
+\end{itemize}
+\end{itemize}
+
+\section{Combinational Circuits: Theory}
+\begin{itemize}
+\item Circuit elements. A circuit consists of:
+\begin{itemize}
+\item Inputs
+\item Outputs
+\item Nodes (wires): Connections between I/O and circuit elements. To count them, look at
+\begin{itemize}
+\item Outputs of every circuit elements
+\item Inputs to the entire circuit
+\end{itemize}
+\item Circuit elements
+\end{itemize}
+\item Types of Logic Circuits
+\begin{itemize}
+\item Combinational Logic
+\begin{itemize}
+\item Memoryless
+\item Outputs determined by current values of inputs
+\item In some books called Combinatorial Logic
+\end{itemize}
+\item Sequential Logic
+\begin{itemize}
+\item Has Memory
+\item Outputs determined by previous and current values of inputs
+\end{itemize}
+\end{itemize}
+\item Rules of Combinational Composition
+\begin{itemize}
+\item Every circuit element is itself combinational
+\item Every node of the circuit is either
+\begin{itemize}
+\item Designated as an input to the circuit
+\item Connects to exactly one output terminal of a circuit element
+\end{itemize}
+\item The circuit contains no cyclic paths: Every path through the circuit visits each node at most once
+\item Boolean Equations\footnote{For a more in depth look, use the material from Diskrete Mathematik}
+\end{itemize}
+
 \end{itemize}
 \end{document}
