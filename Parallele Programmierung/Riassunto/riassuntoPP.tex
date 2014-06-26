@@ -376,7 +376,170 @@ S_p&=p-b(p-1)
 \end{itemize}
 
 \section{Parallel programming models}
-
+\begin{itemize}
+\item Parallel Programming is not uniform
+\begin{itemize}
+\item Similar to sequential programming
+\item Many different approaches to solve problems
+\item Many are equivalent under certain conditions, it depends on the application
+\item More of an art than a science
+\end{itemize}
+\item Task Parallel: Programmer explicitly defines parallel tasks (generic, not always productive)
+\begin{itemize}
+\item Tasks:
+\begin{itemize}
+\item Execute code
+\item Spawn other tasks
+\item wait for results from other tasks
+\end{itemize}
+\item A graph is formed based on spawning tasks\\\includegraphics[scale=0.5]{Figures/chapter4slide7.jpg}
+\item Example: Fibonacci function 
+\begin{lstlisting}
+public class Fibonacci {   public static long fib(int n) {
+      if (n < 2)         return n;      spawn a task to execute fib(n-1);      spawn a task to execute fib(n-2);      wait for the tasks to complete      return the addition of the task results      } 
+}
+\end{lstlisting}
+\item Tasks can execute in parallel
+\begin{itemize}
+\item But they don't have to
+\item Assignment of tasks to CPU is up to the scheduler
+\end{itemize}
+\item Task graph is dynamic: unfolds as execution proceeds
+\item Intuition: wide task graph $\to$ more parallelism
+\item Time:\todo[inline]{Check for a better explanation somewhere else}
+\item Scheduling
+\begin{itemize}
+\item algorithm for assigning tasks to processors
+\item There exists a scheduling with
+\[T_p\leq \frac{T_1}{p}+T_\infty\] 
+\item This upper bound can be achieved with a greedy scheduler
+\begin{enumerate}
+\item if $\geq p$ tasks exist, $p$ tasks execute
+\item if $< p$ tasks exist, all execute
+\end{enumerate}
+\item optimal with a factor of 2
+\item linear speedup for $\frac{T_1}{T_\infty}\geq P$
+\end{itemize}
+\item Work stealing scheduler
+\begin{itemize}
+\item First used in CIlk
+\item provably: $T_p=\frac{T_1}{P}+O\left( T_\infty\right)$
+\item empirically: $T_p\approx\frac{T_1}{P}+T_\infty$
+\item $\frac{T_1}{T_\infty}>>P\to$ linear speedup
+\item Parallel slackness: granularity
+\item Why should the programmer care? A: guideline for parallel programs
+\end{itemize}
+\item Example: Sum the elements of a list, using D\&C\footnote{D\&C: Divide and Conquer}
+\begin{lstlisting}
+public static long sum_rec(List<Long> Xs){
+    int size = Xs.size();
+    if (size == 1)
+        return Xs.get(0);
+    int mid = size / 2;
+    long sum1 = sum_rec(Xs.subList(0, mid)); 
+    long sum2 = sum_rec(Xs.subList(mid, size)); 
+    return sum1 + sum2;
+}
+\end{lstlisting}
+\begin{lstlisting}
+Divide and Conquer:    if cannot divide:        return unitary solution (stop recursion)    divide problem in two    solve first (recursively)    solve second (recursively)    combine solutions    return result
+\end{lstlisting}
+\item So far: Dynamic task graph, but the graph can also be static, i.e. does not change with time
+\begin{itemize}
+\item Pipeline
+\begin{itemize}
+\item Think Laundry as an example
+\item In full utilization, output rate is 1 item per time unit
+\item Time unit is determined by the slower stage: a slower stage stalls the pipeline
+\item Hence, we try to create pipelines where each stage takes (roughly) the same amount of time
+\item Achieved using splits and joins for parallel stages\\\includegraphics[scale=0.38]{Figures/chapter4slide30.jpg}
+\end{itemize}
+\item Streaming\todo[inline]{There isn't a single thing in the slides about streaming}
+\item Dataflows
+\begin{itemize}
+\item Programmer defines: what each task does, and how the tasks are connected
+\item Scheduling: Assigning nodes (tasks) into processors
+\item $n<p$: cannot utilize all processors
+\item $n == p$: one node per processor
+\item $n>p$: need to combine tasks; portability, flexibility (parallel slackness); balancing, minimize communication (graph partitioning)
+\item Dataflow programming is a good match for parallel programming since the programmer is not concerned with low-level details; and the same program is used for different platforms (e.g. shared/distributed memory $\to$ different edge impl.)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Data parallel: An operation is applied simultaneously to an aggregate of individual items (e.g. arrays) (productive, not general)
+\begin{itemize}
+\item In task parallelism, programmer describes what each task does and the task graph (dynamic or static)
+\item In data parallelism, the programmer describes an operation on an aggregate of data items. 
+\begin{itemize}
+\item Data partitioning is done by the system
+\item D.P. is declarative: programmer describes what, not how
+\end{itemize}
+\item Example: Map\\\includegraphics[scale=0.42]{Figures/chapter4slide34.jpg}
+\begin{itemize}
+\item Each operation can be performed in parallel
+\item Work partitioning $\to$ partition the index space
+\end{itemize}
+\item Reductions
+\begin{itemize}
+\item Simple examples: sum, max
+\item Reductions over programmer-defined operations
+\begin{itemize}
+\item Operation properties (associativity/commutativity) define the correct executions
+\item Supported in most parallel languages/frameworks
+\item powerful constru\todo{Word is chopped}
+\end{itemize}
+\item Other data types than arrays
+\item similar operation: prefix scan
+\end{itemize}
+\item Parallel Loops
+\begin{itemize}
+\item So far: work partition $\to$ partition object (e.g. array) index space
+\item Iterations can (but do not have to) perform in parallel: work partitioning $\to$ partition iteration space
+\item Add generality
+\item Potential source of bugs if thought of as a sequential loop due to data races
+\end{itemize}
+\end{itemize}
+\item Managing State: Main challenge for parallel programs. There are different approaches:
+\begin{itemize}
+\item Immutability
+\begin{itemize}
+\item Data does not change
+\item best option, should be used when possible
+\end{itemize}
+\item Isolated mutability
+\begin{itemize}
+\item Data can change, but only one execution context can access them
+\item message passing for coordination
+\item State is not shared
+\item Each task (actor) holds its own state
+\item (Asynchronous) messages
+\item Models:
+\begin{itemize}
+\item Actors
+\item Communicating Sequential processes (CSP)
+\end{itemize}
+\end{itemize}
+\item Mutable/shared data
+\begin{itemize}
+\item Data can change/all execution contexts can potentially access them
+\item Enabled in shared memory architectures
+\begin{itemize}
+\item \textbf{However}: concurrent accesses may lead to inconsistencies
+\item \textbf{Solution}: protect state by allowing only one execution context to access it at a time
+\end{itemize}
+\item State needs to be protected
+\begin{itemize}
+\item Exclusive access
+\item intermediate inconsistent states should not be observed\footnote{Think two people at the blackboard example}
+\end{itemize}
+\item Methods
+\begin{itemize}
+\item Locks: Mechanisms to ensure exclusive access/atomicity; ensuring good performance/correctness with locks can be hard
+\item Transactional Memory: Programmer describes a set of actions that need to be atomic; easier for the programmer, but getting good performance might be challenging
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
 
 %%=============== START OF MIDTERM 2, NEEDS REVISION ================
 %\setcounter{section}{10}%required to start at chapter 11
