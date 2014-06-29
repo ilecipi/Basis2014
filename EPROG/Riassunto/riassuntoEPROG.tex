@@ -1,5 +1,6 @@
 \documentclass[a4paper]{article}
 \usepackage{todonotes}
+\usepackage{amsmath}
 
 
 \begin{document}
@@ -157,9 +158,56 @@ Information hiding only applies to use by clients using dot or infix notation. U
 \end{itemize}
 
 \section{Describing syntax}
+\subsection{BNF}
+Backus-Naur-Form (BNF): A metasyntax used to express context-free grammars. A formal way to describe formal languages. It consists of the following parts
+\begin{itemize}
+\item \textbf{Delimiters}: Fixed tokens of the languages vocabulary, such as keywords and special symbols
+\item \textbf{Constructs}: They represent structures of the language, for instance \emph{Conditional}. A particular instance of a construct os known as a specimen of the construct. There are two kinds of constructs:
+\begin{itemize}
+\item \textbf{Nonterminal construct}: They are defined by a production
+\item \textbf{Terminal construct}: Terminal constructs such as \emph{Identifier} or \emph{Integer} are not defined by this grammar, they are described at the lexical level
+\end{itemize}
+\item \textbf{Productions}: They are associated with a particular construct and specify their specimens
+\end{itemize}
+Each production defines the syntax of specimens of a particular construct, in terms of other constructs and delimiters. An example for a production (not BNF-E) 
+\[A=B|C[D]\{ E``;''\}^*\]
+Depending on the right side of a production, they can be separated into three kinds:
+\begin{itemize}
+\item \textbf{Concatenation}: This production lists zero or more constructs, some may enclosed in brackets and said to be \textbf{optional}
+\item\textbf{Choice}: Listing one or more constructs, separated by vertical bars. A choice specifies that every specimen of the construct on the left consists of exactly one specimen of one of the constructs on the right
+\item \textbf{Repetition}: A construct, enclosed in curly brackets, followed by a star. This indicates zero or more occurrences of the construct, Example: $A=\{ B\}^*$. The star might be replaced by a plus, indicating one or more repetition
+\end{itemize}
+\subsection{BNF-E}
+\begin{itemize}
+\item Every non-terminal must appear on the left side of exactly one production, called its defining production. 
+\item Every production must be of one kind: either concatenation, choice or repetition
+\item There is also a major change in the repetition production. Instead of \[A=[B \{\text{terminal }B\}^*]\] one may write \[A=\{B\text{ terminal }\dots\}^*\] The same is also true for the plus instead of a star.
+\end{itemize}
 
+\subsection{Regular Grammar}
+The regular grammar is generally used to describe the terminal construct, which could be done using BNF, but can be achieved more easily using a regular grammar. The rules are quite similar, although different:
+\begin{itemize}
+\item The use of \textbf{choice} is no problem, possibly with character intervals
+\item There are also \textbf{concatenations}, although they do not assume breaks (spaces, new lines, \dots) between elements. But you may define them explicitly using a lexical construct.
+\item \textbf{Repetitions} have a different, simpler form; $A^*$ or $A^+$, following the same rules
+\item No \textbf{recursion} is allowed whatsoever. As a result you may write any language in a single regular expression
+\item Unlike BNF-E, you may mix different kinds of productions 
+\end{itemize}
 
-
-
+\section{Inheritance and Genericity}
+\subsection{Inheritance}
+\begin{itemize}
+\item Terminology\todo[inline]{Check for a better explanation?}
+\begin{itemize}
+\item A class is a \textbf{parent} to another, if the other inherits directly from it, i.e. class $A$ is a parent to class $B$, if class $B$ inherits from class $A$
+\item The \textbf{descendants} of a class are the class itself and (recursively) the descendants of its heirs (parents). \textbf{Proper descendant} excludes the class itself.
+\end{itemize}
+\item \textbf{Features of classes}
+\begin{itemize}
+\item They can be \textbf{inherited} if it is a feature of one of the parents of the class. They can also be \textbf{immediate} if it is declared in the class. In this case, the class is said to introduce the feature
+\item Fully implemented features are called \textbf{effective}, otherwise one may call them \textbf{deferred}
+\end{itemize}
+\item Contracts 
+\end{itemize}
 
 \end{document}
