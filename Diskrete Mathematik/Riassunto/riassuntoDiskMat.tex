@@ -4,7 +4,10 @@
 \usepackage{multicol}
 \usepackage{amssymb}
 \usepackage{amsmath}
-
+\usepackage{mathtools}
+\usepackage{todonotes}
+\usepackage{cancel}
+\usepackage[bookmarks,bookmarksdepth=2]{hyperref}%Depth of index in pdf program
 
 %Environment for the definitions
 \newenvironment{definition}[1]{\begin{framed}\centerline{\textbf{Definition #1}}\noindent\hspace{-1.1mm}}{\end{framed}}
@@ -13,6 +16,24 @@
 %Custom commands
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\DeclarePairedDelimiter\cur{\{}{\}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\A}{\mathcal{A}}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert} % nice |x|
+\DeclarePairedDelimiter\norm{\lVert}{\rVert} % nice ||x||
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+
 
 
 \begin{document}
@@ -338,12 +359,213 @@ For every predicate $P$ on $\N$ we have \[P(0)\land\forall n(P(n)\to P(n+1))\Lon
 The natural numbers are well-ordered, i.e. every nonempty set of natural numbers has a least element\footnote{The well-ordering principle could be stated more formally as \[\exists n P(n)\Longrightarrow \exists m \left( P(m)\land \forall k <m\lnot P(k)\right)\] but we will not need this formula.}
 
 \chapter{Sets, Relations and Functions}
+There seems to be no simpler mathematical concept than a \emph{set} (Menge), a collection of objects.\\
 
+\emph{``Unter eine Menge verstehen wir jede Zusammenfassung $M$ von bestimmten wohlunterschiedenen Objekten unserer Anschauung oder unseres Denkens (welche die Elemente von $M$ genannt werden) zu einem Ganzen''} - Georg Cantor, 1895
 
+\section{Sets and Operations on Sets}
+\subsection{Set Memebership, Set Equality, and Cardinality}
+We assume that for every object $x$ and set $A$ it is defined whether $x$ is an \emph{element} of $A$, denoted $x\in A$, or whether it is not an element of $A$, denoted $x\not\in A$ (instead of $\lnot(x\in A))$
 
+\subsubsection*{Example 3.1}
+If $\Z$ denotes the set of integers, then $5\in \Z$, but $\frac{1}{2}\not\in\Z$. Two sets $A$ and $B$ are equal $(A=B)$ if and only if they contain the same elements, independently of how $A$ and $B$ are described.
 
+\begin{definition}{3.1}
+\[A=B:\Longleftrightarrow\forall x(x\in A\leftrightarrow x\in B)\]
+\end{definition}
+\begin{definition}{3.2}
+The number of elements of a finite set $A$ is called its \textbf{cardinality} and is denoted $\abs{A}$
+\end{definition}
 
+\subsection{Set Description}
+A natural way to specify a finite set is by listing its elements. We use the standard notation $A=\{a,b,c\}$ to say that the set contains the three elements $a,b,c$ and no other element. If two elements in the list are equal, then one of them an be dropped. 
 
+\subsubsection*{Example 3.2}
+\[\{1,2,3\}=\{1,2,3,1,3\}=\{3,1,2\}=\left\{2,\frac{18}{6},\frac{6}{3},1\right\}\]
+A set can also be described by defining a property of its elements. If $A$ is a set and $P$ is a predicate defined on $A$, then \[\{x\in A\mid P(x)\}\] which denotes the set of elements of $A$ having property $P$
 
+\subsubsection*{Example 3.3}
+For $A=\{n\in\Z\mid 1\leq n\leq 10\}$ we have $\{n\in A\mid\text{ prime($n$)}\}=\{2,3,5,7\}$
+
+\subsection{Sets as Elements}
+Sets can themselves be elements of a set. For example, the set $\cur{3,\cur{4,5}}$ is a set with two elements, the number 3 and the set $\cur{4,5}$.\\
+
+For the operation of forming an \emph{ordered pair} of two objects $a$ and $b$, denoted $(a,b)$, we have \[(a,b)=(c,d):\Longleftrightarrow a=c\land b=d\]
+
+\subsection{Subsets}
+An important relation between sets is the \emph{subset} (or \emph{inclusion}) relation.
+
+\begin{definition}{3.3}
+The set $A$ is a subset of the set $B$, denoted $A\subseteq B$, if every element of $A$ is also an element of $B$, i.e. \[A\subseteq B:\Longleftrightarrow\forall x(x\in A\to x\in B)\]
+\end{definition}
+
+\subsection{The Empty Set}
+\begin{definition}{3.4}
+The \emph{empty set}, denoted $\varnothing$ or $\cur{}$, is the set with no elements, i.e. $\forall x (x\not\in\varnothing)$
+\end{definition}
+
+\subsubsection*{Lemma 3.1}
+The empty set is a subset of every set, i.e. $\forall A (\varnothing\subseteq A)$.
+
+\subsubsection*{Lemma 3.2}
+The empty set is unique.
+
+\subsection{Constructing Sets form the Empty Set}
+The empty set can be used to construct new sets, without using any other predefined objects as elements. The set $\cur{\varnothing}$ is a set with a single element, the empty set $\varnothing$. It is important not to confuse $\varnothing$ with $\cur{\varnothing}$. Note that $\abs{\cur{\varnothing}}=1$ while $\abs{\varnothing}$. Sets with different (finite) cardinality are different. One can define a whole sequence of such sets:
+\[\varnothing,\cur{\varnothing},\cur{\cur{\varnothing}}\cur{\cur{\cur{\varnothing}}},\dots\] 
+Note that except for the empty set, all these sets have cardinality 1.
+
+\subsection{The Power Set}
+\begin{definition}{3.5}
+The \emph{power set} of a set $A$, denoted $\P(A)$ or sometimes $2^A$, is the set of all subsets of $A$: \[\P(A):=\cur{S\mid S\subseteq A}\]
+\end{definition}
+For a finite set with cardinality $k$, the power set has cardinality $2^k$ (hence the name 'power set' and the alternative notation $2^A$)
+
+\subsection{Union, Intersection, Difference and Complement}
+\begin{definition}{3.6}
+The \emph{union} of two sets $A$ and $B$ is defined as 
+\[A\cup B:=\cur{x\mid x\in A\lor x\in B}\text{ or }\forall x(x\in A\cup B\leftrightarrow x\in A\lor x\in B)\]
+and their \emph{intersection} is defined as 
+\[A\cap B:=\cur{x\mid x\in A\land x\in B}\]
+\end{definition}
+
+Let $\A$ be a set of sets, with finite or infinite cardinality. The only restriction on $\A$ is that its elements must be sets. Then we define the union of all sets in $\A$ as the set of all $x$ that are an element of at least one of the sets in $\A$:
+\[\bigcup {\A} :=\cur{x\mid\exists A\in A:x\in A}\]
+Similarly, we define the intersection of all sets in $\A$ as the set of all $x$ that are an element of every set in $\A$:
+\[\bigcap {\A} :=\cur{x\mid\forall A\in A:x\in A}\]
+
+\begin{definition}{3.7}
+For a given universe of discourse $U$, the \emph{complement} of a set $A$, denoted $\overline{A}$ is \[\overline{A}:=\cur{x\in U\mid x\not\in A}\] or simply $\overline{A}=\cur{x\mid x\not\in A}$\footnote{The complement of $A$ is sometimes also denoted as $A^c$}.\\
+
+If union and intersection are understood as logical OR and AND, respectively, then the complement can be understood as the logical negation.
+\end{definition}
+\todo[inline]{Problem with footnote inside framed environment!!}
+
+\begin{definition}{3.8}
+The \emph{difference} of sets $B$ and $A$, denoted $B-A$ (or sometimes $B\backslash A$) is the complement of $A$, relative to $B$: \[B-A:=\cur{x\in B\mid x\not\in A}\] 
+\end{definition}
+
+\subsubsection*{Theorem 3.3}
+For any sets $A,B$ and $C$, and a universe $U$, the following laws hold:\\
+\begin{center}
+\begin{tabular}{r l}
+Idempotence: & $A\cap A=A$ \\
+{}& $A\cup A=A$\\
+Commutativity: & $A\cap B=B\cap A$\\
+{}&$A\cup B=B\cup A$\\
+Associativity: & $A\cap (B\cap C)=(A\cap B)\cap C$\\
+{} & $A\cup (B\cup C)=(A\cup B)\cup C$\\
+Absorption: & $A\cap (A\cup B)=A$\\
+{}& $A\cup (A\cap B)=A$\\
+Distributivity: & $A\cap (B\cup C)=(A\cap B)\cup (A\cap C)$\\
+{}&$A\cup (B\cap C)=(A\cup B)\cap (A\cup C)$\\
+Complementarity: & $A\cap\overline{A}=\varnothing$\\
+{} & $A\cup\overline{A}= U$\\
+Consistency: & $A\subseteq B\Longleftrightarrow A\cap B=A\Longleftrightarrow A\cup B=B$
+\end{tabular}
+\end{center}
+
+\subsection{The Cartesian Product}
+\begin{definition}{3.9}
+The \emph{Cartesian product} $A\times B$ of two sets $A$ and $B$ is the set of all ordered pairs with the first component from $A$ and the second component from $B$: \[A\times B=\cur{(a,b)\mid a\in A\land b\in B}\]
+\end{definition}
+For finite sets, the cardinality of the Cartesian product of some sets is the product of their cardinalities.
+
+\subsection{Russell's Paradox}
+The problem with Cantor's intuitive set theory is that, because it was not clearly axiomatized, it makes the following apparently innocent (yet false) assumption. Whenever one specifies a precise condition, allowing to distinguish between objects that satisfy the condition and objects that don't, then $\cur{x\mid P(x)}$, the set of objects satisfying the definition, is well-defined. Russell proposed the set \[R=\cur{A\mid A\not\in A}\] of sets that are not themselves. Note that there seems nothing wrong with a set being an element of itself. For example, the set of sets containing at least 10 elements is certainly an element of itself, as it contains 10 elements. 
+\todo[inline]{Check again, maybe find a better and shorter explanation}
+\section{Relations}
+\subsection{The Relation Concept}
+\begin{definition}{3.10}
+A (binary) relation $\rho$ from a set $A$ to a set $B$ is a subset of $A\times B$. If $A=B$, then $\rho$ is called a relation on $A$
+\end{definition}
+Instead of $(a,b)\in \rho$ one usually writes \[a\rho b\] and sometimes we write $a\cancel{\rho} b$ if $(a,b)\not\in\rho$
+
+\subsection{Representations of Relations}
+For finite sets $A$ and $B$, a (binary) relation $\rho$ from $A$ to $B$ can be represented as a Boolean $\abs{A}\times\abs{B}$ matrix $M^\rho$ with the rows and columns labeled by the elements of $A$ and $B$ respectively. For $a\in A$ and $b\in B$, the matrix entry $M_{a,b}^\rho$ is 1 if $a\rho b$, 0 otherwise.
+
+\subsection{Set Operations on Relations}
+Relations are sets, and therefore we can apply any operation defined on sets: union, intersection and complement. 
+
+\subsection{The Inverse of a Relation}
+\begin{definition}{3.12}
+The \emph{inverse} of a relation $\rho$ from $A$ to $B$ is the relation $\widehat{\rho}$ from $B$ to $A$ such that \[a\rho b\Longleftrightarrow b\widehat{\rho} a\]
+\end{definition}
+An alternative notation for the inverse of $\rho$ is $\rho^{-1}$\\
+
+In the matrix representation, taking the inverse of a relation corresponds to the transposition of the matrix. In the graph representation, it taking the inverse corresponds to inverting the direction of all edges.
+
+\subsection{Composition of Relations}
+\begin{definition}{3.13}
+Let $\rho$ be a relation from $A$ to $B$ and let $\sigma$ be a relation from $B$ to $C$. Then the \emph{composition} of $\rho$ and $\sigma$, denoted $\rho\sigma$ (or also $\rho\circ\sigma$), is the relation from $A$ to $C$ where \[a\rho\sigma c:\Longleftrightarrow\exists b\in B:(a\rho b\land b\sigma c)\]
+The $n-$fold composition of a relation $\rho$ on a set $A$ is denoted $\rho^n$
+\end{definition}
+
+\subsubsection*{Lemma 3.4}
+The composition of relations is associative, i.e. we have $\rho(\sigma\phi)=(\rho\sigma)\phi$
+
+\subsubsection*{Lemma 3.5}
+Let $\rho$ be a relation from $A$ to $B$ and let $\sigma$ be a relation from $B$ to $C$. Then the inverse $\widehat{\rho\sigma}$ of $\rho\sigma$ is the relation $\widehat{\sigma}\widehat{\rho}$
+
+\subsection{Special Properties of Relations}
+\begin{definition}{3.14}
+A relation $\rho$ on a st $A$ is called \emph{reflexive} if $a\rho a$ for every $a\in A$, i.e. if $\text{id}\subseteq\rho$
+\end{definition}
+In other words, a relation is reflexive if it contains the equality relation ($=$). In the matrix representation of relations, reflexive means that the diagonal is all 1. In a graph representation, reflexive means that every vertex has a loop (an edge from the vertex to itself).
+
+\begin{definition}{3.16}
+A relation $\rho$ on a set $A$ is called \emph{symmetric} if $\rho=\widehat{\rho}$, i.e. if \[a\rho b\Longleftrightarrow b\rho a\]
+\end{definition}
+In the matrix representation of relations, symmetric means that the matrix is symmetric (with respect to the diagonal).
+
+\begin{definition}{3.17}
+A relation $\rho$ on a set $A$ is called \emph{antisymmetric} if $\rho\cap\widehat{\rho}\subseteq\text{id}$, i.e. \[a\rho b\land b\rho a\Longrightarrow a=b\]
+\end{definition}
+In a graph representation, antisymmetric means that there is no cycle of length 2, i.e. no distinct vertices $a$ and $b$ with edges both from $a$ and $b$ and from $b$ to $a$. Note that antisymmetric is \textbf{not} the negation of symmetric. 
+
+\begin{definition}{3.18}
+A relation $\rho$ on a set $A$ is called \emph{transitive} if \[a\rho b\land b\rho c\Longrightarrow a\rho c\]
+\end{definition}
+
+\subsubsection*{Lemma 3.6}
+A relation $\rho$ is transitive if and only if $\rho^2\subseteq\rho$.
+
+\subsection{Transitive Closure}
+\begin{definition}{3.19}
+The transitive closure of a relation $\rho$ on a set $A$, denoted $\rho^*$, is \[{\rho ^*} = \bigcup\limits_{n = 1}^\infty  {{\rho ^n}} \]
+\end{definition}
+In the graph representation of a relation $\rho$ on $A$, we have $a\rho^k b$ if and only if there is a path of length $k$ from $a$ to $b$ in the graph. The transitive closure is the reachability relation, i.e. $a\rho^* b$ if and only if there is a path (of arbitrary finite length) from $a$ to $b$.
+
+\section{Equivalence Relations}
+\subsection{Definition of Equivalence Relations}
+\begin{definition}{3.20}
+An \emph{equivalence relation} is a relation that is reflexive, symmetric and transitive 
+\end{definition}
+
+\begin{definition}{3.21}
+For an equivalence relation $\theta$ on a set $A$ and for $a\in A$, the set of elements of $A$ that are equivalent to $a$ is called the \emph{equivalence class of} a and is denoted as $\lbrack a\rbrack_\theta$: \[\lbrack a\rbrack_\theta:=\cur{b\in A\mid b\theta a}\]
+\end{definition}
+
+\subsubsection*{Lemma 3.7}
+The intersection of two equivalence relations is an equivalence relation.
+
+\subsubsection*{Example 3.44}
+The intersection of $\equiv_5$ and $\equiv_3$ is $\equiv_{15}$.
+
+\subsection{Equivalence Classes Form a Partition}
+\begin{definition}{3.22}
+A \emph{partition} of a set $A$ is a set $\cur{S_i\subseteq A}_{i\in I}$ of mutually disjoint subsets of $A$ that cover $A$, i.e. \[S_i\cap S_j=\varnothing\hspace{5mm}\text{for }i\not= j\hspace{7.5mm}\text{and}\hspace{7.5mm}\bigcup\limits_{i\in I}S_i=A\]
+\end{definition}
+Partitions and equivalence relations capture the same (simple) abstraction.
+
+\begin{definition}{3.23}
+The set of equivalence classes of an equivalence relation $\theta$, denoted by \[A/\theta:=\cur{\lbrack a\rbrack_\theta\mid a\in A}\] is called the \emph{quotient set of} $A$ by $\theta$, or simply $A$ modulo $\theta$, or $A$ mod $\theta$.
+\end{definition}
+
+\subsubsection*{Theorem 3.8}
+The set $A/\theta$ of equivalence classes of an equivalence relation $\theta$ on $A$ is a partition of $A$.
+
+\todo[inline]{Maybe add proof on page 45}
+%PAGE 45
 
 \end{document}
