@@ -144,7 +144,7 @@ while (!flag)
 Nel miglior caso, se l'array è già ordinato, abbiamo $n-1$ paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
 \section{Quicksort (pag 92)}
-Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito``in situ'', vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
+Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito ``in situ'', vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
 \subsubsection*{Esempio}
 \begin{center}
 array: 5 7 3 1 6 4\\
@@ -194,7 +194,7 @@ Per evitare un tempo di $O(n^2)$ nel caso di un array già ordinato sono state p
 L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo $O(n)$ quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uguali al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazione più dettagliata possono essere trovate a pagina 104.
 
 \section{Heapsort (pag 106)}
-Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa $O(n)$ paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo "versickern" sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
+Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa $O(n)$ paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo ``versickern'' sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
 
 \[\begin{array}{*{20}{c}}
 {}&{2}&1&{5}&{3}&4&8&7&6\\
@@ -231,7 +231,7 @@ versickere(int[] a, int i, int m)
 				i=m //fine		
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
-La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente "in situ". L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
+La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 
 \section{Mergesort (pag 112)}
 Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
@@ -477,7 +477,7 @@ Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece i
 T(n) &=& T(qn)+cn \nonumber \\
 & \leq & cn \sum_{i=0}^{+\infty} q^i = cn \cdot\frac{1}{1-q} \in O(n)
 \end{eqnarray}
-Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato "median of median strategy".
+Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato ``median of median strategy''.
 \begin{enumerate}
 \item (caso base) se $n<$costante calcola l'$i-$tesimo più piccolo elemento direttamente.
 \item dividi gli $n$ elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
@@ -548,7 +548,7 @@ binsearch(k)
 \end{lstlisting}
 In questo modo una ricerca non impiega più che $\lceil log_2(n+1) \rceil \in O(n) $ passaggi.
 \section{Interpolationsuche (pag 179)}
-Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico "Bernasconi" non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della $m$:
+Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico ``Bernasconi'' non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della $m$:
 $$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
 Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega $O(n)$ paragoni.
 \section{Selbstanordnende lineare Liste (pag 180)}
@@ -610,7 +610,7 @@ $$ C_n '=\frac{n}{m}=\alpha $$
 $$ C_n = 1+\frac{\alpha}{2} $$
 Nell'altro caso cambia solo il tempo della ricerca infruttuosa:
 $$C_n '=\alpha + e^{-\alpha} $$
-I principali vantaggi di "appendere" una lista alle voci dell'hash table sono quelli della facilità di eliminare una voce e che in questo modo è possibile avere un Belegungsfaktor maggiore delle dimensioni della tabella. Il più grande svantaggio è invece rappresentato dal fatto che serve spazio extra oltre alla tabella stessa.
+I principali vantaggi di ``appendere'' una lista alle voci dell'hash table sono quelli della facilità di eliminare una voce e che in questo modo è possibile avere un Belegungsfaktor maggiore delle dimensioni della tabella. Il più grande svantaggio è invece rappresentato dal fatto che serve spazio extra oltre alla tabella stessa.
 \section{Offene Hashverfahren}
 Attenzione: da non confondere con open hashing (in inglese si dice open addressing). Questo metodo consiste nel salvare le chiavi in voci libere presenti nella tabella. Si introduce pertanto una nuova funzione $s$ in modo da creare una Sondierungsfolge per la ricerca di altri spazi liberi. Definiamo quindi una funzione $s(j,k)$ in funzione del numero di collisioni e della chiave. $k$ verrà dunque salvato alla posizione:
 $$(h(k)-s(j,k))\mbox{ mod }m$$
@@ -712,7 +712,7 @@ $$ h\leq 1,44 log_2 (n)+1 \in O(log(n))$$
 \subsection*{Einfügen}
 Non è sempre detto che aggiungendo un elemento all'albero esso mantenga le sue proprietà AVL. Definiamo dunque:
 $$ bal(p)=\mbox{ Altezza del sottoalbero di destra - altezza sottoalbero di sinistra}$$
-Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura upin(p), dove p è il padre della nuova chiave. La condizione di uscita dal metodo upin è che bal(p) diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di O(log(n)) volte. Definiamo con pp il padre della chiave p. Ci sono due casi: p è il figlio sinistro di pp o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli "aggiornamenti" della variabile bal, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
+Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura upin(p), dove p è il padre della nuova chiave. La condizione di uscita dal metodo upin è che bal(p) diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di O(log(n)) volte. Definiamo con pp il padre della chiave p. Ci sono due casi: p è il figlio sinistro di pp o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli ``aggiornamenti'' della variabile bal, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
 \begin{center}
 \includegraphics[scale=0.6]{Figures/singlerot.jpg}
 \includegraphics[scale=0.55]{Figures/doublerot.jpg}
@@ -815,7 +815,7 @@ A seguire l'implementazione di un min heap. Poniamo che le chiavi siano salvate 
 \item Min: ritorna A[1]
 \item Inserisci(x): incrementiamo n di uno e piazziamo x alla posizione A[n]. Per restaurare le proprietà dell'heap (x può essere minore del suo predecessore) chiamiamo bottom-up(i).
 \item Delete(i): chiamiamo replace(i,A[n]). Dopodiché la chiave A[n] compare due volte, quindi riduciamo la dimensione dell'heap di uno. 
-\item Replace(i,k): poniamo k'=A[i]. Innanzitutto A[i]=k, poi dobbiamo distinguere due casi: se k<k' chiamiamobottom-up(i), altrimenti shift-down(i). Da ricordarsi che shift-down(i) altro non è che versickere(i,n) trattato nel capitolo "Sort". In ogni caso è analogo a bottom-up(i).
+\item Replace(i,k): poniamo k'=A[i]. Innanzitutto A[i]=k, poi dobbiamo distinguere due casi: se k<k' chiamiamobottom-up(i), altrimenti shift-down(i). Da ricordarsi che shift-down(i) altro non è che versickere(i,n) trattato nel capitolo ``Sort''. In ogni caso è analogo a bottom-up(i).
 \end{itemize}
 \begin{lstlisting}
 bottom-up(int i)
@@ -927,7 +927,7 @@ int find(x)
 	return y			
 \end{lstlisting}
 \begin{mytheorem}{6.3}
-Il processo "unione per grandezza" (Vereinigung nach Grösse) conserva la seguente caratteristica: un albero di altezza h ha almeno $2^h$ nodi.
+Il processo ``unione per grandezza'' (Vereinigung nach Grösse) conserva la seguente caratteristica: un albero di altezza h ha almeno $2^h$ nodi.
 \paragraph*{Dimostrazione}
 Ammettiamo che dobbiamo unire gli alberi $T_1 \mbox{ e } T_2$ e che il primo sia più grande del secondo, quindi $g(T_1)\geq g(T_2)$. Secondo l'ipotesi $T_i \mbox{ ha almeno } 2^{h_i}$ nodi. 
 \begin{itemize}
@@ -939,4 +939,344 @@ $$g(T_1 \cup T_2)=g(T_1)+g(T_2) \geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2
 \end{itemize}
 \end{mytheorem}
 Come diretta conseguenza find(x) impiega al massimo log(n) passi. Le altre operazioni sono fattibili in tempo costante.
+
+\chapter{Graphenalgorithmen}
+\section{Topologisches Sortieren (pag 597)}
+Topological sort non è altro che la creazione di una relazione di ordine totale a partire da una parziale (esse possono essere rappresentate in forma di grafi e matrici, vedi Diskrete Mathematik). Una relazione di ordine parziale richiede che il grafo non abbia cicli, quindi si presta bene come test a riguardo.
+\begin{lstlisting}
+ord //array che da un ordine ad ogni nodo
+
+topSortBasic(Graph G)
+	int count=0
+	while (G ha almeno un nodo v con indeg=0){
+		count++
+		ord[v]=count
+		G=G-v
+		}
+	if G=null
+		//G senza cicli
+	else
+		//G ha cicli		
+\end{lstlisting}
+Questa è l'idea di base dell'algoritmo. Per trovare un nuovo nodo col grado di entrata 0 (nella relazione di ordine parziale non ha valori che lo precedono), si può seguire le frecce in ordine opposto partendo da un nodo qualsiasi. In questo modo si impiega $\Omega (n^2)$ passi per l'algoritmo. Una variante più efficiente è la seguente:
+\begin{lstlisting}
+topSort(Graph G)
+	int lfdNr=0
+	Stack<Node> degzero
+	indeg //array [Node] of integers
+	
+	//set eingrad[v]
+	for v=1:n //assume that G has n nodes
+		indeg[v]=0 
+		for v=1:n
+			p=adjacencyList[v]
+			while p!=null
+				indeg[p.endnode]++
+				p=p.next
+	
+	//set degzero
+	for v=1:n
+		if indeg[v]=0
+			degzero.push(v)
+	
+	//topsort
+	while degzero!=null
+		v=degzero.pop()
+		lfdNr++
+		ord[v]=lfdNr
+		p=adjacencyList[v]
+		while p!=null
+			w=p.endnode		
+			indeg[w]--
+			if indeg[w]=0
+				degzero.push(w)
+	//conditions
+	if lfdNr=n
+		//cycle free
+	else
+		//has cycle
+									
+\end{lstlisting}
+L'algoritmo impiega $O(|V|+|E|)$.
+\section{Transitive Hülle}
+È esattamente la stessa cosa che la transitive closure (matematica discreta, capitolo relazioni). Dato un grafo G come matrice, l'algoritmo ritorna la matrice rappresentante la reflexive and transitive closure. Praticamente se A[i,j]=1 significa che esiste una via da i a j.
+\begin{lstlisting}
+for i=1:n
+	A[i,i]=1
+for j=1:n
+	for i=1:n
+		if A[i,j]==1
+			for k=1:n
+				if A[j,k]==1
+					A[i,k]=1	
+\end{lstlisting}
+Approssimativamente richiede $O(|V|^3)$, nel dettaglio $O(|V|^2+|E||V|)$.
+\section{Search}
+\subsection{Breadth first search}
+\begin{center}
+\includegraphics[scale=1]{Figures/bfs.JPG}
+\end{center}
+Da notare che se al posto della coda si utilizza uno stack si ottiene una depth first search.
+\begin{lstlisting}
+BFS(Graph G,Vertex v)
+     create a queue Q
+     create a set V
+     enqueue v onto Q
+     add v to V
+     while Q is not empty loop
+     	t=Q.dequeue()
+       	if t is what we are looking for 
+            	return t
+     	for all edges e in G.adjacentEdges(t)
+			u = G.adjacentVertex(t,e)
+           	if u is not in V
+            	   add u to V
+            	   enqueue u onto Q           
+\end{lstlisting}
+L'algoritmo impiega uno spazio di $O(|V|^2)$ e una complessità di $O(|V|+|E|)$. Da notare che ogni nodo viene raggiunto per la miglior via.
+\subsection{Depth first search (pag 607)}
+Al posto di usare una coda usiamo uno stack. Nel caso di prima l'ordine con cui i lati vengono visitati sarebbe quindi: A, B, E, G, H, C, F, D. Possiamo usare questo algoritmo per apprendere alcune caratteristiche del grafo, quali la suddivisione dei vari tipi di lati. Definiamo l'albero risultate dai lati utilizzati dalla ricerca (Baumpfeile) come DFS-tree. Ad ogni nodo associamo un indice, che rappresenta l'ordine con cui viene visitato. Differenziamo il depth-first-begin-index (DFBI), che rappresenta l'ordine con cui vengono inseriti nello stack, e il depth-first-end-index (DFEI), l'ordine con cui vengono allontanati dallo stack. Definiamo dunque i tipi possibili di lati:
+\begin{itemize}
+\item Appartenenti al DFS-tree: Baumpfeile.
+\item Frecce che arrivano ad un nodo già visitato: Vorwärtspfeile.
+\item Frecce che tornano ad un predecessore del DFS-tree: Ruckwärtspfeile.
+\item Altrimenti chiamate Seitwärtspfeile.
+\end{itemize}
+Esempio:
+\begin{center}
+\includegraphics[scale=0.7]{Figures/edgetype.png}
+\end{center}
+Con l'aiuto di questo algoritmo ricorsivo possiamo arrivare a tutte le informazioni:
+\begin{lstlisting}
+Set<Vertex> B=nullSet
+int dfbi=dfei=0
+Set<Edge> BP=VP=RP=SP=nullSet
+Graph G
+Node start
+int[] DFEI,DFBI
+
+public static void main(String[] args)
+	DFS(G, start, null)
+
+DFS(Graph G, Node v,w)
+	//depth first search, starting from node v, that comes from w
+	if !B.has(v)
+		//v not reached yet
+		B=B+{v} //where + denotes the union of two sets
+		BP=BP+{(w,v)}
+		dfbi++
+		DFBI[v]=dfbi
+		for (Edge (v,u):G.E) //G.E=set of edges of G
+			DFS(G, u,v)
+		dfei++
+		DFEI[v]=dfei
+	else
+		//classify edge
+		if DFBI[w]<=DFBI[v]
+			//forward edge
+			VP=VP+{(w,v)}
+		else if DFEI[w]==0 
+			//DFS not finished for w, that means w is an ancestor of v
+			BP=BP+{(w,v)}
+		else
+			//cross edge
+			SP=SP+{(w,v)}			
+\end{lstlisting}
+In un grafo non diretto non ci sono cross edges. Interessante notare che invertendo l'ordine del DFEI si ottiene un topological sort (dimostrato in un esercizio, penso accada lo stesso senza invertire il DFBI in un grafo connesso e senza cicli). Un'altra possibile applicazione potrebbe essere quella di ricavare uno spanning tree.\todo{Supposizioni logiche, non sicure e non dimostrate} 
+\section{Kürzeste Weg (pag 619)}
+Per ogni lato definiamo una funzione c((v,u)) che ne associa il costo.
+\subsection{Dijkstra}
+Ammettiamo che tutti i costi siano positivi. Se p=(a,...,f) è una via più corta tra a ed f, allora lo devono essere anche tutte le vie intermedie.
+\begin{lstlisting}
+int infinity //a big number
+Set<Node> R=nullSet
+	
+Dijkstra(Graph G, Node s)
+	for (Node v: V-{s})
+		v.predecessor=null
+		v.distance=infinity
+		v.chosen=false	
+	s.predecessor=s
+	s.distance=0
+	s.chosen=true
+	//i vertici adiacenti a s appartengono al bordo (Rand)
+	fillR(s)
+	while !R.isEmpty()
+		//scegli v con v.distance minima e allontanalo da R
+		v.chosen=true
+		fillR(v)
+		
+fillR(Node v)
+	for (Edge (v,u):E)
+		if !u.chosen && (v.distance+c((v,u))<u.distance)
+			u.predecessor=v
+			u.distance=v.distance+c((v,u))
+			R.add(u)				
+\end{lstlisting}
+L'efficienza dell'algoritmo dipende dalla struttura dati rappresentata da R, che necessita di eseguire le seguenti operazioni nel minor tempo possibile:
+\begin{enumerate}
+\item Inizializzare
+\item Controllare se è vuoto
+\item Trovare e allontanare il nodo con la distanza minima
+\item Aggiungere una nuova voce
+\end{enumerate}
+Di seguito le possibili implementazioni con i loro costi:
+\paragraph*{Non salvarlo esplicitamente}
+Inizialmente tutti i nodi che non sono stati scelti appartengono a R. Dopodiché 1. e 4. non devono più essere eseguiti. Per 2. e 3. basta controllare tutti i nodi. Il tempo richiesto dall'algoritmo diventa dunque $O(|V|^2)$, molto efficiente solo se ci sono molti lati.
+\paragraph*{Heap}
+Le operazioni 1. e 2. richiedono tempo costante, mentre 3. e 4. tempo logaritmico. In totale $O(|E|\log (|V|))$.
+\paragraph*{Fibonacci Heap}
+1, 2, 4 possono essere eseguite in tempo ammortizzato costante, mentre 3. in tempo logaritmico. In totale $O(|E|+|V|\log (|V|))$.
+\subsection*{Bellman-Ford}
+Nel caso di un grafo con valori negativi il percorso più breve si lascia trovare nel seguente modo:
+\begin{lstlisting}
+int infinity //a big number
+Set<Node> R=nullSet
+	
+Dijkstra(Graph G, Node s)
+	for (Node v: V-{s})
+		v.predecessor=null
+		v.distance=infinity
+	s.predecessor=s
+	s.distance=0
+	//i vertici adiacenti a s appartengono al bordo (Rand)
+	fillR(s)
+	while !R.isEmpty()
+		//scegli v allontanalo da R
+		fillR(v)
+		
+fillR(Node v)
+	for (Edge (v,u):E)
+		if v.distance+c((v,u))<u.distance
+			u.predecessor=v
+			u.distance=v.distance+c((v,u))
+			R.add(u)				
+\end{lstlisting}
+Attenzione: se c'è un ciclo negativo il processo potrebbe non finire. Altrimenti il tempo impiegato è $O(|V||E|)$.
+\begin{lstlisting}
+     //controlla la presenza di cicli negativi
+     for each arco uv in archi:
+        u := uv.source
+        v := uv.destination
+        if v.distance > u.distance + uv.weight:
+           error "Il grafo contiene un ciclo di peso negativo"
+\end{lstlisting}
+\section{Minimale spannende Baum (pag 631)}
+Per risolvere questo problema utilizziamo un procedimento greedy, vale a dire l'applicazione iterativa delle seguenti regole:
+\paragraph*{Regola 1} Tra due ``cut'' non connessi scegli l'arco dal costo minore.
+\paragraph*{Regola 2} Se ci troviamo in un ciclo, elimina il nodo dal costo maggiore.
+\paragraph*{Invariante} L'invariante dell'algoritmo è che l'applicazione di queste regole mantiene il minimum spanning tree parziale minimo. 
+\begin{mytheorem}{9.1}
+Qualsiasi algoritmo che rispetti le precisazioni fatte sopra garantisce l'invariante.
+\paragraph*{Dimostrazione} Fatta in classe e leggibile a pag 629 (abbastanza triviale).
+\end{mytheorem}
+\subsection{Kruskal}
+Il principio dell'algoritmo è semplice: inizialmente ogni nodo rappresenta un albero minimale separato. Dopodiché avviene un'iterazione in base al prezzo degli archi: se l'arco appartiene già a uno dei sottoalberi non viene scelto, altrimenti sì, quindi i due sottoalberi vengono uniti. Per un'efficiente implementazione i lati devono essere ordinati in senso crescente già all'inizio e i nodi vengono salvati in una Union find structure. 
+\begin{lstlisting}
+Set<Edge> S //solution
+UnionFind uf
+sort E
+for (Vertex v:V)
+	uf.makeSet(v)
+for (Edge (v,w):E)
+	if uf.find(v)!=uf.find(w)
+		S.add((v,w))
+		uf.union(find(v),find(w))
+	
+\end{lstlisting}
+L'algoritmo impiega $O(|E|\log (|V|))$.
+\subsection{Prim,Dijkstra}
+Iniziamo con un nodo e finché non siamo alla fine, quindi n-1 passi, scegliamo ogni volta l'arco che possiede un solo nodo nell'albero e con costo minimo. In questo modo impieghiamo $O(|E|+|V|\log (|V|))$.
+\section{Flüsse in Netzwerken (pag 637)}
+Innanzitutto si cerca una via che collega q a s (Quelle und Senke). Dopodiché si costruisce un cosiddetto Restgraph nel modo seguente:
+\begin{center}
+\includegraphics[scale=0.8]{Figures/restgraph.jpg} 
+\end{center}
+Le frecce viola indicano la capacità utilizzata, mentre quelle blu ciò che ancora rimane. Finché esiste ancora un percorso nel grafo, che può essere trovato ad esempio tramite breadth first search, è ancora possibile aumentare la capacità su quella via. Intuitivamente si può capire che la capacità massima del flusso è limitata dal taglio minimo (min cut), più precisamente essi sono uguali.
+\begin{lstlisting}
+//initialize
+for (Edge e:E)
+	f(e)=0
+//iterations, the flow f grows up
+while (there is a path p from q to s)
+	r=min\{rest(e)|e is in p\}
+	grow f across p of r units
+\end{lstlisting}
+Si tratta di una semplice versione che richiede $O(|V||E|^2)$. Tramite l'inserimento di una soglia c approssimativa (Schwelle) che viene dimezzata ad ogni iterazione possiamo migliorarne il tempo. In questo caso consideriamo solo i lati con una capacità maggiore della soglia, aumentiamo la capacità per poi diminuire la soglia. Il tempo richiesto è di $O(\log (c)m^2)$. 
+
+Ecco una versione completa dell'algoritmo di base, estratta dall'API condivisa sul seguente link: \url{https://db.tt/ftsSt6j9}.
+\begin{lstlisting}
+package GraphAPI;
+import java.util.LinkedList;
+import DataStructure.Queue;
+
+public class MaxFlow {
+	private int infinity=100000000;
+    private boolean[] marked;     // marked[v] = true if s->v path in residual Network
+    private FlowEdge[] edgeTo;    		// edgeTo[v] = last edge on shortest residual s->v path
+    private Network G;
+    private int s, t;
+
+    public MaxFlow(Network G, int s, int t) {
+    	this.G=G;
+    	this.s=s;
+    	this.t=t;
+    }
+
+    public int compute(){
+    	int res=0;
+    	while (hasPath()){
+    		int min=infinity;
+    		//compute the min flow on the residual Network
+    		BreadthFirstSearch search=new BreadthFirstSearch(G);
+    		Iterable<Integer> path=search.pathToFrom(t,s); //path from s to t
+    		for (int e:path)
+    			if (edgeTo[e].residualCapacityTo(e)<min)
+    				min=edgeTo[e].residualCapacityTo(e);
+    		
+    		//add min to all edges on the path
+    		for (int e: path)
+    			edgeTo[e].addResidualFlowTo(e, min);
+    		res+=min;
+    	}
+    	return res;
+    }
+  
+    private boolean hasPath(){
+    	edgeTo=new FlowEdge[G.V()];
+    	marked=new boolean[G.V()];
+    	
+    	Queue<Integer> q=new Queue<Integer>();
+    	q.enqueue(s);
+    	while(!q.isEmpty()){
+    		int v=q.dequeue();
+    		marked[v]=true;
+    		for (FlowEdge e : G.adj(v)){
+    			int w=e.other(v);
+    			if (e.residualCapacityTo(w)>0 && !marked[w]){
+    				edgeTo[w]=e;
+    				q.enqueue(w);
+    			}
+    		}
+    	}
+    	return marked[t];
+    }
+    
+    public Iterable<Integer> path(){
+    	LinkedList<Integer> path=new LinkedList<Integer>();
+    	int pos=t;
+    	while (pos!=s){
+    		path.addFirst(pos);
+    		pos=edgeTo[pos].other(pos);
+     	}
+    	return path;
+    }
+}
+\end{lstlisting} 
+\subsection{Maximale Zuordnung in bipartiten Graphen (pag 646)}
+Consideriamo il problema del matching ottimale tra due set. Le coppie possibili possono essere semplicemente modellate come un grafo bipartito, che a sua volta può essere trasformato nella forma utilizzata per i flussi:
+\begin{center}
+\includegraphics[scale=0.5]{Figures/matching.jpg}
+\end{center}
+In questo caso, dato che il costo è sempre 1, la crescita del Restgraph consiste semplicemente nel cambiamento di direzione delle frecce. In un livello di astrazione più concreto questo corrisponde nel liberare una coppia per poterne formare altre due. L'esecuzione dell'algoritmo in questo speciale tipo di grafo richiede solamente $O(\sqrt{|V|}|E|)$.
 \end{document}
