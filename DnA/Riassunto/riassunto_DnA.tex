@@ -144,7 +144,7 @@ while (!flag)
 Nel miglior caso, se l'array è già ordinato, abbiamo $n-1$ paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
 \section{Quicksort (pag 92)}
-Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito "in situ", vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
+Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito``in situ'', vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
 \subsubsection*{Esempio}
 \begin{center}
 array: 5 7 3 1 6 4\\
@@ -272,7 +272,7 @@ merge (int[] a, int l,m,r)
 \subsection*{Analisi}
 Merge impiega sempre $O(n)$ spostamenti e comparazioni. Dato che l'array viene sempre diviso in due, il metodo merge viene chiamato $\log(n)$ volte. In totale l'algoritmo impiega sempre $\Theta (n \log(n))$. L'unico problema è che serve sempre $O(n)$ spazio extra per salvare l'array di supporto.
 \subsection*{Mergesort iterativo}
-L'algoritmo può anche essere reso totalmente iterativo. Esso si chiama "reines 2-Wege-Mergesort" (straight 2-way merge sort). L'idea è quella di unire tramite il metodo merge intervalli sempre più grandi (esattamente il doppio) fino ad avere l'intero array completamente ordinato. Esempio:
+L'algoritmo può anche essere reso totalmente iterativo. Esso si chiama ``reines 2-Wege-Mergesort'' (straight 2-way merge sort). L'idea è quella di unire tramite il metodo merge intervalli sempre più grandi (esattamente il doppio) fino ad avere l'intero array completamente ordinato. Esempio:
 \[\begin{array}{*{20}{c}}
 {}&{2}&1&{3}&{9}&6&5\\
 {\Rightarrow}&1&{2|}&{3}&{9|}&5&{6|}\\
@@ -362,9 +362,9 @@ radixexchangesort(int[] a, int l,r,b)
 \subsection*{Analisi}
 L'algoritmo viene richiamato al massimo $b$ volte ed ogni volta impiega $O(n)$ paragoni e movimenti. In totale impiega dunque $O(bn)$ (tempo pseudo polinomiale). Se $b> \log (n)$ radixsort non è l'algoritmo adeguato al problema.
 \subsection{Fachverteilung}
-Questo algoritmo viene spesso anche chiamato bucket sort, poiché vengono utilizzati dei bucket per ordinare i numeri. L'idea di base è semplice: per ordinare una serie di numeri con $m$ cifre si inizia ad ordinarli dividendoli in bucket rappresentanti la cifra, sempre da destra a sinistra, dal basso all'alto. Dopo uno step bisogna "raccogliere" nuovamente la sequenza dai bucket e rieseguire il procedimento con la cifra successiva. Dopo $m$ step la sequenza è ordinata. L'algoritmo può praticamente essere diviso in due parti, dividere e raccogliere.
+Questo algoritmo viene spesso anche chiamato bucket sort, poiché vengono utilizzati dei bucket per ordinare i numeri. L'idea di base è semplice: per ordinare una serie di numeri con $m$ cifre si inizia ad ordinarli dividendoli in bucket rappresentanti la cifra, sempre da destra a sinistra, dal basso all'alto. Dopo uno step bisogna ``raccogliere'' nuovamente la sequenza dai bucket e rieseguire il procedimento con la cifra successiva. Dopo $m$ step la sequenza è ordinata. L'algoritmo può praticamente essere diviso in due parti, dividere e raccogliere.
 \subsubsection*{Esempio}
-Sequenza originale: 40, 13, 22, 54, 15, 28.Primo step:    
+Sequenza originale: 40, 13, 22, 54, 15, 28. Primo step:    
 \[\begin{array}{*{20}{c}}
 {40}&{ }&{22}&{13}&{54}&{15}&{ }&{ }&{28}&{ }\\
 {F0}&{F1}&{F2}&{F3}&{F4}&{F5}&{F6}&{F7}&{F8}&{F9}\\
@@ -432,7 +432,7 @@ Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne ra
 Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare $n$ chiavi.
 \paragraph*{Dimostrazione}
 Per dimostrare questo teorema valutiamo tutte le possibili $n!$ permutazioni di $n$ chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo $i:j$ rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono $n!$ permutazioni possibili devono per forza esserci $n!$ foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con $k$ foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
-$$ log (k!) \geq \log ((\frac{n}{2})^{\frac{n}{2}}) = \frac{n}{2} \log (\frac{n}{2}) \in \Omega (n \log (n))$$
+$$ log (k!) \geq \log \left(\left(\frac{n}{2}\right)^{\frac{n}{2}}\right) = \frac{n}{2} \log \left(\frac{n}{2}\right) \in \Omega (n \log (n))$$
 \end{mytheorem}
 \begin{mytheorem}{2.4.1}
 L'altezza massima e media di un albero binario con $k$ chiavi è di almeno $ log_2 (k)$.
@@ -444,7 +444,7 @@ La prima parte è triviale, in quanto un albero di altezza $t$ può avere al mas
    &=&\frac{1}{k}(log_2(2k_1)+log_2(2k_2)) = f(k_1,k_2)
 \end{eqnarray}
 Secondo la condizione che $k_1+k_2=k$, $f$ assume valore minimo quando $k_1=k_2=\frac{k}{2}$ quindi:
-$$ \mbox{altezza media}(T) \geq \frac{1}{k}(\frac{k}{2} log_2(k)+\frac{k}{2} log_2(k))=log_2 (k)$$
+$$ \mbox{altezza media}(T) \geq \frac{1}{k}\left(\frac{k}{2} log_2(k)+\frac{k}{2} log_2(k)\right)=log_2 (k)$$
 Si incappa dunque in una contraddizione.
 \end{mytheorem}
 \chapter{Search}
@@ -475,7 +475,7 @@ trova (int l,r,i)
 Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece il pivot divide l'array in $qn$ e $(1-q)n$ elementi, con $0.5<q<1$ impiega:
 \begin{eqnarray}
 T(n) &=& T(qn)+cn \nonumber \\
-& \leq & cn \sum_{i=0}^{+\infty} q^i = cn \frac{1}{1-q} \in O(n)
+& \leq & cn \sum_{i=0}^{+\infty} q^i = cn \cdot\frac{1}{1-q} \in O(n)
 \end{eqnarray}
 Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato "median of median strategy".
 \begin{enumerate}
@@ -486,7 +486,7 @@ Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chia
 \item utilizza quest'elemento come pivot e procedi normalmente.
 \end{enumerate}
 Questa strategia assicura che ci sono almeno 
-$$ 3(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2) \geq \frac{3n}{10} -6$$
+$$ 3\left(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2\right) \geq \frac{3n}{10} -6$$
 elementi più piccoli di $v$. Segue quindi che l'algoritmo deve essere richiamato al massimo $ \lceil \frac{7n}{10} + 6 \rceil$ volte ricorsivamente. Il tempo impiegato è dunque:
 $$ T(n) \leq T\lceil \frac{n}{5} \rceil +T \lceil \frac{7n}{10} +6 \rceil + an \leq ... \leq cn \in O(n) $$
 \section{Sequenzielle Suche (pag 173)}
@@ -574,7 +574,7 @@ Una buona scelta per $m$ è che sia un numero primo.
 \section{Hashing perfetto ed universale}
 Se il numero di chiavi possibili è minore alla grandezza della tabella e già conosciuto in partenza possiamo costruire una funzione di hashing iniettiva che evita qualsiasi collisione. In questo caso si parla di hashing perfetto (perfektes Hashing).
 Nella maggior parte dei casi non sappiamo però se è possibile evitare collisioni. Sia $H$ una collezione finita di hash functions. $H$ si chiama universale se per ogni diversa coppia di chiavi $x$ e $y$ vale:
-$$ \frac{|\{h\in H: h(x)=h(y)\}|}{|H|} \leq \frac{1}{m}$$
+$$ \frac{\left|\{h\in H: h(x)=h(y)\}\right|}{|H|} \leq \frac{1}{m}$$
 In altre parole $H$ è universale se per ogni coppia di chiavi differenti al massimo la $m-$esima parte delle funzioni porta ad una collisione. La probabilità che due chiavi collidano con una funzione di $H$ è dunque al massimo $1\over m$. Per una funzione $h$ e due chiavi $x$ e $y$ definiamo:
 $$
 \delta (x,y,h) =
@@ -666,18 +666,18 @@ delete (int k)
 \subsection{Lineares Sondieren}
 $$ s(j,k)=j $$
 Abbastanza inefficiente, poiché grossi pezzi occupati tendono a crescere ancora di più, aumentando così il numero di collisioni.
-$$C_n '=\frac{1}{2} (1+\frac{1}{(1-\alpha)^2}) $$
-$$C_n =\frac{1}{2} (1+\frac{1}{(1-\alpha)}) $$
+$$C_n '=\frac{1}{2} \left(1+\frac{1}{(1-\alpha)^2}\right) $$
+$$C_n =\frac{1}{2} \left(1+\frac{1}{(1-\alpha)}\right) $$
 \subsection{Quadratisches Sondieren}
 $$s(j,k)=\lceil \frac{j}{2} \rceil ^2(-1)^j$$
 In questo modo si riesce a sondare molto più velocemente, ma il fenomeno del sekundäre Häufung (secondary clustering) influenza l'efficienza. Due sinonimi hanno difatti la stessa sequenza dunrante la ricerca proprio come nel lineares Sondieren.
-$$C_n = 1+\ln ( \frac{1}{1-\alpha})-\frac{\alpha}{2}$$
-$$C_n '= \frac{1}{1-\alpha}-\alpha +\ln ( \frac{1}{1-\alpha})$$
+$$C_n = 1+\ln \left( \frac{1}{1-\alpha}\right)-\frac{\alpha}{2}$$
+$$C_n '= \frac{1}{1-\alpha}-\alpha +\ln \left( \frac{1}{1-\alpha}\right)$$
 \subsection{Double hashing}
 $$s(j,k)=jh'(k) $$
 In cui $h'$ è una seconda hash function. Per scegliere una buona funzione $h'$ bisogna essere sicuri che il risultato non sia influenzato dal risultato della prima, quindi che abbiano probabilità disgiunte. Da ricordarsi che $h'(k) \neq 0$ e che non sia divisore di $m$. Normalmente i tempi sono i seguenti:
 $$ C_n '= \frac{1}{1-\alpha} $$
-$$ C_n = \frac{1}{\alpha} \ln (\frac{1}{1-\alpha})$$
+$$ C_n = \frac{1}{\alpha} \ln \left(\frac{1}{1-\alpha}\right)$$
 Grazie all'algoritmo di Brent è però possibile migliorare il tempo della ricerca con successo:
 \begin{lstlisting}
 //hh = la seconda hash function
@@ -699,7 +699,7 @@ BrentEinfuegen (Datensatz ds)
 Grazie a questo algoritmo il tempo diventa il seguente:
 $$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
 \section{Dynamische Hashverfahren}
-\todo{voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!?}
+\todo[inline]{voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!?}
 \chapter{Bäume}
 A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
 \section{AVL-Tree (pag. 284)}
@@ -723,7 +723,7 @@ Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo inna
 \item Se la chiave p ha un solo figlio q per forza q non può avere figli. q prende quindi la posizione di p, dopodiché viene chiamato upout(pp).
 \item Se p ha invece due figli si inverte la posizione di p con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 pag 293}. Anche in questo caso viene chiamato upout.
 \end{enumerate}
-Il metodo upout è analogo ad upin, cambia soltanto l'invariante (condizione d'uscita quando bal(pp)=1) e l'ordine delle rotazioni:
+Il metodo upout è analogo ad upin, cambia soltanto l'invariante (condizione d'uscita quando bal$(pp)=1$) e l'ordine delle rotazioni:
 \begin{center}
 \includegraphics[scale=0.5]{Figures/avldeletion.png}
 \end{center}

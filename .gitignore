@@ -5,3 +5,15 @@
 *.synctex.gz
 
 TSWLatexianTemp*
+
+*.fdb_latexmk
+
+*.fls
+
+*.toc
+
+*.ddf
+
+*Backup*
+
+*.bb

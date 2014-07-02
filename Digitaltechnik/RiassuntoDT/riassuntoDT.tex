@@ -3,16 +3,12 @@
 \usepackage{amsmath}
 \usepackage{tabularx}
 \usepackage{todonotes}
-%\usepackage{showframe}
+\usepackage{showframe}
+\usepackage{tikz}
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
 \begin{document}
-
-%\title{Title}
-%\author{Author}
-%\date{Today}
-%\maketitle
-
-
-
 \section{Organization and Introduction}
 \begin{itemize}
 \item The Art of managing complexity
@@ -355,8 +351,266 @@ $2^7$&$2^6$&$2^5$&$2^4$&$2^3$&$2^2$&$2^1$&$2^0$&{}&Two's Compl.&Unsigned\\\hline
 \item Connects to exactly one output terminal of a circuit element
 \end{itemize}
 \item The circuit contains no cyclic paths: Every path through the circuit visits each node at most once
-\item Boolean Equations\footnote{For a more in depth look, use the material from Diskrete Mathematik}
-\end{itemize}
 
 \end{itemize}
+\item Boolean Equations\footnote{For a more in depth look, use the material from Diskrete Mathematik}
+\begin{itemize}
+\item Functional specifications of outputs in terms of inputs.
+\end{itemize}
+\item Boolean Algebra
+\begin{itemize}
+\item Set of axioms and theorems to simplify Boolean equations
+\item Like regular algebra, but in some cases simpler because variables only have 1 or 0 as a value
+\item Axioms and theorems obey the principles of duality:
+\begin{itemize}
+\item Stay corrected if: ANDs and ORs interchanged and 0's and 1's interchanged
+\item Example:\\
+\begin{tabular}{l|l}
+{}&Dual\\\hline
+$\overline{0}=1$&$\overline{1}=0$\\
+$B\cdot\overline{B}=0$&$B+\overline{B}=1$
+\end{tabular}
+
+\end{itemize}
+\end{itemize}
+\item Boolean Axioms\\
+\begin{tabular}{|l|l|l|l|l|}\hline
+{}&Axiom&{}&Dual&Name\\\hline
+$A1$ & $B=0$ if $B\not = 1$ & $A1'$ & $B=1$ if $B\not=0$ & Binary Field\\
+$A2$ & $\overline{0}=1$ & $A2'$ & $\overline{1}=0$ & NOT  \\
+$A3$ & $0\cdot 0=0$ & $A3'$ & $1+1=1$ & AND/OR     \\
+$A4$ & $1\cdot 1=1$ & $A4'$ & $0+0=0$ & AND/OR    \\
+$A5$ & $0\cdot 1=1\cdot 0=0$ & $A5'$ & $1+0=0+1=1$ & AND/OR \\ \hline
+\end{tabular}
+\\Duality: If the symbols 0 and 1 and the operators $\cdot$ (AND) and $+$ (OR) are interchanged, the statement will still be correct
+\item Boolean Theorems\\
+\resizebox{13cm}{!}{
+\begin{tabular}{|l|l|l|l|l|}\hline
+{}&Theorem&{}&Dual&Name\\\hline\hline
+$T1$ & $B\cdot 1=B$ & $T1'$ & $B+0=B$ & Identity\\\hline
+$T2$ & $B\cdot 0=0$ & $T2'$ & $\overline{1}=0$ & Null Element  \\\hline
+$T3$ & $B\cdot B=B$ & $T3'$ & $1+1=1$ & Idempotency     \\\hline
+$T4$ & {} & $\overline{\overline{B}}=B$ & {} & Involution    \\\hline
+$T5$ & $B\cdot\overline{B}=0$ & $T5'$ & $1+0=0+1=1$ & Complements \\ \hline
+$T6$ & $B\cdot C=C\cdot B$ & $T6'$ & $B+C=C+B$ & Commutativity	\\\hline
+$T7$ & $(B\cdot C)\cdot D= B\cdot (C\cdot D)$ & $T7'$ & $(B+C)+D = B+(C+D)$ & Associtivity	\\\hline
+$T8$ & $(B\cdot C)+(B\cdot D)=B\cdot (C+D)$ & $T8'$ & $(B+C)\cdot (B+D)=B+(C\cdot D)$ & Distributivity	\\\hline
+$T9$ & $B\cdot (B+C)=B$ & $T9'$ & $B+(B\cdot C)=B$ & Covering	\\\hline
+$T10$ & $(B\cdot C) + (B\cdot \overline{C})=B$ &$T10'$& $(B+C)\cdot (B+\overline{C})=B$& Combining\\\hline
+$T11$ &\specialcell{$(B\cdot C)+(\overline{B}\cdot D)+(C\cdot D)$\\$=B\cdot C+\overline{B}\cdot D$} & $T11'$ & \specialcell{$(B+t C)\cdot(\overline{B}+ D)\cdot(C+ D)$\\$=(B + C)\cdot(\overline{B}+ D)$}  & Consensus	\\\hline
+$T12$ & $\overline{B_0\cdot B_1\cdot B_2\cdot\dots}= (\overline{B_0}+\overline{B_1}+\overline{B_2}+\dots)$ & $T12'$ & $\overline{B_0 +  B_1+ B_2+\dots}= (\overline{B_0}\cdot\overline{B_1}\cdot\overline{B_2}\cdot\dots)$ & \specialcell{De Morgan's\\ Theorem}\\
+\hline
+\end{tabular}
+}
+
+\item Bubble Pushing
+\begin{itemize}
+\item Pushing bubbles backward (from the output) or forward (from the inputs) changes the body of the gate from AND to OR or vice versa
+\begin{itemize}
+\item Pushing a bubble from the output back to the inputs puts bubbles on all gate inputs
+\item Pushing bubbles on all gate inputs forward toward the output puts a bubble on the output and changes the gate body
+\includegraphics[scale=0.35]{Figures/bubblePushing.jpg}
+\end{itemize}
+\item Rules:
+\begin{itemize}
+\item Begin at the output of the circuit and work toward the inputs
+\item Push any bubbles on the final output back toward the inputs
+\item Draw each gate in a form so that bubbles cancel
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\section{Combinational Circuits Design}
+\begin{itemize}
+\item Some Definitions:
+\begin{itemize}
+\item Complement: variable with a bar over it ($\overline{A},\overline{B},\overline{C}$)
+\item Literal: variable or its complement ($A,\overline{A},B,\overline{B},C,\overline{C}$)
+\item Implicant: product (AND) of literals ($A\cdot B\cdot \overline{C}$)
+\item Minterm: product (AND) that includes all input variables ($A\cdot B \cdot \overline{C}$)
+\item Maxterm: sum (OR) that includes all input variables ($A+\overline{B}+\overline{C}$)
+\end{itemize}
+\item Sum-of-Products (SOP) Form
+\begin{itemize}
+\item All boolean equations can be written in SOP form
+\begin{itemize}
+\item Each row in a truth table has a minterm
+\item A minterm is a product (AND) of literals
+\item Each minterm is TRUE for that row (and only that row)
+\end{itemize}
+\item Formed by ORing the minterms for which the output is TRUE
+\end{itemize}
+\item The Dual: Product-of-Sums (POS) Form
+\begin{itemize}
+\item Al Boolean equations can be written in POS form
+\begin{itemize}
+\item Each row in a truth table has a maxterm
+\item A minterm is a sum (OR) of literals
+\item Each minterm is FALSE for that row (and only that row)
+\end{itemize}
+\item Formed by ANDing the maxterms for which the output is FALSE
+\end{itemize}
+\item Karnaugh Maps (K-Maps)
+\begin{itemize}
+\item Boolean expressions can be minimized by combining terms
+\item K-maps minimize equations graphically
+\item Rules:
+\begin{itemize}
+\item Special order for bit combinations: $\mathop {00,01,11,10}\limits^{
+\begin{tikzpicture}
+\draw[<-] (0,0) parabola bend (1,0.1) (2,0);
+\end{tikzpicture}
+}$ (only one bit changes to the next)
+\item Every 1 in a K-map must be circled at least once
+\item Each circle must span a power of 2 ($2^0$ included) squares in each direction 
+\item Each circle must be as large as possible
+\item A circle may wrap around the edges of the K-map
+\item A ``Don't care'' $(X)$ is circled only if it helps minimize the equation
+\end{itemize}
+\end{itemize}
+\item Circuit schematics 
+\begin{itemize}
+\item Inputs: left (or top) side of a schematic
+\item Outputs: right (or bottom) side of a schematic
+\item Circuits should flow from left to right
+\item Straight wires are better than wires with multiple corners
+\item Wires always connect at a T junction
+\item A dot where wires cross indicated a connection between the wires
+\item Wires crossing without a dot make no connection
+\end{itemize}
+\item Additional Logic Levels: $X$ and $Z$
+\begin{itemize}
+\item Contention: $X$
+\begin{itemize}
+\item When a signal is being driven to 1 and 0 simultaneously
+\item Not a real level, could be any value (1,0 or something in between)
+\item Usually a problem:
+\begin{itemize}
+\item Two outputs drive one node to opposite values
+\item Normally there should only be one driver for every connection
+\end{itemize}
+\item WARNING: ``Don't care'' and ``contention'' are both called $X$
+\begin{itemize}
+\item These are not the same
+\item Verilog uses $X$ for both, VHDL uses ``-'' for don't care, and ``$X$'' for contention
+\item Don't care: degree of freedom that is fixed at implementation time
+\item Contention: a bug really, undetermined behaviour
+\end{itemize}
+\end{itemize}
+\item High-impedance or tri-state (or Floating): $Z$
+\begin{itemize}
+\item When an output is not driving to any specific value
+\item Means the output is disconnected
+\item Not a real level, some other output is able to determine the level
+\item Output is called Floating, high impedance, tri-stated, or high-$Z$
+\item Floating output might be 0, 1 or somewhere in between
+\item Floating nodes are used in tri-state busses:
+\begin{itemize}
+\item Many different drivers share one common connection
+\item Exactly one driver is active at any time
+\item All the other drivers are ``disconnected''
+\item The disconnected drivers are said to be floating, allowing exactly one node to drive
+\item More than one input can listen to the shared bus without problems
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Combinational Building Blocks
+\begin{itemize}
+\item Combinational logic is often grouped into larger building blocks to build more complex systems
+\item Hide the unnecessary gate-level details to emphasize the function of the building block (full adders, priority circuits, etc.)
+\end{itemize}
+\item Multiplexer (Mux)
+\begin{itemize}
+\item Selects between one of $N$ inputs to connect to the output
+\item Needs $\log_2N-$bit control input
+\item A 4:1 Multiplexer can be implemented with:
+\begin{itemize}
+\item Two-level logic
+\item Tristate buffers
+\item Tree of 2:1 muxes
+\end{itemize}
+\item In general, a $2^N-$input multiplexer can be programmed to perform any $N-$input logic function by applying 0's and 1's to the appropriate data inputs
+\end{itemize}
+\item Decoders
+\begin{itemize}
+\item $N$ inputs, $2^N$ outputs
+\item One-hot outputs: only one output HIGH at once
+\end{itemize}
+\item Timing
+\begin{itemize}
+\item Propagation delay: $t_{pd}=$ max delay from input to output
+\item Contamination delay: $t_{cd}=$ min delay from input to output\\
+\includegraphics[scale=0.3]{Figures/PropContDelay.jpg}
+\item Delay is caused by 
+\begin{itemize}
+\item capacitance and resistance in a circuit
+\item Speed of light limitation (not as fast as you think)
+\end{itemize}
+\item Reasons why $t_{pd}$ and $t_{cd}$ may be different:
+\begin{itemize}
+\item Different rising and falling delays
+\item Multiple inputs and outputs, some of which are faster than other
+\item Circuits slow down when hot and speed up when cold
+\end{itemize}
+\item Critical (Long) and short paths\\
+\includegraphics[scale=0.25]{Figures/CriticalAndShortPath.jpg}
+\begin{itemize}
+\item Critical (Long) path: $t_{pd}=2t_{pd\_\text{AND}}+t_{pd\_\text{OR}}$
+\item Short path: $t_{cd}=t_{cd\_\text{AND}}$
+\end{itemize}
+\item Propagation Times\\
+\begin{tabular}{l|l}
+Gate & $t_{pd}$(ps)\\\hline
+NOT & 30\\
+$2-$input AND & 60\\
+$3-$input AND & 80\\
+$4-$input OR & 90\\
+tristate ($A$ to $Y$) & 50\\
+tristate (enable to $Y$) & 35
+\end{tabular}
+\end{itemize}
+\item Glitches
+\begin{itemize}
+\item Glitch: when a single input change causes multiple output changes
+\item Glitches don't cause problems because of synchronous design conventions
+\item But it's important to recognize a glitch when you see one in timing diagrams
+\item In general a glitch can occur when a change in a single variable crosses the boundary between two prime implicants in a $K-$map.
+\item You \textbf{can't} get rid of all glitches - simultaneous transitions on multiple inputs can also cause glitches
+\end{itemize}
+\end{itemize}
+
+\section{Field Programmable Gate Array (FPGA)}
+\begin{itemize}
+\item Logic arrays
+\begin{itemize}
+\item Programmable logic arrays (PLAs)
+\begin{itemize}
+\item AND array followed by OR array
+\item Perform combinational logic only
+\item Fixed internal connections
+\item Composed of:
+\begin{itemize}
+\item LUTs (LookUp Tables): perform combinational logic
+\item Flip-flops: perform sequential functions
+\item Multiplexers connect LUTs and flip-flops
+\end{itemize}
+\end{itemize}
+\item Field programmable gate arrays (FPGAs)
+\begin{itemize}
+\item Array of configurable logic blocks (CLBs)
+\item Perform combinational and sequential logic
+\item Programmable internal connections
+\item Composed of:
+\begin{itemize}
+\item CLBs (Configurable Logic Blocks): Perform logic
+\item IOBs (Input/Output Buffers): Interface with outside world
+\item Programmable interconnection: connect CLBs and IOBs
+\end{itemize}
+\item Some FPGAs include other building blocks such as multipliers and RAMs
+\end{itemize}
+\end{itemize}
+\item Programming PLAs
+\end{itemize}
+
+
 \end{document}
