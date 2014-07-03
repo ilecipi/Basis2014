@@ -313,6 +313,23 @@ $2^7$&$2^6$&$2^5$&$2^4$&$2^3$&$2^2$&$2^1$&$2^0$&{}&Two's Compl.&Unsigned\\\hline
 \item Static power consumption: Power consumed when no gates are switching, caused by the leakage current \[P_{\text{static}}=I_{DD}V_{DD}\]
 \end{enumerate}
 \end{itemize}
+\item Power Consumption example:
+\begin{itemize}
+\item Estimate the power consumption of a wireless handheld computer
+\begin{itemize}
+\item $V_{DD}=1.2V$
+\item $C=20nF$
+\item $f=1 GHz$
+\item $I_{DD}=20 mA$
+\begin{align*}
+P_{\text{total}}&=P_{\text{dynamic}}+P_{\text{static}}\\
+&=\frac{1}{2}CV_{DD}^2f+I_{DD}V_{DD}\\
+&=\frac{1}{2}(20 nF)(1.2V)^2(1GHz)+(20mA)(1.2V)\\
+&=14.4 W
+\end{align*}
+\end{itemize}
+\end{itemize}
+
 \end{itemize}
 
 \section{Combinational Circuits: Theory}
