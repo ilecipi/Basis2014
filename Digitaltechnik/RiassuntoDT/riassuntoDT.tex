@@ -14,7 +14,7 @@
 \item The Art of managing complexity
 \begin{itemize}
 \item Abstraction: Hiding details when they are not important
-\item Discipline: Intentionally restricting your design choices to that you can work more productively at higher abstraction levels
+\item Discipline: Intentionally restricting your design choices so that you can work more productively at higher abstraction levels
 \item The three -Y's
 \begin{itemize}
 \item Hierarchy: A system is divided into modules of smaller complexity
@@ -80,7 +80,9 @@ Decimal & Hexadecimal & Binary&{}&Decimal & Hexadecimal & Binary\\\hline
 7&7&0111&{}&15&F&1111\\
 \end{tabular}
 \item Bits, Bytes, Nibbles...
-\[\begin{array}{*{20}{c}}{\underbrace 1_{{\text{MSB}}}001011\underbrace 0_{{\text{LSB}}}}&{\overbrace {1001\underbrace {0110}_{{\text{nibble}}}}^{{\text{Byte}}}}&{\underbrace {{\text{CE}}}_{{\text{MSB}}}{\text{BF9A}}\underbrace {{\text{D7}}}_{{\text{LSB}}}}\end{array}\]
+\[\begin{array}{*{20}{c}}
+{\underbrace 1_{{\text{MSB}}}001011\underbrace 0_{{\text{LSB}}}}&{\overbrace {1001\underbrace {0110}_{{\text{nibble}}}}^{{\text{Byte}}}}&{\underbrace {{\text{CE}}}_{{\text{MSB}}}{\text{BF9A}}\underbrace {{\text{D7}}}_{{\text{LSB}}}}
+\end{array}\]
 Where MSB=Most significant Bit and LSB=Least significant Bit
 \item Addition in base two works exactly the same as in base 10, using carries
 \item Overflow
@@ -448,6 +450,17 @@ $T12$ & $\overline{B_0\cdot B_1\cdot B_2\cdot\dots}= (\overline{B_0}+\overline{B
 \item Maxterm: sum (OR) that includes all input variables ($A+\overline{B}+\overline{C}$)
 \end{itemize}
 \item Sum-of-Products (SOP) Form
+\todo[inline]{aggiungere tabella cerchiata ai valori Y=1}
+\begin{center}
+\begin{tabular}{c c|c|c}
+A&B&Y&minterm\\\hline
+0&0&0&$\overline{A}\overline{B}$\\
+0&1&1&$\overline{A}B$\\
+1&0&0&$A\overline{B}$\\
+1&1&1&$AB$
+\end{tabular}
+$$Y=F(A,B)=(\overline{A}\cdot B)+(A\cdot B)$$
+\end{center}
 \begin{itemize}
 \item All boolean equations can be written in SOP form
 \begin{itemize}
@@ -458,8 +471,19 @@ $T12$ & $\overline{B_0\cdot B_1\cdot B_2\cdot\dots}= (\overline{B_0}+\overline{B
 \item Formed by ORing the minterms for which the output is TRUE
 \end{itemize}
 \item The Dual: Product-of-Sums (POS) Form
+\todo[inline]{aggiungere tabella cechiata ai valori Y=0}
+\begin{center}
+\begin{tabular}{c c|c|c}
+A&B&Y&maxterm\\\hline
+0&0&0&$A+B$\\
+0&1&1&$A+\overline{B}$\\
+1&0&0&$\overline{A}+B$\\
+1&1&1&$\overline{A}+\overline{B}$
+\end{tabular}
+$$Y=F(A,B)=(A+B)\cdot (\overline{A}+B)$$
+\end{center}
 \begin{itemize}
-\item Al Boolean equations can be written in POS form
+\item All Boolean equations can be written in POS form
 \begin{itemize}
 \item Each row in a truth table has a maxterm
 \item A minterm is a sum (OR) of literals
