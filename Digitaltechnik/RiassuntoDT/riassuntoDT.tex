@@ -644,6 +644,11 @@ tristate (enable to $Y$) & 35
 \item Composed of:
 \begin{itemize}
 \item CLBs (Configurable Logic Blocks): Perform logic
+\todo[inline]{too deeply nested}
+\item \textbf{LUT}s (\textbf{L}ook\textbf{U}p \textbf{T}ables): perform combinational logic
+\item Flip-flops: performs sequential functions
+\item Multiplexers: connect LUTs and flip-flops
+\todo[inline]{fino qua}
 \item IOBs (Input/Output Buffers): Interface with outside world
 \item Programmable interconnection: connect CLBs and IOBs
 \end{itemize}
@@ -652,5 +657,127 @@ tristate (enable to $Y$) & 35
 \end{itemize}
 \end{itemize}
 
+
+\section{Verilog for Combinational Circuits}
+\begin{itemize}
+\item Two hardware description languages
+\begin{itemize}
+\item Verilog
+\begin{itemize}
+\item Developed in 1984
+\item Became an IEEE standard (1364) in 1995
+\item More popular in US
+\end{itemize}
+\item VHDL
+\begin{itemize}
+\item Developed in 1981
+\item Became an IEEE standard (1076) in 1987
+\item More popular in Europe
+\end{itemize}
+We used Verilog
+\end{itemize}
+\item Defining a module
+\begin{itemize}
+\item A module is the main buliding block in Verilog
+\item Need to declare:
+\begin{itemize}
+\item Name of the module
+\item Types of its connections (input, output)
+\item Names of its connections
+\end{itemize}
+\end{itemize}
+\textit{The following two codes are identical}\\
+\includegraphics[scale=0.25]{Figures/DefiningModuleExample2ways.jpg}
+\item You can also define multi-bit busses
+\begin{itemize}
+\item \lbrack \texttt{range\_start : range\_end}\rbrack
+\end{itemize}
+\textit{Example}\\
+\includegraphics[scale=0.25]{Figures/BussesExample.jpg}
+\item Basic Syntax
+\begin{itemize}
+\item Verilog is case sensitive:
+\begin{itemize}
+\item SomeName \textbf{and} somename \textbf{are not the same!}
+\end{itemize}
+\item Names cannot start with numbers:
+\begin{itemize}
+\item 2good \textbf{is not a valid name}
+\end{itemize}
+\item White space is ignored
+\item Comments
+\begin{itemize}
+\item Single Line comment starts with //
+\item Multiline comments start and end with /*...*/ 
+\end{itemize}
+Remember:
+\begin{itemize}
+\item Use a consistent naming style
+\item Use MSB to LSB ordering for busses, e.g a\lbrack31:0\rbrack and not a\lbrack0:31\rbrack
+\item Define one module per file, it makes managing your design hierarchy easier
+\item Use a file name that equals your module name
+\end{itemize}
+\end{itemize}
+\item Two main HDL's styles
+	\begin{itemize}
+		\item Structural
+			\begin{itemize}
+				\item Describe how modules are interconnected
+				\item Each module contains other modules (instances) and interconnections between them
+				\item Describes a hierarchy
+			\end{itemize}
+		\item Behavioral
+			\begin{itemize}
+				\item The module body contains functional description of the circuit
+				\item Contains logical and mathematical operators	
+			\end{itemize}
+	\end{itemize}
+\todo[inline]{quando togli il todo, il titolo dell'immagine e l'immagine vengono separati su due pagine}
+	\textit{Structural HDL Example}\\
+		\includegraphics[scale=0.3]{Figures/StructuralHDLExample.jpg}
+\item Behavioral HDL: Defining Functionality\\
+	\includegraphics[scale=0.26]{Figures/BehavioralHDL_DefiningFunctionality.jpg}
+\item Bitwise Operators\\
+	\includegraphics[scale=0.30]{Figures/BitwiseOperators.jpg}
+\item Reduction Operators\\
+	\includegraphics[scale=0.30]{Figures/ReductionOperators.jpg}
+\item Conditional Assignments\\
+	\includegraphics[scale=0.25]{Figures/ConditionalAssignments.jpg}
+\item How to express numbers
+	\center{\huge{\color{red}N\color{black}'\color{blue}B\color{green}xx}}
+	\center{\Large{\color{red}8\color{black}'\color{blue}b\color{green}0000\_0001}}
+	\begin{itemize}
+		\item \color{red}(N) Number of bits\color{black}
+			\begin{itemize}
+				\item Expresses how many bits will be used to store the value
+			\end{itemize}
+		\item \color{blue}(B) Base\color{black}
+			\begin{itemize}
+				\item Can be n (binary), h (hexadecimal), d (decimal), o (octal)
+			\end{itemize}
+		\item \color{green}(xx) Number\color{black}
+			\begin{itemize}
+				\item The value expressed in base, aparto from numbers it can also have X and Z as values
+				\item Underscore\_ can be used to improve readability
+			\end{itemize}	
+	\end{itemize}
+	\end{itemize}
+\begin{itemize}
+\item Number representation in Verilog\\
+	\begin{tabular}{l|l}
+	Verilog&Stored Number\\\hline
+	$4'b1001$&$1001$\\
+	$8'b1001$&$0000\enspace1001$\\
+	$8'b0000\_1001$&$000\enspace1001$\\
+	$8'bxX0X1zZ1$&$XX0X\enspace1ZZ1$\\
+	$'b01$&$0000...0001$\\
+	$4'd5$&$0101$\\
+	$12'hFA3$&$1111\enspace1001\enspace0011$\\
+	$8'o12$&$00\enspace001\enspace010$\\
+	$4'h7$&$0111$\\
+	$12'h0$&$0000\enspace0000\enspace0000$\\
+	\end{tabular}
+\todo[inline]{non so cosa ce di importante da aggiungere...}
+\end{itemize}
 
 \end{document}
