@@ -541,6 +541,114 @@ Divide and Conquer:    if cannot divide:        return unitary solution (stop 
 \end{itemize}
 \end{itemize}
 
+\section{Introduction to (Parallel) Programming}
+\todo[inline]{Not really needed??}
+
+\section{Introduction to Java}
+\todo[inline]{Only the technical things are discussed, no basic java syntax!}
+\begin{itemize}
+\item Java is an interpreted language
+\begin{itemize}
+\item Platform independence via bytecode interpretation
+\item Java programs run (in theory) on any computing device (PC, mobile, linux, etc.)
+\item Java compiler translates source to byte code
+\item Java Virtual Machine (JVM) interprets compiled program
+\end{itemize}
+\item Compiling/Running
+\begin{enumerate}
+\item Write it
+\begin{itemize}
+\item Code or source code: The set of instructions in a program
+\end{itemize}
+\item Compile it
+\begin{itemize}
+\item Compile: Translate a program from one language to another
+\item Byte code: The java compiler converts your code into a format named \emph{byte code} that runs on many computer types
+\end{itemize}
+\item Run (execute) it
+\begin{itemize}
+\item Output: The messages printed to the user by a program
+\end{itemize}
+\end{enumerate}
+\item JVM Bytecode interpretation
+\begin{itemize}
+\item JVM interprets compiled Bytecode
+\item Simulates a virtual CPU (or rather an entire machine)
+\item Translates bytecode into architecture dependent machine code at runtime
+\item Loss in performance due to interpretation?
+\begin{itemize}
+\item Yes and no
+\item Some overhead due to interpretation step but JVM is highly optimized
+\item Other language constructs impact performance more
+\end{itemize}
+\end{itemize}
+\item Structure of a Java program
+\begin{lstlisting}
+public class name {
+	public static void main(String[] args){
+		statement;
+		statement;
+		...
+		statement;
+	}
+}
+\end{lstlisting}
+Where:
+\begin{itemize}
+\item \textbf{class}: a program
+\item\textbf{method (main)}: a named group of statements
+\item \textbf{statement}: a command to be executed
+\end{itemize}
+Also:
+\begin{itemize}
+\item \textbf{import} statement makes classes and methods from other packages (API) available
+\item The \textbf{class body} contains:
+\begin{itemize}
+\item Instance and class variables (attributes)
+\item Names constants
+\item Class specific methods (\textbf{static} methods)
+\end{itemize}
+\item \textbf{Methods} are what we called functions or procedures so far
+\begin{itemize}
+\item \textbf{Constructor} is a special method that gets called automatically on object creation
+\end{itemize}
+\item \textbf{Methods} must have a name and optionally have:
+\begin{itemize}
+\item List of parameters
+\item Local variables
+\item Instructions (statements)
+\end{itemize}
+\item Each \textbf{class} can be compiled independently 
+\end{itemize}
+
+\begin{lstlisting}
+import ...
+
+class A {
+	class body
+	
+	constructor {
+	    ...
+	}
+	method_m1 {
+	    ...
+	}
+	method_m2 {
+	    ...
+	}
+}	
+
+class B {
+     ...
+}
+\end{lstlisting}
+\item In Java, the main method is called at runtime automatically, it serves as the entry point. Methods are then called from here.
+\end{itemize}
+
+\section{Loops/Objects/Classes}
+
+
+
 %%=============== START OF MIDTERM 2, NEEDS REVISION ================
 %\setcounter{section}{10}%required to start at chapter 11
 %\section{Synchronization: Beyond Locks}
