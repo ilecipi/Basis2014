@@ -8,6 +8,8 @@
 \usepackage{todonotes}
 \usepackage{cancel}
 \usepackage[bookmarks,bookmarksdepth=2]{hyperref}%Depth of index in pdf program
+\usepackage{tikz}
+\usepackage{multicol}
 
 %Environment for the definitions
 \newenvironment{definition}[1]{\begin{framed}\centerline{\textbf{Definition #1}}\noindent\hspace{-1.1mm}}{\end{framed}}
@@ -566,6 +568,150 @@ The set of equivalence classes of an equivalence relation $\theta$, denoted by \
 The set $A/\theta$ of equivalence classes of an equivalence relation $\theta$ on $A$ is a partition of $A$.
 
 \todo[inline]{Maybe add proof on page 45}
-%PAGE 45
+\subsection{Example: Definition of the Rational Numbers}
+\todo[inline]{send back to the book!}
+
+\section{Partial Order Relations}
+\subsection{Definition}
+\begin{definition}{3.24}
+A \emph{partial order} on a set $A$ is a relation that is reflexive, antisymmetric and transitive. A set $A$ together with a partial order $\preceq$ on $A$ is called a \emph{partially ordered set} (or simply \emph{poset}) and is denoted as $(A;\preceq)$\footnote{Partial orders are usually denoted by $\leq$ or by a similar symbol}
+\end{definition}
+
+In a graph representation of relations, a partial order has no cycles. \\
+
+For a partial order relation $\preceq$ we can define the relation $a\prec b$ similar to how the relation $<$ is obtained from $\leq$: \[a\prec b:\Longleftrightarrow a\preceq b\land a\not=b\]
+
+\begin{definition}{3.25}
+For a poset $(A;\preceq)$, two elements $a$ and $b$ are called \emph{comparable} if $a\preceq b$ or $b\preceq a$; otherwise they are called \emph{incomparable}
+\end{definition}
+
+\begin{definition}{3.26}
+If any two elements of a poset $(A;\preceq)$ are comparable, then $A$ is called \emph{totally ordered} (or \emph{linearly ordered} by $\preceq$
+\end{definition}
+
+\begin{definition}{3.27}
+A poset $(A;\preceq)$ is \emph{well-ordered} if it is totally ordered and if every non-empty subset of $A$ has a least element
+\end{definition}
+
+Note that every totally ordered finite poset is well-ordered. The property of being well-ordered is of interest inly for infinite posets. Any subset of the natural numbers is also well-ordered. 
+
+\subsection{Hasse Diagrams}
+\begin{definition}{3.28}
+In a poset $(A;\preceq)$ an element $b$ is said to \emph{cover} an element $a$ if $a\prec b$ and there exists no $c$ with $a\prec c$ and $c\prec b$ (i.e. between $a$ and $b$)
+\end{definition}
+
+\begin{definition}{3.29}
+The \emph{Hasse diagrams} of a (finite) poset $(A;\preceq)$ is the directed graph whose vertices are labeled with the elements of $A$ and where there is an edge from $a$ to $b$ if and only if $b$ covers $a$
+\end{definition}
+
+The Hasse diagram is a graph with directed edges. It usually drawn such that whenever $a\prec b$, then $b$ is placed higher than $a$. This means that all arrows are directed upwards ad therefore can be omitted.
+
+\begin{center}
+\includegraphics[scale=0.27]{Figures/Figure3,1Page48.jpg}
+\end{center}
+
+\subsection{Chains and Antichains}
+\begin{definition}{3.30}
+A totally ordered subset (with respect to $\preceq$) $C\subseteq A$ of a poset $(A;\preceq)$ is called a chain (in$(A;\preceq)$)
+\end{definition}
+
+\begin{definition}{3.31}
+A subset $B\subseteq A$ of a poset $(A;\preceq)$ is called an \emph{antichain} if any two distinct elements in $B$ are incomparable
+\end{definition}
+
+\subsection{Combinations of Posets and the Lexicographic Order}
+\subsubsection*{Theorem 3.9}
+For given posets $(A;\preceq)$ and $(B;\sqsubseteq)$, the relation $\leq_\text{lex}$ defined on $A\times B$ by \[(a_1,b_1)\leq (a_2,b_2):\Longleftrightarrow a_1\preceq a_2\land b_1\sqsubseteq b_2\]
+is a partial order relation.
+
+\subsubsection*{Theorem 3.10}
+For given posets $(A;\preceq)$ and $(B;\sqsubseteq)$, the relation $\leq_\text{lex}$ defined on $A\times B$ by \[(a_1,b_1)\leq_\text{lex} (a_2,b_2):\Longleftrightarrow a_1\prec a_2\lor (a_1=a_2\land b_1\sqsubseteq b_2)\]
+is a partial order relation.\footnote{As mentioned earlier, for a partial order $\preceq$ we can define the relation $\prec$ as $a\prec b:\Longleftrightarrow a\preceq b\land a\not=b$}
+
+\subsection{Special elements in Posets}
+\begin{definition}{3.32}
+Let $(A;\preceq)$ be a poset, and let $S\subseteq A$ be some subset of $A$. Then 
+\begin{enumerate}
+\item $a\in S$ is a \emph{minimal (maximal) element} of $S$ if there exists no $b\in S$ with $b\prec a$ $(b\succ a)$
+\item $a\in S$ is the \emph{least (greates) element} of $S$ if $a\preceq b$ $(a\succeq b)$ for all $b\in S$
+\item $a\in A$ is a \emph{lower (upper) bound} of $S$ if $a\preceq b$ $(a\succ b)$ for all $b\in S$
+\item $a\in A$ is the \emph{greatest lower bound (least upper bound)} of $S$ if $a$ is the greatest (least) element of the set of all lower (upper) bounds of $S$ 
+\end{enumerate}
+\end{definition}
+Minimal, maximal, least and greatest elements are easily identified in a Hasse diagram. \\
+\indent The greatest lower bound and the least upper bound of a set $S$ are sometimes denotes as glb$(S)$ and lub$(S)$, respectively. 
+\subsection{Meet, Join and Lattices}
+\begin{definition}{3.33}
+Let $(A;\preceq)$ be a poset. If $a$ and $b$ (i.e. the set $\{a,b\}\subseteq A$) have a greatest lower bound, then it is called the \emph{meet} of $a$ and $b$, often denoted $a\land b$. If $a$ and $b$ have a least upper bound, then it is called the \emph{join} of $a$ and $b$, often denoted $a\lor b$.
+\end{definition}
+
+\begin{definition}{3.34}
+A poset $(A;\preceq)$ in which every pair of elements has a meet and a join is called a \emph{lattice}
+\end{definition}
+
+\section{Functions}
+\subsection{The Function Concept}
+\begin{definition}{3.35}
+A function $f:A\to B$ from a \emph{domain} $A$ to a \emph{codomain} $B$ is a relation $A\times B$, i.e. a subset $f\subseteq A\times B$, with the special properties (using the relation notation $afb$):
+\begin{enumerate}
+\item $\forall a\in A \hspace{2mm} \exists b\in B\hspace{2mm} afb$\hspace{10mm}($f$ is totally defined)
+\item $afb\land afb'\hspace{2mm}\Rightarrow b=b'$\hspace{9mm}($f$ is well-defined)
+\end{enumerate}
+\end{definition}
+The set of all functions $A\to B$ is denoted as $B^A$. This notation is motivated by the fact that if $A$ and $B$ are finite, then there are $\abs{B}^{\abs{A}}$ such functions (see Section 4.1).
+
+\begin{definition}{3.36}
+A \emph{partial function} is a relation $A\times B$ such that condition 2. above holds
+\end{definition}
+
+\begin{definition}{3.37}
+Two (partial) functions with common domain $A$ and codomain $b$ are \emph{equal} if they are equal as relations (i.e. as sets)
+\end{definition}
+
+$f=g$ is equivalent to saying that the function values of $f$ and $g$ agree for all arguments (including, in case of partial functions, whether or not it is defined)
+
+\begin{definition}{3.38}
+For a function $f:A\to B$ and a subset $S$ of $A$, the \emph{image} of $S$ under $f$, denoted $f(S)$, is the set \[f(S):=\{f(a)\mid a\in S\}\]
+\end{definition}
+
+\begin{definition}{3.39}
+The subset $f(A)$ of $B$ is called the \emph{image} (or \emph{range}) of $f$ and is also denoted $\text{Im}(f)$
+\end{definition}
+
+\begin{definition}{3.40}
+For a subset $T$ of $B$, the \emph{inverse image} (or \emph{preimage}) of $T$, denoted $f^{-1}(T)$, is the set of values in $A$ that map into $T$: \[f^{-1}(T):=\{a\in A\mid f(a)\in T\}\]
+\end{definition}
+
+
+\subsection{Properties of Functions and Function Composition}
+\begin{definition}{3.41}
+A function $f:A\to B$ is called
+\begin{enumerate}
+\item \emph{Injective} if $a\not=b\Rightarrow f(a)\not=f(b)$, i.e. no two distinct values are mapped to the same function value (there are no ``collisions'')
+\item \emph{Surjective} (or \emph{onto}) if for every $b\in B$, $b=f(a)$ for some $a\in A$, i.e. if $f(A)=B$ (every value in the codomain is taken on for some argument)
+\item \emph{Bijective} if it is both surjective and injective.  
+\end{enumerate}
+\end{definition}
+
+\begin{definition}{3.42}
+The \emph{composition} of a function $f:A\to B$ and a function $g:B\to C$, denoted by $g\circ f$, or simply $gf$, is defined by $g\circ f(a)=g\left( f(a)\right)$
+\end{definition}
+
+\subsubsection*{Lemma 3.11}
+Function composition is associative, i.e. $(h\circ g)\circ f = h\circ (g\circ f)$
+
+\chapter{Combinatorics and Counting}
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
