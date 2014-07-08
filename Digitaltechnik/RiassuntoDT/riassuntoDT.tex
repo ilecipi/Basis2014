@@ -779,5 +779,201 @@ Remember:
 	\end{tabular}
 \todo[inline]{non so cosa ce di importante da aggiungere...}
 \end{itemize}
-
+\section{Sequential Logic Design}
+	\begin{itemize}
+		\item Introduction
+			\begin{itemize}
+				\item Outputs of sequential logic depend on current ad prior input values, it has memory.
+				\item State: all the information about a circuit necessary to explain its future behavior
+				\item Latches nd flip-flops: state elements that store one bit of state
+				\item Synchronous sequentila circuits: combinational logic followed by a bank of flip-flops
+			\end{itemize}
+		\item Sequential Circuits
+			\begin{itemize}
+				\item Give sequence to events
+				\item Have memory (short-term)
+				\item Use feedback from output t input to store information 
+			\end{itemize}
+		\item State Elements
+			\begin{itemize}
+				\item The state of a circuit influences its future behavior
+				\item State elements store state
+				\item Bistable circuits
+					\begin{itemize}
+						\item SR Latch
+						\item D Latch
+						\item D Flip-flop
+					\end{itemize}
+			\end{itemize}
+		\item The way a circuit remembers
+			\begin{itemize}
+				\item Bistable circuits can have two distinct states, once they are in one state, they will remain there.\\
+					\begin{center}
+						\includegraphics[scale=0.25]{Figures/BistableCircuit.jpg}
+					\end{center}
+				\item We can move from one state to another by simply adding one switch to brea the loop and at the same time add another switch that connects an input to the circuit.
+			\end{itemize}
+		\item The D Latch
+			\begin{itemize}
+				\item It is the basic bi-stable circuit used in modern CMOS.
+				\item The clock controls the switches, Only one is active at a time.
+				\item Traditionally the input is called D (Data) and the output Q\\
+				\begin{center}
+						\includegraphics[scale=0.95]{Figures/DLatch.jpg}
+				\end{center}
+				\item It has two nodes 
+					\begin{itemize}
+						\item Latch mode, loop is active, input disconected, keeps state (output is stored)\\
+						\begin{center}
+							\includegraphics[scale=1]{Figures/LatchMode.jpg}
+						\end{center}
+						\item Transparent mode, loop is inactive, input is connected and propagates to output\\
+						\begin{center}
+							\includegraphics[scale=1]{Figures/TransparentMode.jpg}
+						\end{center}
+					\end{itemize}
+			\end{itemize}
+		\item Rising edge triggered D Flip-Flop
+			\begin{itemize}
+				\item Two inputs: CLK, D
+				\item Function
+					\begin{itemize}
+						\item Te flip-flop ``samples'' D on the rising edge of CLK
+						\item When CLK rises from 0 to 1, D passes through to Q
+						\item Otherwise, Q holds its previous values
+						\item Q changesonly on the ising edge of CLK
+					\end{itemize}
+				\item A flip-flop is called an edge-triggered device because it is activated on the clock edge
+			\end{itemize}
+		\item D FLip-Flop Internal Circuit
+			\begin{itemize}
+				\item Two back-to-back latches (L1 and L2) controlled by complementary clocks
+					\begin{itemize}
+						\item When CLK=0
+							\begin{itemize}
+								\item L1 is transparent
+								\item L2 is opaque
+								\item D passes through to N1
+							\end{itemize}
+						\item When CLK=1
+							\begin{itemize}
+								\item L2 is transparent
+								\item L1 is opaque
+								\item N1 passes thorugh to Q
+							\end{itemize}	
+						\item Thus, on the edge of the clock (CLK rises from 0 to 1), D passes through Q
+					\end{itemize}
+			\end{itemize}
+		\item Registers
+			\begin{itemize}
+				\item Multiple parallel flip-flops that store mor than 1 bit\\
+						\begin{center}
+							\includegraphics[scale=1]{Figures/Register.jpg}
+						\end{center}
+			\end{itemize}
+		\item Enabled Flip-Flops
+			\begin{itemize}
+				\item Inputs: CLK, D, EN
+					\begin{itemize}
+						\item The enable input (EN) controls when new data (D) is stored
+					\end{itemize}
+				\item Function
+					\begin{itemize}
+						\item EN=1: D passes through to Q on the clock edge
+						\item EN=0: the flip-flop retains its previous state\\
+						\begin{center}
+							\includegraphics[scale=1]{Figures/EnabledFlip-Flops.jpg}
+						\end{center}
+					\end{itemize}
+			\end{itemize}
+		\item Resettable Flip-Flops
+			\begin{itemize}
+				\item Inputs: CLK, D, Reset
+					\begin{itemize}
+						\item The reset is used to set the output to 0.
+					\end{itemize}
+				\item Function:
+					\begin{itemize}
+						\item Reset=1: Q is forced to 0
+						\item Reset=0: the flip-flop behaves like an ordinary D flip-flop
+					\end{itemize}
+				\item Two types:
+					\begin{itemize}
+						\item Synchronous: resets at the clock edge only
+						\item Asynchronous: resets immediately when Reset=1 (requires changing the internal circuitry of the flip-flop)\\
+						\begin{center}
+							\includegraphics[scale=1]{Figures/ResettableFLip-Flops.jpg}
+						\end{center}
+					\end{itemize}
+			\end{itemize}
+		\item Settable Flip-Flops
+			\begin{itemize}
+				\item Inputs: CLK, D, Set
+				\item Function:
+					\begin{itemize}
+						\item Set=1: Q is set to 1
+						\item Set=0: the flip-flop behaves like an ordinary D flip-flop\\
+						\begin{center}
+							\includegraphics[scale=1.1]{Figures/SettableFlip-FLops.jpg}
+						\end{center}
+					\end{itemize}
+			\end{itemize}
+		\item Sequential Logic
+			\begin{itemize}
+				\item Sequential Logic: all circuits that aren't combinational
+				\item A problematic circuits:
+					\begin{itemize}
+						\item It is an unstable circuit that oscillates
+						\item Its period depends on the delay of the inverters whic hdepends on the manufacturing process, temperature, etc
+						\item The circuit has a cyclic path: ouput fed back o input
+					\end{itemize}
+			\end{itemize}
+		\item Synchronous Sequential Logic Design
+			\begin{itemize}
+				\item Breaks Cyclic paths by inserting registers
+					\begin{itemize}
+						\item These registers contain the state of the system
+						\item The state changes at the clock edge, so we say the system is synchronized to the clock
+					\end{itemize}
+				\item Rules of synchronous sequential circuit composition
+					\begin{itemize}
+						\item Every circuit element is either a register or a combinational circuit
+						\item At least one circuit element is a register
+						\item All registers receive the same clock signal
+						\item Every cyclic path contains at least one register
+					\end{itemize}
+				\item Two common synchronous sequential circuits
+					\begin{itemize}
+						\item Finite State Machines (FSMs)
+						\item Pipelines
+					\end{itemize}
+			\end{itemize}
+		 \item Finite State Machine (FSM) consits of:
+		 	\begin{itemize}
+		 		\item State register:
+		 			\begin{itemize}
+		 				\item Store the current state and load the next state at the clock edge
+		 				\item Sequetial circuit\\
+		 				\begin{center}
+							\includegraphics[scale=1.3]{Figures/FSM-StateRegister.jpg}
+						\end{center}
+		 			\end{itemize}
+		 		\item Next state logc
+		 			\begin{itemize}
+		 				\item Determines what the next state will be
+		 				\item Combinational Circuit\\
+		 				\begin{center}
+							\includegraphics[scale=1.3]{Figures/FSM-NextStateLogic.jpg}
+						\end{center}
+		 			\end{itemize}
+		 		\item Output logic
+		 			\begin{itemize}
+		 				\item Generates the outputs
+		 				\item Combinational Circuit\\
+		 				\begin{center}
+							\includegraphics[scale=1.3]{Figures/FSM-OutputLogic.jpg}
+						\end{center}
+		 			\end{itemize}
+		 	\end{itemize}	
+	\end{itemize}
 \end{document}
