@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{todonotes}
 %\usepackage{showframe}
+\usepackage{ upgreek }
 \usepackage{tikz}
 \newcommand{\specialcell}[2][c]{%
   \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
@@ -811,7 +812,7 @@ Remember:
 					\begin{center}
 						\includegraphics[scale=0.25]{Figures/BistableCircuit.jpg}
 					\end{center}
-				\item We can move from one state to another by simply adding one switch to brea the loop and at the same time add another switch that connects an input to the circuit.
+				\item We can move from one state to another by simply adding one switch to break the loop and at the same time add another switch that connects an input to the circuit.
 			\end{itemize}
 		\item The D Latch
 			\begin{itemize}
@@ -924,8 +925,8 @@ Remember:
 				\item A problematic circuits:
 					\begin{itemize}
 						\item It is an unstable circuit that oscillates
-						\item Its period depends on the delay of the inverters whic hdepends on the manufacturing process, temperature, etc
-						\item The circuit has a cyclic path: ouput fed back o input
+						\item Its period depends on the delay of the inverters which depends on the manufacturing process, temperature, etc
+						\item The circuit has a cyclic path: output fed back o input
 					\end{itemize}
 			\end{itemize}
 		\item Synchronous Sequential Logic Design
@@ -974,6 +975,226 @@ Remember:
 							\includegraphics[scale=1.3]{Figures/FSM-OutputLogic.jpg}
 						\end{center}
 		 			\end{itemize}
-		 	\end{itemize}	
-	\end{itemize}
+				\item FSMs get their name because a circuit with $k$ registers can be in one of a finite number $\left( 2^k\right)$ of unique states. 
+				\item Next state is determined by the current state and the inputs
+				\item Two types of FSMs differ in the ouput logic:
+				\begin{itemize}
+				\item \textbf{Moore FSM}: Outputs depend only on the current state
+				\item \textbf{Mealy FSM}: Outputs depend on the current state and the inputs
+				\end{itemize}
+		 	\end{itemize}
+		\includegraphics[scale=0.18]{Figures/MooreMealyFSMs.jpg}
+		\begin{itemize}
+		\item Example: See slides 30-47
+		\end{itemize}
+		\item Factoring FSMs: Break complex FSMs into smaller interacting FSMs
+		\item FSM Design Procedure:
+		\begin{itemize}
+		\item Prepare
+		\begin{itemize}
+		\item identify the inputs and outputs
+		\item Sketch a state transition diagram
+		\item Write a state transition table
+		\item Select state encodings
+		\end{itemize}
+		\item For a Moore Machine
+		\begin{itemize}
+		\item Rewrite the state transition table with the selected state encodings
+		\item Write the output table
+		\end{itemize}
+		\item For a Mealy Machine
+		\begin{itemize}
+		\item Rewrite the combined state transition and output table with the selected state encodings
+		\end{itemize}
+		\item Write boolean equations for the next state and output logic
+		\item Sketch the circuit schematic
+		\end{itemize}
+		\end{itemize}
+		
+\section{Verilog for Sequential Circuits}
+\todo[inline]{Add something about async vs sync}
+\begin{itemize}
+\item Sequential Logic in Verilog:
+\begin{itemize}
+\item Define blocks that have memory (Flip-Flops, Latches, FSMs)
+\item Sequential Logic is triggered by a ``CLOCK'' event
+\begin{itemize}
+\item Latches are sensitive to the level of the signal
+\item Flip-flops are sensitive to the transitioning of clock
+\end{itemize}
+\item Combinational constructs are not sufficient. We need new constructs: \emph{always} and \emph{initial}
+\end{itemize}
+\item Always statement, Defining processes
+\begin{itemize}
+\item Whenever the event in the sensitivity list occurs, the statement is executed\\
+\includegraphics[scale=0.4]{Figures/alwaysStatementDefiningProcesses.jpg}
+\item Example: D Flip-Flop\\\includegraphics[scale=0.4]{Figures/exampleDFlipFlop.jpg}
+\begin{itemize}
+\item The posedge defines a rising edge (transition from 0 to 1)
+\item This process triggers only if the clk signal rises
+\item Once it rises, the value of $d$ will be copied to $q$
+\item ``assign'' statement is not used within always block
+\item The $<=$ describes a ``non-blocking''\footnote{More on this later} assignment
+\item Assigned variables need to be declared as \textbf{reg} (doesn't necessarily mean that it is a register)
+\end{itemize}
+\end{itemize}
+\item Always blocks for combinational Circuits
+\begin{itemize}
+\item If the statement define the signals completely, nothing is memorized, block becomes combinational. 
+\item Always blocks allow powerful statements (\textbf{if\dots then\dots else}), \textbf{case})
+\item Use always blocks only if it makes your job easier
+\end{itemize}
+\item Non-blocking and Blocking Statements:\\\includegraphics[scale=0.45]{Figures/nonBlockingAndBlockingStatements.jpg}
+\begin{itemize}
+\item Non-blocking:
+\begin{itemize}
+\item Values are assigned at the end of the block
+\item All assignments are made in parallel, process flow is not-blocked
+\end{itemize}
+\item Blocking
+\begin{itemize}
+\item Value is assigned immediately
+\item Process waits until the first assignment is complete, it blocks progress
+\end{itemize}
+\end{itemize}
+\item Why use (Non-)Blocking Statements?
+\begin{itemize}
+\item There are technical reasons for each
+\item Blocking statements allow sequential descriptions
+\item If the sensitivity list is correct, blocks with non-blocking statements will always evaluate to the same result
+\end{itemize}
+\item Rules for Signal Assignment
+\begin{itemize}
+\item Use \textbf{always @(posedge clk)} and non-blocking assignments ($<=$) to model synchronous sequential logic. 
+\item Use continuous assignments (\textbf{assign \dots}) to model simple combinational logic ($\textbf{assign} \hspace{2mm}y=a\& b$)
+\item Use \textbf{always @(*)} and blocking assignments ($=$) to model more complicated combinational logic where the always statement is helpful
+\item Do not make assignments to the same signal in more than one always statement or continuous assignment statement
+\end{itemize}
+\item Example of Verilog + FSM on slides 44-50
+\end{itemize}
+
+\section{Sequential Circuits: Timing}
+\begin{itemize}
+\item Timing
+\begin{itemize}
+\item Flip-Flop samples $D$ at clock edge
+\item $D$ must be stable when it is sampled
+\item Similar to a photograph, $D$ must be stable around the clock edge
+\item If $D$ is changing when it is sampled, \textbf{metastability} can occur (See again ``rising edge of the clock'' concept)
+\end{itemize}
+\item Input Timing Constraints
+\begin{itemize}
+\item Setup time: $t_{\text{setup}}=$ time before the clock edge that data must be stable (i.e. not changing)
+\item Hold time: $t_{\text{hold}}=$ time after the clock edge that data must be stable
+\item Aperture time: $t_a=$ time around clock edge that data must be stable $(t_a=t_{\text{setup}}+t_{\text{hold}})$ \\
+\begin{center}
+\includegraphics[scale=0.25]{Figures/inputTimingContraints.jpg}
+\end{center}
+\end{itemize}
+\item Output Timing Constraints
+\begin{itemize}
+\item Propagation delay: $t_\text{pcq}=$ time after clock edge that the output $Q$ is guaranteed to be stable (i.e. to stop changing)
+\item Contamination delay: $t_\text{ccq}=$ time after clock edge that $Q$ might be unstable (i.e. start changing)
+\\
+\begin{center}
+\includegraphics[scale=0.25]{Figures/outputTimingContraints.jpg}
+\end{center}
+\end{itemize}
+\item Dynamic Discipline
+\begin{itemize}
+\item The input to a sync. seq. circuit must be stable during the aperture (setup and hold) time around the clock edge
+\item Specifically, the input must be stable
+\begin{itemize}
+\item at least $t_\text{setup}$ before the clock edge
+\item at least until $t_\text{hold}$ after the clock edge
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.3]{Figures/dynamicDiscipline.jpg}
+\end{center}
+\item The delay between registers has a minimum and maximum delay, dependent on the delays of the circuit elements
+\end{itemize}
+\item Setup Time Constraints
+\begin{itemize}
+\item The clock period or cycle time $T_{c'}$ is the time between rising edges of a repetitive clock signal. Its reciprocal $f_c=\frac{1}{T_{c'}}$ is the clock frequency
+\item All else being the same, increasing the clock frequency increases the work that a digital system can accomplish per unit time
+\item The setup time constraint depends on the maximum delay from register $R1$ through the combinational Logic
+\item The input to register $R2$ must be stable at least $t_\text{setup}$ before the clock edge
+\begin{align*}
+T_c&\geq t_\text{pcq}+t_\text{pd}+t_\text{setup}\\
+t_\text{pd}&\leq T_c-(t_\text{pcq}+t_\text{setup})
+\end{align*}
+\end{itemize}
+\item Hold Time Constraint
+\begin{itemize}
+\item The hold time constraint depends on the minimum delay from register $R1$ through the combinational logic
+\item The input to register $R2$ must be stable for at least $t_\text{hold}$ after the clock edge
+\begin{align*}
+t_\text{hold}&<t_\text{ccq}+t_\text{cd}\\
+t_\text{cd}&>t_\text{hold}-t_\text{ccq}
+\end{align*}
+\end{itemize}
+\item Clock Skew
+\begin{itemize}
+\item The clock doesn't arrive at all registers at the same time
+\item Skew is the difference between two clock edges
+\item Examine the worst case to guarantee that the dynamic discipline is not violated for any register - many registers in a system
+\end{itemize}
+\item Metastability
+\begin{itemize}
+\item Any bi-stable device has two stable states and a metastable state between them
+\item A flip-flop has two stable states (1 and 0) and one metastable state
+\item If a flip-flop lands in the metastable state, it could stay there for an undetermined amount of time
+\item $\frac{T_0}{T_c}$ describes the probability that the input changes at a bad time
+\[P(t_\text{res}>t)=\left( \frac{T_0}{T_c}\right)\cdot e^{-\frac{t}{\uptau}}\]
+\item $\uptau$: a time constant indicating how fast the flip flop moves away from the metastable state
+\item If a flip-flop samples a metastable input, if you wait long enough, the outputs resolves itself
+\end{itemize}
+\item Synchronizers
+\begin{itemize}
+\item Ansynchronous inputs are inevitable (user interfaces, different clocks, etc.)
+\item The goal of a synchronizer is to make the probability of failure (the output $Q$ still being metastable) low
+\item A synchronizer cannot make the probability of failure 0
+\item Internals:
+\begin{itemize}
+\item A synchronizer can be built with two back-to-back flip-flops
+\item Suppose the input $D$ is changing when it is sampled by $F1$
+\item Internal signal $D2$ has $\left( T_c - t_\text{setup}\right)$ time to resolve a 1 or 0
+\end{itemize}
+\item Probability of failure:
+\begin{itemize}
+\item For each sample, the probability of failure of this synchronizer is: \[P(\text{failure})=\frac{T_0}{T_c}\cdot e^{-\frac{T_c-t_\text{setup}}{\uptau}}\]
+\begin{center}
+\includegraphics[scale=0.43]{Figures/synchronizerProbabilityOfFailure.jpg}
+\end{center}
+\end{itemize}
+\item Mean time before failure:
+\begin{itemize}
+\item If the asynchronous input changes once per second, the probability of failure per second of the synchronizer is simply $P$(failure).
+\item In general, if the input changes $N$ times per second, the probability of failure of the synchronizer is:
+\[\frac{P(\text{failure})}{\text{sec}}=N\cdot{\frac{T_0}{T_c}}^{-\frac{T_c-t_\text{setup}}{\uptau}}\]
+\item and the Mean Time Before Failure (MTBF):
+\[\text{MTBF}=\frac{T_c\cdot e^{-frac{T_c-t_\text{setup}}{\uptau}}}{NT_0}\]
+\end{itemize}
+\end{itemize}
+\item Parallelism:
+\begin{itemize}
+\item Two types of parallelism:
+\begin{itemize}
+\item Spatial Parallelism: duplicate hardware performs multiple tasks at once
+\item Temporal parallelism
+\begin{itemize}
+\item Task is broken into multiple stages
+\item Also called pipelining
+\item Think an assembly line
+\end{itemize}
+\end{itemize}
+\item Some definitions:
+\begin{itemize}
+\item Token: A group of inputs processed to produce a group of outputs
+\item Latency: Time for one token to pass from start to end
+\item Throughput: The number of tokens that can be produced per unit time
+\end{itemize}
+\item Parallelism increases throughput
+\end{itemize}
+\end{itemize}
 \end{document}
