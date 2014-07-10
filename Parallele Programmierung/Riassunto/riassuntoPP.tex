@@ -6,6 +6,7 @@
 \usepackage{enumerate}%used for custom enumerates
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{multicol}
 %Colors for the listings
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -395,8 +396,15 @@ S_p&=p-b(p-1)
 \item A graph is formed based on spawning tasks\\\includegraphics[scale=0.5]{Figures/chapter4slide7.jpg}
 \item Example: Fibonacci function 
 \begin{lstlisting}
-public class Fibonacci {   public static long fib(int n) {
-      if (n < 2)         return n;      spawn a task to execute fib(n-1);      spawn a task to execute fib(n-2);      wait for the tasks to complete      return the addition of the task results      } 
+public class Fibonacci {
+   public static long fib(int n) {
+      if (n < 2)
+         return n;
+      spawn a task to execute fib(n-1);
+      spawn a task to execute fib(n-2);
+      wait for the tasks to complete
+      return the addition of the task results
+      } 
 }
 \end{lstlisting}
 \item Tasks can execute in parallel
@@ -442,7 +450,14 @@ public static long sum_rec(List<Long> Xs){
 }
 \end{lstlisting}
 \begin{lstlisting}
-Divide and Conquer:    if cannot divide:        return unitary solution (stop recursion)    divide problem in two    solve first (recursively)    solve second (recursively)    combine solutions    return result
+Divide and Conquer:
+    if cannot divide:
+        return unitary solution (stop recursion)
+    divide problem in two
+    solve first (recursively)
+    solve second (recursively)
+    combine solutions
+    return result
 \end{lstlisting}
 \item So far: Dynamic task graph, but the graph can also be static, i.e. does not change with time
 \begin{itemize}
@@ -646,6 +661,214 @@ class B {
 \end{itemize}
 
 \section{Loops/Objects/Classes}
+    \begin{itemize}
+      \item The \textit{\textbf{for}} loop
+        \begin{itemize}
+          \item The for loop statement performs a task many times
+          \item syntax:
+            \begin{lstlisting}
+for (initialization;test;update){
+  statement;
+  statement;
+    ...
+  statement;
+}
+            \end{lstlisting}
+            \item It performs initialization once
+            \item Repeat the following:
+              \begin{itemize}
+                \item Check if the test is true. If not, stop.
+                \item Execute the statements.
+                \item Perform the update
+              \end{itemize}
+        \end{itemize}
+      \item Loop walkthrough  
+
+\begin{lstlisting}
+for (int i=1; i<=4; i++){
+    System.out.println(i + `` squared = '' + (i*i));
+  }
+  System.out.println(``Whoo!'');
+\end{lstlisting}
+\begin{multicols}{2}
+  Output:\\
+  1 squared = 1\\
+  2 squared = 4\\
+  3 squared = 9\\
+  4 squared = 16\\
+  Whoo!
+\columnbreak
+\includegraphics[scale=1]{Figures/ForLoopWalkthrough.jpg}
+\end{multicols}
+\item Categories of loops
+  \begin{itemize}
+    \item \textbf{Definite loop}: Executes a known number of times.
+      \begin{itemize}
+        \item The \textbf{for} loops we have seen are definite loops
+          \begin{itemize}
+            \item Print ``Hello'' 10 times.
+            \item FInd all the prime numbers up to an integer n.
+            \item Print each odd number between 5 and 127
+          \end{itemize}
+      \end{itemize}
+    \item \textbf{Indefinite loop}: One where the number of times its body repeats is not known in advance.
+      \begin{itemize}
+        \item Prompt the user until they type a non-negative number.
+        \item Print random numbers until a prime number is printed.
+        \item Repeat until the user has types ``q'' to quit.
+      \end{itemize}  
+  \end{itemize}
+\item The \textit{\textbf{while}} loop:
+  \begin{itemize}
+    \item It repeatedly executes its body as long as a logical test is true.
+    \item Syntax:
+    \begin{lstlisting}
+while (test){
+    statement;
+}
+    \end{lstlisting}
+    \item \textbf{While} is better than \textbf{for} because we don't know how many times we will need to increment to find the factor.
+  \end{itemize}
+\item Sentinel values:
+  \begin{itemize}
+    \item \textbf{Sentinel loop}: it repeats until a sentinel value is seen
+    \item Sentinel code example:
+    \begin{lstlisting}
+Scanned console = new Scanner(System.in);
+int sum = 0
+//pull one prompt/read out of the loop
+System.out.print(``Enter a number (-1 to quit): '');
+int number = console.nextInt();
+
+while (number != -1){
+  sum=sum+number;    //moved to top of loop in order to avoid
+                     //fencepost problems
+  System.out.print(``Enter a number (-1 to quit): '');
+  number = console.nextInt();
+}
+
+System.out.println(``The total is '' + sum);
+    \end{lstlisting}
+  \end{itemize}
+\item The \textbf{do/while} loop
+  \begin{itemize}
+    \item It performs its test at the end of each repetition.
+      \begin{itemize}
+        \item It guarantees that the loop's { } body will run at least once.
+        \item Syntax:
+\begin{lstlisting}
+do{
+  statement;
+} while (test);
+\end{lstlisting}
+      \end{itemize}
+  \end{itemize}
+\item Arrays
+  \begin{itemize}
+    \item \textbf{Array}: object that stores many values of the same type.
+      \begin{itemize}
+        \item \textbf{element}: One value in an array.
+        \item \textbf{index}: A 0-based integer to access an element from an array\\
+        \\
+        \begin{center}
+        \includegraphics[scale=1]{Figures/ArrayExample.jpg}
+        \end{center}
+      \end{itemize}
+    \item Accessing elements\\
+      \begin{lstlisting}
+name[index]            //access
+name[index] = value;   //modify
+      \end{lstlisting}
+      \item One can use \textbf{for loops} to insert elements in the array
+      \item Arrays are reference types
+      \item Out-of-bounds exception
+        \begin{itemize}
+        \item Legal indexes: between \textbf{0} and the \textbf{array's length -1}.
+          \begin{itemize}
+            \item Reading or writing any index outisde this range will throw an \textit{ArrayIndexOutOfBoundsException}
+          \end{itemize}
+        \end{itemize}
+  \end{itemize}
+  \item Strings
+    \begin{itemize}
+      \item \textbf{String}: An object storing a sequence of text characters
+        \begin{itemize}
+          \item Unlike most other objects, a \textit{String} is not create with \textit{new}.
+          \item Syntax:
+\begin{lstlisting}
+String name = ``text'';
+String name = expression;
+\end{lstlisting} 
+        \end{itemize}
+    \end{itemize}
+    \item Indexes
+    \begin{itemize}
+      \item Characters of a string are numbered with 0-based \textit{indexes}:
+      \begin{itemize}
+        \item First character's index: 0
+        \item Last character's index: 1 less than th string's length
+        \item The individual characters are values of type chars
+      \end{itemize}
+      \end{itemize}
+      \item String methods\\
+      \begin{center}
+        \includegraphics[scale=1]{Figures/StringMethods.jpg} 
+      \end{center}
+      This methods are called using the dot notation
+  \item Comparing strings
+    \begin{itemize}
+      \item ``=='' compares objects by \textit{references}, so it often gives \textit{false} even when two \textit{Strings} have the same letters
+      \item Example:\\
+      \begin{center}
+        \includegraphics[scale=1.2]{Figures/StringExample.jpg}
+      \end{center}
+    \end{itemize}
+  \item String test methods
+    \begin{center}
+      \includegraphics[scale=1]{Figures/StringTestMethods.jpg}
+    \end{center}
+  \begin{lstlisting}
+String name = console.next ();
+  if (name.startsWith(``Prof'')){
+      System.out.println(``When are your office hours?'');
+  } else if (name.equalsIgnoreCase(``STUART'')){
+      System.out.println(``Lets talk about meta!``);
+  }
+  \end{lstlisting}
+  \item Extract from Java API
+    \begin{itemize}
+      \item \textbf{compareTo}
+        \begin{itemize}
+          \item \textbf{public int} compareTo(String anotherString)\\Compares two strings lexicographically
+          \item \textbf{Parameters}:\\anotherString - the String to be compared
+          \item \textbf{Returns}:\\The value 0 if the argument strins is equal to this string, less tha 0 if it is lexicographically less than the string argument, value greater than 0 otherwise
+        \end{itemize}
+        \item \textbf{concat}
+          \begin{itemize}
+            \item \textbf{public} String concat(String str)\\Concatenates the string argument to the end of this string.
+            \item \textbf{Paramters};\\str - the String which is concatenated to the end of this String
+            \item \textbf{Returns}: A string that represents th concatenation of this object's characters followed by the string argument's characters
+          \end{itemize}
+          \item \textbf{copyValueOf}
+            \begin{itemize}
+              \item \textbf{public static} String copyValueOf(\textbf{char} data[])
+              \item \textbf{Parameters}:\\data - the character array
+              \item \textbf{Returns}:\\A string that contains the characters of the array
+            \end{itemize}
+    \end{itemize}
+    \item Classes and objects
+      \begin{itemize}
+        \item \textbf{Class}:
+          \begin{itemize}
+        \item A program entity that represents either:
+          \begin{enumerate}
+            \item A program/module, or
+            \item A type of objects
+          \end{enumerate}
+            \item A class is a blueprint or template for constructing objects
+          \end{itemize}
+      \end{itemize}
+\end{itemize}
 
 
 
