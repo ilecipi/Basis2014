@@ -612,12 +612,12 @@ public class name {
 Where:
 \begin{itemize}
 \item \textbf{class}: a program
-\item\textbf{method (main)}: a named group of statements
+\item\textbf{method} (\inline{main}): a named group of statements
 \item \textbf{statement}: a command to be executed
 \end{itemize}
 Also:
 \begin{itemize}
-\item \textbf{import} statement makes classes and methods from other packages (API) available
+\item \inline{import} statement makes classes and methods from other packages (API) available
 \item The \textbf{class body} contains:
 \begin{itemize}
 \item Instance and class variables (attributes)
@@ -663,7 +663,7 @@ class B {
 
 \section{Loops/Objects/Classes}
     \begin{itemize}
-      \item The \textit{\textbf{for}} loop
+      \item The \textit{\inline{for}} loop
         \begin{itemize}
           \item The for loop statement performs a task many times
           \item syntax:
@@ -705,7 +705,7 @@ for (int i=1; i<=4; i++){
   \begin{itemize}
     \item \textbf{Definite loop}: Executes a known number of times.
       \begin{itemize}
-        \item The \textbf{for} loops we have seen are definite loops
+        \item The \inline{for} loops we have seen are definite loops
           \begin{itemize}
             \item Print ``Hello'' 10 times.
             \item FInd all the prime numbers up to an integer n.
@@ -719,7 +719,7 @@ for (int i=1; i<=4; i++){
         \item Repeat until the user has types ``q'' to quit.
       \end{itemize}  
   \end{itemize}
-\item The \textit{\textbf{while}} loop:
+\item The {\inline{while}} loop:
   \begin{itemize}
     \item It repeatedly executes its body as long as a logical test is true.
     \item Syntax:
@@ -728,7 +728,7 @@ while (test){
     statement;
 }
     \end{lstlisting}
-    \item \textbf{While} is better than \textbf{for} because we don't know how many times we will need to increment to find the factor.
+    \item \inline{while} is better than \inline{for} because we don't know how many times we will need to increment to find the factor.
   \end{itemize}
 \item Sentinel values:
   \begin{itemize}
@@ -751,7 +751,7 @@ while (number != -1){
 System.out.println(``The total is '' + sum);
     \end{lstlisting}
   \end{itemize}
-\item The \textbf{do/while} loop
+\item The \inline{do/while} loop
   \begin{itemize}
     \item It performs its test at the end of each repetition.
       \begin{itemize}
@@ -780,7 +780,7 @@ do{
 name[index]            //access
 name[index] = value;   //modify
       \end{lstlisting}
-      \item One can use \textbf{for loops} to insert elements in the array
+      \item One can use \inline{for} \textbf{loops} to insert elements in the array
       \item Arrays are reference types
       \item Out-of-bounds exception
         \begin{itemize}
@@ -838,21 +838,21 @@ String name = console.next ();
   \end{lstlisting}
   \item Extract from Java API
     \begin{itemize}
-      \item \textbf{compareTo}
+      \item \inline{compareTo}
         \begin{itemize}
-          \item \textbf{public int} compareTo(String anotherString)\\Compares two strings lexicographically
+          \item \inline{public int compareTo(String anotherString)}\\Compares two strings lexicographically
           \item \textbf{Parameters}:\\anotherString - the String to be compared
-          \item \textbf{Returns}:\\The value 0 if the argument strins is equal to this string, less tha 0 if it is lexicographically less than the string argument, value greater than 0 otherwise
+          \item \textbf{Returns}:\\The value 0 if the argument strings is equal to this string, less tha 0 if it is lexicographically less than the string argument, value greater than 0 otherwise
         \end{itemize}
         \item \textbf{concat}
           \begin{itemize}
-            \item \textbf{public} String concat(String str)\\Concatenates the string argument to the end of this string.
-            \item \textbf{Paramters};\\str - the String which is concatenated to the end of this String
+            \item \inline{public String concat(String str)}\\Concatenates the string argument to the end of this string.
+            \item \textbf{Parameters};\\str - the String which is concatenated to the end of this String
             \item \textbf{Returns}: A string that represents the concatenation of this object's characters followed by the string argument's characters
           \end{itemize}
-          \item \textbf{copyValueOf}
+          \item \inline{copyValueOf}
             \begin{itemize}
-              \item \textbf{public static} String copyValueOf(\textbf{char} data[])
+              \item \inline{public static String copyValueOf(char data[])}
               \item \textbf{Parameters}:\\data - the character array
               \item \textbf{Returns}:\\A string that contains the characters of the array
             \end{itemize}
@@ -878,9 +878,8 @@ String name = console.next ();
      					\begin{itemize}
      						\item You interact with the methods; the data is hidden in the object
      					\end{itemize}
-     				\item Constructing an object:\\Type objectName = new Type (parameters);
-     				\item Calling an object's method:\\ objectName.methodName (parameters);
-     				\todo[inline]{Formattazione in Java???}
+     				\item Constructing an object:\\\inline{Type objectName = new Type (parameters);}
+     				\item Calling an object's method:\\ \inline{objectName.methodName (parameters);}
      			\end{itemize}
      	\end{itemize}
      	\item Inheritance\\
@@ -1156,23 +1155,23 @@ classDatum {
 \end{itemize}
 \item A condition interface provides the following methods:
 \begin{itemize}
-\item \textsl{await()}: the current thread waits until it is signaled. 
+\item \inline{await()}: the current thread waits until it is signaled. 
 \begin{itemize}
 \item Called with the lock held
 \item Releases the lock atomically and waits for thread to be signaled
 \item When returns, it is guaranteed to hold the lock
 \item Thread always needs to check condition
 \end{itemize}
-\item \textsl{signal()}: wakes up one waiting thread. Called with the lock held
-\item \textsl{signalAll()}: wakes up all waiting threads. Is called with the lock held
+\item \inline{signal()}: wakes up one waiting thread. Called with the lock held
+\item \inline{signalAll()}: wakes up all waiting threads. Is called with the lock held
 \end{itemize}
 \textbf{\underline{Conditions are always associated with a lock}}
 \item Check then act! 
-\item Conditions can also be used with intrinsic locks where each object can act as a condition, implementing \textsl{.notify()}, \textsl{.notifyAll()}, .\textsl{wait()}. 
+\item Conditions can also be used with intrinsic locks where each object can act as a condition, implementing \inline{.notify()}, \inline{.notifyAll()}, .\inline{wait()}. 
 \begin{itemize}
 \item They do not allow for multiple conditions (e.g. different condition for Full/Empty in P/C queues)
 \end{itemize}
-\item \textsl{Object.wait} and \textsl{Condition.await}: 
+\item \inline{Object.wait} and \inline{Condition.await}: 
 \begin{itemize}
 \item always have a condition predicate
 \item always test the condition predicate: before calling wait and after returning from wait 
@@ -1201,8 +1200,8 @@ classDatum {
 \end{itemize}
 \item Notes on Semaphores:
 \begin{itemize}
-\item A thread cannot know the value of a semaphore, and thus cannot know whether its execution will be suspended if it calls \textsl{acquire()}
-\item There is no rule about what thread will continue its operation after \textsl{release()}
+\item A thread cannot know the value of a semaphore, and thus cannot know whether its execution will be suspended if it calls \inline{acquire()}
+\item There is no rule about what thread will continue its operation after \inline{release()}
 \item Operations are traditionally also referred to as
 \begin{itemize}
 \item \textsl{P()}: acquire (also wait)
@@ -1306,13 +1305,13 @@ Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thr
 \end{itemize}
 \item In order to make our life easier, we need rich(er) atomic operations for AtomicInteger: 
 \begin{itemize}
-\item \textbf{getAndSet(val)} (atomically { set to val, return old value })
-\item \textbf{getAndAdd(val)}
-\item \textbf{getAndIncrement}
-\item \textbf{getAndDecrement}
-\item \textbf{CompareAndSet} (CAS for short)
+\item \inline{getAndSet(val)} (atomically { set to val, return old value })
+\item \inline{getAndAdd(val)}
+\item \inline{getAndIncrement}
+\item \inline{getAndDecrement}
+\item \inline{CompareAndSet} (CAS for short)
 \end{itemize}
-\item Lock using \textbf{getAndSet}: mutex is an AtomicBoolean which is set to either true or false on lock or unlock (resp.)
+\item Lock using \inline{getAndSet}: mutex is an AtomicBoolean which is set to either true or false on lock or unlock (resp.)
 \begin{lstlisting}
 mutex = new AtomicBoolean(false);
 lock:
@@ -1334,7 +1333,7 @@ atomically {
   }
 }
 \end{lstlisting}
-\item Lock using \textbf{getAndSet}: 
+\item Lock using \inline{getAndSet}: 
 \begin{lstlisting}
 mutex = new AtomicBoolean(false);
 
@@ -1513,18 +1512,18 @@ $\to$ Based on Java Generics
 \item CyclicBarrier (Java's barrier)
 \item CountDownLatch (thread wait until countdown reaches zero)
 \begin{itemize}
-\item CountDownLatch(int count) - initialize latch
-\item \textsl{.await()} - wait for event
-\item \textsl{.countDown()} - decrement count
+\item \inline{CountDownLatch(int count)} - initialize latch
+\item \inline{.await()} - wait for event
+\item \inline{.countDown()} - decrement count
 \end{itemize}
 \end{itemize}
 \item Future: \\
 interface Future$<$V$>$
 \begin{itemize}
 \item Represents a result (type T) for an asynchronous computation
-\item \textsl{.get()} - wait for result
-\item \textsl{.isDone()} - check if task is completed
-\item \textsl{.cancel()} - attempt to cancel computation
+\item \inline{.get()} - wait for result
+\item \inline{.isDone()} - check if task is completed
+\item \inline{.cancel()} - attempt to cancel computation
 \end{itemize}
 \end{itemize}
 
@@ -1556,12 +1555,12 @@ public static int sum(int[] xs) {
 \item ExecutorService and recursive sum\footnote{Have a look at the code in the slides, pp36-38} : task is described as the array to be summed and the region for which the task is responsible for, additionally an instance to the ExecutorService is passed so that the task can spawn other tasks; problems (observation: no result returned): Tasks create other tasks and then wait for results, when they are waiting they are keeping threads busy, other tasks need to run so that the recursion reaches its bottom, system does not know that tasks waiting need to be removed so that other tasks can run due to: tasks create other tasks (which is not supported) and work partitioning (splitting up work) is part of the task - we can decouple work partitioning from solving the problem
 \item Fork/Join framework with ForkJoinTask 
 \begin{itemize}
-\item \textbf{fork()} creates a new task
-\item \textbf{join()} returns the result when task is done
-\item \textbf{invoke()} executes task without creating a new task
-\item subclasses need to define \textbf{compute()}
+\item \inline{fork()} creates a new task
+\item \inline{join()} returns the result when task is done
+\item \inline{invoke()} executes task without creating a new task
+\item subclasses need to define \inline{compute()}
 \end{itemize}
-implements Future and ForkJoinPool implements ExecutorService. Note \textbf{fork()}, , \textbf{join()}, \textbf{join()} doesn’t work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
+implements Future and ForkJoinPool implements ExecutorService. Note \inline{fork()}, , \inline{join()}, \inline{join()} doesn’t work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
 \begin{lstlisting}
 t1.fork(), r2 = t2.compute()
 return r2 + t1.join()
@@ -1763,7 +1762,7 @@ return r2 + t1.join()
 \end{itemize}
  \begin{figure}[ht]
 \centering
-%\includegraphics[width=85mm]{image1.jpg}
+\includegraphics[width=85mm]{Figures/image1.jpg}
 \end{figure}
 
 \item shared memory architecture (left side in image)
