@@ -848,7 +848,7 @@ String name = console.next ();
           \begin{itemize}
             \item \textbf{public} String concat(String str)\\Concatenates the string argument to the end of this string.
             \item \textbf{Paramters};\\str - the String which is concatenated to the end of this String
-            \item \textbf{Returns}: A string that represents th concatenation of this object's characters followed by the string argument's characters
+            \item \textbf{Returns}: A string that represents the concatenation of this object's characters followed by the string argument's characters
           \end{itemize}
           \item \textbf{copyValueOf}
             \begin{itemize}
@@ -869,6 +869,192 @@ String name = console.next ();
             \item A class is a blueprint or template for constructing objects
           \end{itemize}
       \end{itemize}
+     \item \textbf{Object}: An entity that combines data and behavior.
+     	\begin{itemize}
+     		\item \textbf{object-oriented programming (OOP)}:\\Programs that perform their behavior as interactions between objects.
+     			\begin{itemize}
+     				\item data: variables inside the object
+     				\item behavior: methods inside the object 
+     					\begin{itemize}
+     						\item You interact with the methods; the data is hidden in the object
+     					\end{itemize}
+     				\item Constructing an object:\\Type objectName = new Type (parameters);
+     				\item Calling an object's method:\\ objectName.methodName (parameters);
+     				\todo[inline]{Formattazione in Java???}
+     			\end{itemize}
+     	\end{itemize}
+     	\item Inheritance\\
+     	Eventhought there are systematic diferences, different kinds of objects often have a certain amount in common with each other.\\ Classes \textit{inherit} commonly used state and behavior from other classes, but specialized behavior and states further \todo{WTF??}
+\item References and objects
+	\begin{itemize}
+		\item Arrays and objects use reference semantics, because of:
+			\begin{itemize}
+				\item \textit{efficiency}: Copying large objects slows down a program
+				\item \textit{sharing}: It's useful to share an object's data among methods
+				\item Example:
+					\begin{lstlisting}
+DrawingPanel1 panel1 = new DrawingPanel (80, 50);
+DrawingPanel panel2 = panel1; //same window
+panel2.setBackground(Color.CYAN);
+					\end{lstlisting}
+			\end{itemize}
+	\end{itemize}
+	\item Objects as parameters
+		\begin{itemize}
+			\item When an object is passed as a parameter, th object is \textit{not} copied. The parameter refers to the same object.
+				\begin{itemize}
+					\item If the parameter is modified, it \textit{will} affect the original object.
+					\begin{lstlisting}
+public static void main(String[] args) {
+	DrawingPanel window = new DrawingPanel(80, 50);
+	window.setBackground(Color.YELLOW);
+	example(window);
+}
+
+public static void example(DrawingPanel panel) {
+	panel.setBackground(Color.CYAN);
+	..
+}
+					\end{lstlisting}
+				\end{itemize}
+		\end{itemize}
+	\item Arrays pass by reference
+		\begin{itemize}
+			\item Arrays are passed as parameters by \textit{reference}.
+				\begin{itemize}
+					\item Changes made in the method are also seen by the caller
+						\begin{lstlisting}
+public static void main(String[] args) {
+	int[] iq = {126, 167, 95};
+	increase(iq);
+	System.out.println(Arrays.toString(iq));
+}
+public static void increase(int[] a) {
+	for (int i = 0; i < a.length; i++) {
+		a[i] = a[i] * 2;
+	}
+}
+
+Output:
+[252, 334, 190]
+						\end{lstlisting}
+						 
+				\end{itemize}
+		\end{itemize}
+	\item Arrays of objects
+		\begin{itemize}
+			\item \inline{null}: A value that does not refer to any object.
+				\begin{itemize}
+					\item The elements of an arays of objects are initialized to \inline{null}.\\
+				\end{itemize}
+		\end{itemize}
+		\item Things you can do with null:
+			\begin{itemize}
+				\item store \inline{null} in a variable or an array element
+				\item print a \inline{null} reference
+				\item ask whether a variable or array element is \inline{null}
+				\item pass \inline{null} as a parameter to a method
+				\item return \inline{null} from a method (often to indicate failure)
+			\end{itemize}
+			\item Null pointer exception
+				\begin{itemize}
+					\item \textit{dereference}: To access data or methods of an object with the dot notation, such as \inline{s.length()}.
+						\begin{itemize}
+							\item It is illegal to dereference \inline{null} (causes an exception)
+							\item \inline{null} is not any object, so it has no methods or data.
+						\end{itemize}
+					\item One can avoid raising an exception by simply using a if case statement before calling an object's method:
+						\begin{lstlisting}
+if (words[i] != null){
+	...
+}
+					\end{lstlisting}
+				\end{itemize}
+	\item Encapsulation
+		\begin{itemize}
+			\item Encapsulation is a very important O-O concept
+				\begin{itemize}
+					\item Each object has 2 views. An internal view and an external view
+				\end{itemize}
+			\item Encapsulation is a form of protection
+				\begin{itemize}
+					\item Also called \textit{Information Hiding}
+					\item The outside world does not have direct access to the internal implementation or representation of an object
+					\item As long as the external view does not change, the internal view can take on any form without affecting the outside world
+					\item Methods have the responsibility of maintaining data integritiy
+				\end{itemize}
+			\item Private visibility offer full encapsulation
+				\begin{itemize}
+					\item protected and default offer limited encapsulation
+					\item public offers no encapsulation
+				\end{itemize}
+			\item Benefits
+				\begin{itemize}
+					\item Abstraction between object and clients
+					\item Protects object from unwanted access
+						\begin{itemize}
+							\item Example: One can't fraudulently increase an \inline{Account}'s balance
+						\end{itemize}
+						\item Can change the class implementation later
+							\begin{itemize}
+								\item Example: \inline{Point} could be rewritten in polar coordinates with the same methods,
+							\end{itemize}
+						\item Can constrain object's state (\textbf{invariants})
+							\begin{itemize}
+								\item Example: Only allow \inline{Accounts} with non-negative balance.
+								\item Example: Only allow \inline{Dates} with a month 1-12-
+							\end{itemize}
+				\end{itemize}
+				\todo[inline]{Un po' ripetitivo...???}
+		\end{itemize}
+	\item Java access restrictions
+		\begin{itemize}
+			\item \textbf{Packages}: defin a name space
+			\item Default package used in the absence of a package declaration
+			\item For class members you can specify which other objects can access (read/write or invoke) them
+				\begin{itemize}
+					\item (default)[nothing]: accessible in current package
+					\item \inline{public}: everywhere
+					\item \inline{private}: only from this class
+					\item \inline{protected}: accessible in current package and all subclasses, regardless of their package
+				\end{itemize}
+		\end{itemize}
+	 \item Private fields
+	 	\begin{itemize}
+	 		\item A field that cannot be accessed from outside the classe\\
+	 		\inline{private type name;}
+	 	\end{itemize}
+	 \item The \inline{this} keyword
+	 	\begin{itemize}
+	 		\item \inline{this}: Refers to the implicit parameter inside your class.\\\textit{(a variable that stores the object a method is called)}
+	 			\begin{itemize}
+	 				\item Refer to a field \inline{this.field}
+	 				\item Call a method: \inline{this.method(parameters);}
+	 				\item One constructor can call another: \inline{this(parameters);}
+	 			\end{itemize}
+	 	\end{itemize}
+	 \item Class versus Instance Methods
+	 	\begin{itemize}
+	 		\item \textbf{Class methods} are marked by the \inline{static} keyword.
+	 			\begin{itemize}
+	 		\item They are not called via an object reference but directly via the class
+	 		\item Can be called from a static context.
+	 		\item often serve as utility function.
+	 		\item They are generic and need no access to object variables and methods
+	 			\begin{lstlisting}
+classDatum {
+	privateintday, month, year;
+	staticString monthName(Datum d)
+		{
+			if(d.month== 1) return "January";
+			if... 			return "February";
+			...
+		}
+	...
+}
+	 			\end{lstlisting}
+	 			\end{itemize}
+	 	\end{itemize}
 \end{itemize}
 
 
@@ -1496,7 +1682,7 @@ return r2 + t1.join()
 \end{itemize}
  \begin{figure}[ht]
 \centering
-\includegraphics[width=85mm]{image1.jpg}
+%\includegraphics[width=85mm]{image1.jpg}
 \end{figure}
 
 \item shared memory architecture (left side in image)
