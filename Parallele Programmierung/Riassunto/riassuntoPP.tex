@@ -29,6 +29,7 @@
   tabsize=3
 }
 
+\newcommand{\inline}[1]{\lstinline!#1!}%Inline code
 
 
 
@@ -872,588 +873,798 @@ String name = console.next ();
 
 
 
-%%=============== START OF MIDTERM 2, NEEDS REVISION ================
-%\setcounter{section}{10}%required to start at chapter 11
-%\section{Synchronization: Beyond Locks}
-%\begin{itemize}
-%\item Locks provide means to enforce atomicity via mutual exclusion yet they lack means for threads to communicate about changes, e.g. changes in state
-%\item Example: producer/consumer (p/c) queues (think: bakery)
-%\begin{itemize}
-%\item can be used for data-flow parallel programs, e.g. pipelines where a mean to transfer X from the producer to the consumer is needed
-%\item There might be multiple producers or (not xor) multiple consumers
-%\item For an implementation a circular buffer (with a fixed size) can be used with simple \textbf{dequeue()}/\textbf{enqueue()} and an “in” and “out” counter. Both functions use a shared (reentrant) lock and rely on helper functions to check for full/empty queue\footnote{Note: If you have a try-catch-finally block and there is a return statement (assume it will be called no matter what) in the ``try'' part and an unlock() in the ``finally'' part, the finally part will always be executed (and thus also the lock released!).}
-%\item If you use a busy wait (while loop) there is a chance of a deadlock (and CPU running high). Using sleep for synchronization as another approach is generally discouraged
-%\item The solution is a condition variable which (ideally) notifies the threads upon change
-%\end{itemize}
-%\item A condition interface provides the following methods:
-%\begin{itemize}
-%\item \textbf{await()}: the current thread waits until it is signaled. Is called with the lock held, releases the lock atomically and waits for thread to be signaled and is guaranteed to hold the lock when returning and the threads always needs to check the condition
-%\item \textbf{signal()}: wakes up one waiting thread
-%\item \textbf{signalAll()}: wakes up all waiting threads. Is called with the lock held
-%\end{itemize}
-%\textbf{\underline{Conditions are always associated with a lock}}
-%\item Check then act! 
-%\item Conditions can also be used with intrinsic locks where each object can act as a condition, implementing \textbf{.notify()}, \textbf{.notifyAll()}, .\textbf{wait()}. 
-%\begin{itemize}
-%\item They do not allow for multiple conditions
-%\end{itemize}
-%\item \textbf{Object.wait} and \textbf{Condition.await}: 
-%\begin{itemize}
-%\item always have a condition predicate
-%\item always test the condition predicate: before calling wait and after returning from wait 
-%\item always call wait in a loop
-%\item ensure state is protected by lock associated with condition
-%\end{itemize}
-%\item Semaphores\footnote{Language background: semaphore is fancy for traffic light in English (see also Spanish).} have the following operations: 
-%\begin{itemize}
-%\item initialize to an integer value and after initialization only wait/signal operations are allowed
-%\item acquire: integer value is decreased by one, if $<$ 0 $\rightarrow$ thread suspends execution
-%\item release: integer value is increased by one 
-%\begin{itemize}
-%\item if there is at least a thread waiting, one of the waiting threads resume execution
-%\end{itemize}
-%\item A thread cannot know the value of a semaphore and there is no rule about what thread will continue its operation after a release()
-%\end{itemize}
-%\item Say you build a lock (mutex\footnote{Mutual Exclusion Locks: make sure that at most one thread owns the lock}) with a semaphore, you initialize it to 1 and then 1 means unlocked, 0 is locked, $-n$ means $n$ threads are waiting to enter.
-%\item You can (of course) also use semaphore for p/c queues, however you need to use two semaphores to order the operations (and to prevent a deadlock).
-%\item Barrier: rendezvous for arbitrary number of threads i.e. every thread has to wait up for all other threads to arrive at a certain point
-%\begin{itemize}
-%\item can be implemented for n threads with two semaphores (and one count variable), one as a mutex (used to atomically increment the counter) with default = 1 and one as a barrier with default = 0 (which is released if count == n and otherwise only acts as acquire-and-release-immediately).
-%\end{itemize}
-%\item If you want a reusable barrier for n threads (aka 2-phase barrier) with semaphores, you need a count, a mutex and two barriers for it to be thread-safe.
-%\end{itemize}
-%
-%\section{Advanced (and other) Topics}
-%\begin{itemize}
-%\item Locks can be implemented with low-level atomic operations (basic operations that are guaranteed to be atomic) and busy wait loops (a thread continuously checks a condition)
-%\begin{itemize}
-%\item Example: Peterson Lock
-%\begin{lstlisting}
-%AtomicBoolean t0 = new AtomicBoolean(false);
-%AtomicBoolean t1 = new AtomicBoolean(false);
-%AtomicInteger victim = new AtomicInteger(0);
-%lock:
-%    my_t.set(true)
-%    victim.set(me);
-%    while (other_t.get() == true &&victim.get() == me)
-%        ;
-%	
-%	unlock:
-%        my_t.set(false);
-%\end{lstlisting}
-%Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thread will be selected.
-%\end{itemize}
-%\item In order to make our life easier, we need rich(er) atomic operations for AtomicInteger: 
-%\begin{itemize}
-%\item \textbf{getAndSet(val)} (atomically { set to val, return old value })
-%\item \textbf{getAndAdd(val)}
-%\item \textbf{getAndIncrement}
-%\item \textbf{getAndDecrement}
-%\item \textbf{CompareAndSet} (CAS for short)
-%\end{itemize}
-%\item Lock using \textbf{getAndSet}: mutex is an AtomicBoolean which is set to either true or false on lock or unlock (resp.)
-%\item CAS(int old, int new): performs atomically the following (optimistically): 
-%\begin{lstlisting}
-%if current_val == cold then {
-%	current_val = new 
-%	return true 
-%	}
-%else
-%	return false
-%\end{lstlisting}
-%\item Lock using \textbf{getAndSet}: mutex is an AtomicBoolean which is either CAS’ed as \textbf{compareAndSet(false, true)} or \textbf{set(false)} on lock or unlock (resp.)
-%\item Busy-waits check continuously for a value and waste CPU-time (or as alternative: exponential backoff) which should be avoided using a notification mechanism of sorts
-%\item Mutexes: locks that suspend the execution of threads while they wait are typically called mutexes (vs spinlocks)
-%\begin{itemize}
-%\item scheduler (typically from the OS) support is required
-%\item they do not waste CPU time but they have higher wakeup latency
-%\item hybrid approach: spin and then sleep
-%\end{itemize}
-%\item Locks performance: 
-%\begin{itemize}
-%\item Uncontended case: when threads do not compete for the lock, lock implementations try to have minimal overhead, typically just the cost of an atomic operation
-%\item Contended case: when threads do compete for the lock, can lead to significant performance degradation, as well as starvation
-%\end{itemize}
-%\item Disadvantages of locking
-%\begin{itemize}
-%\item locks are pessimistic by design, they assume the worse/worst and enforce mutual exclusion
-%\item performance issues: overhead for each lock taken even in uncontended case, contended case leads to significant performance degradation
-%\item blocking semantics (wait until acquire lock): if a thread is delayed for a reason (e.g., scheduler) when in a critical section $\rightarrow$ all threads suffer, which leads to deadlocks (and also livelocks)
-%\end{itemize}
-%\item Non-blocking algorithms: 
-%\begin{itemize}
-%\item Locks: a thread can indefinitely delay another thread
-%\item non-blocking: failure or suspension of one thread cannot cause failure or suspension of another thread
-%\item Lock-free: at each step, some thread can make progress 
-%\item typically built using CAS (more powerful than plain-atomic)
-%\begin{itemize}
-%\item see lecture slides for stack example
-%\end{itemize}
-%\end{itemize}
-%\item Overview of what java.util.concurrent has to offer:
-%\begin{itemize}
-%\item Lock interface with 
-%\begin{itemize}
-%\item \textbf{lock()}
-%\item \textbf{lockInterruptibly()}
-%\item \textbf{tryLock([delay] )}
-%\item \textbf{unlock()}
-%\item \textbf{newCondition()}, implemented by ReentrantLock
-%\end{itemize}
-%\item ReadWriteLock interface with \textbf{readLock() writeLock()}:
-%\begin{itemize}
-%\item implemented by ReentrantReadWriteLock
-%\item multiple readers can concurrently access state whereas writers get exclusive access, beneficial for scenarios with comparably few writes
-%\item can be implemented with semaphores but fairness might be an issue leading to starvation\footnote{Starvation: when a particular thread cannot resume execution; different from deadlock, where all the threads are unable to proceed}  unless prevented by means to notify the read lock about waiting writers
-%\end{itemize} 
-%\item Collections: objects that group multiple elements into a single unit
-%\item interfaces: Collection, List, Set, SortedSet, …
-%\item implementations: ArrayList, LinkedList, …
-%\item Algorithms: sort, …; 
-%\item based on Java generics
-%\item Synchronized Collections: 
-%\begin{itemize}
-%\item Vector
-%\item HashTable
-%\item synchronizedList
-%\item synchronizedMap
-%\item synchronizedSet
-%\item synchronizedSortedMap
-%\item synchronizedSortedMap
-%\item synchronizedCollection
-%\end{itemize}
-%they are wrapper classes, basically wrapping every public method in a synchronized block, they are thread safe but poor concurrency due to a single, collection-wide lock
-%\item Concurrent Collections: thread safe, but not a single lock. Examples:
-%\begin{itemize}
-%\item ConcurrentHashMap
-%\item ConcurrentSkipListMap
-%\item ConcurrentSkipListSet
-%\item CopyOnWriteArrayList
-%\item CopyOnWriteArrayList
-%\end{itemize}
-%\item Queues: 
-%\begin{itemize}
-%\item BlockingQueue
-%\item ArrayBlockingQueue
-%\item LinkedBlockingQueue (FIFO)
-%\item PriorityBlockingQueue (ordered)
-%\item TransferQueue: allows to wait until a consumer receives item; 
-%\item SynchronousQueue: hand-of, no internal capacity 
-%\item Dequeue/BlockingDeque: allows efficient removal/insertion at both ends (head/tail), work stealing pattern
-%\end{itemize}
-%\item Synchronizers: 
-%\begin{itemize}
-%\item Semaphores
-%\item CyclicBarrier
-%\item CountDownLatch (thread wait until countdown reaches zero)
-%\end{itemize}
-%\item Future: interface with get(), isDone(), cancel() representing a result for async computation
-%\end{itemize}
-%\end{itemize}
-%
-%\section{Parallel Tasks}
-%Example for most of this section: $\sum x_i$
-%\begin{lstlisting}
-%public static int sum(int[] xs) {
-%	int sum = 0;
-%	for (int x: xs)
-%		sum += x;
-% 	return sum;
-%}
-%\end{lstlisting}
-%\begin{itemize}
-%\item When writing a parallel program, write a sequential version first! This is useful for knowing the results are correct and evaluate the performance of the parallel program
-%\item Divide-and-conquer approach: recursive sum with the lower and upper half of the remaining part which cuts off at size = 1 is a lot slower $(\times 10)$. 
-%\item Task parallel model, basic operations: 
-%\begin{itemize}
-%\item create a parallel task and wait for the parallel tasks to complete
-%\item  when using D\&C a task for the first and second part (one each) are created, and upon finishing the operations, their results are combined
-%\end{itemize}
-%\item One thread per task: expensive to create, consumes many resources and is scheduled by the OS - generally inefficient
-%\begin{itemize}
-%\item In General: using one thread per task is highly inefficient 
-%\end{itemize}
-%\item ExecutorService: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
-%\item Note: Runnable doesn’t return a result, Callable does
-%\item ExecutorService and recursive sum\footnote{Have a look at the code in the slides, pp36-38} : task is described as the array to be summed and the region for which the task is responsible for, additionally an instance to the ExecutorService is passed so that the task can spawn other tasks; problems (observation: no result returned): Tasks create other tasks and then wait for results, when they are waiting they are keeping threads busy, other tasks need to run so that the recursion reaches its bottom, system does not know that tasks waiting need to be removed so that other tasks can run due to: tasks create other tasks (which is not supported) and work partitioning (splitting up work) is part of the task - we can decouple work partitioning from solving the problem
-%\item Fork/Join framework with ForkJoinTask 
-%\begin{itemize}
-%\item \textbf{fork()} creates a new task
-%\item \textbf{join()} returns the result when task is done
-%\item \textbf{invoke()} executes task without creating a new task
-%\item subclasses need to define \textbf{compute()}
-%\end{itemize}
-%implements Future and ForkJoinPool implements ExecutorService. Note \textbf{fork()}, , \textbf{join()}, \textbf{join()} doesn’t work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
-%\begin{lstlisting}
-%t1.fork(), r2 = t2.compute()
-%return r2 + t1.join()
-%\end{lstlisting}
-%\item Problems of overhead: bad speedup due to too much overhead (scheduling etc.), can be solved by making each task work more, here: increase cutoff
-%\end{itemize}
-%
-%\section{Transactional Memory (TM)}
-%\begin{itemize}
-%\item Aims at removing the burden of having to deal with locks from the programmer and place it on the system instead
-%\item Problems with locks: 
-%\begin{itemize}
-%\item ensuring ordering and correctness is really hard and locks are not composable
-%\item locks are pessimistic, performance overhead
-%\item locking mechanism is hard-wired to the program (separation not possible and change of synchronization scheme results in changing all of the program)
-%\end{itemize}
-%\item With TM, the programmer explicitly defines atomic code sections and is only concerned with the \textsl{what} and not the \textsl{how} (declarative approach)
-%\item TM benefits: 
-%\begin{itemize}
-%\item easier, less error-prone, higher semantics, composable, optimistic by design
-%\item changes made by a transaction are made visible atomically
-%\item  transactions run in isolation - while a transaction is running, effects from other transactions are not observed (as if transaction takes a snapshot of the global state when it begins and operates on that snapshot)
-%\item Note: while locks enforce atomicity via mutual exclusion, transaction does not require that
-%\end{itemize}
-%\item TM is inspired by transactions in databases where transactions are vital 
-%\begin{itemize}
-%\item ACID: \textbf{A}tomicity, \textbf{C}onsistency, \textbf{I}solation, \textbf{D}urability
-%\end{itemize}
-%\item Implementation of TM:
-%\begin{itemize}
-%\item Keep track of operations performed by each transaction
-%\item Concurrency control, system ensures atomicity and isolation properties
-%\end{itemize}
-%\item Transactions can be aborted if a conflict has been detected by the concurrency control (CC) mechanism 
-%\begin{itemize}
-%\item aborts are possible e.g. if there’s a deadlock
-%\item on abort, a transaction can be retried automatically or the user is notified
-%\end{itemize}
-%\item Where TM is/can be implemented: 
-%\begin{itemize}
-%\item Hardware TM : can be fast but cannot handle big transactions
-%\item Software TM (STM) : in the language, greater flexibility, performance might be challenging
-%\item Hybrid TM; TM is still work in progress with many different approaches and is still under active development
-%\end{itemize}
-%\item Design choice: 
-%\begin{itemize}
-%\item strong vs weak isolation:
-%\begin{enumerate}
-%\item[Q.] What happens when shared state accessed by a transaction, is also accessed outside of a transaction? Are the transactional guarantees still maintained? 
-%\item[A.]
-%\begin{itemize}
-%\item Strong isolation: Yes, 
-%\begin{itemize}
-%\item easier for porting existing code
-%\item difficult to implement, overhea
-%\end{itemize}
-%\item Weak isolation: No
-%\end{itemize}
-%\end{enumerate}
-%\item Nesting:
-%\begin{enumerate}
-%\item[Q.] What are the semantics of nested transactions? (Note: nested transactions are important for composability)
-%\item[A.]
-%\begin{itemize}
-%\item flat nesting (inner aborts $\rightarrow$ outer aborts)
-%\item inner commits $\rightarrow$ changes visibly only if outer commits, closed nesting (inner abort does not result in an abort for the outer transaction
-%\item inner transaction commits $\rightarrow$ changes visible to outer transaction but not to other transaction
-%\item only when outer transaction commits, changes of inner transactions become visible), other approaches (e.g. open nesting)
-%\end{itemize}
-%\end{enumerate}
-%\end{itemize}
-%\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement ,too (need to check every memory operation)
-%\item Reference-based STMs: mutable state is put into special variables
-%\begin{itemize}
-%\item  these variables can only be modified inside a transaction, everything else is immutable (or not shared; see functional programming)
-%\end{itemize}
-%\item Mechanism of retry: 
-%\begin{itemize}
-%\item implementations need to track what reads/writes a transaction performed to detect conflicts, typically called read-/write-set of a transaction
-%\item when retry is called, transaction aborts and will be retried when any of the variables that were read, change
-%\end{itemize}
-%\item Issues with transactions:
-%\begin{itemize}
-%\item it is not clear what the best semantics for transactions are
-%\item getting good performance can be challenging
-%\item I/O operations: can we perform I/O operations in a transaction?
-%\end{itemize}
-%\item I/O  in transactions: in general, I/O operations cannot be rolled-back and thus generally cannot be aborted
-%\begin{itemize}
-%\item that is why I/O operations are not allowed in transactions
-%\item one of the big issues with using TM
-%\item (some) STMs allow registering I/O operations to be performed when the transaction is committed
-%\end{itemize}
-%\end{itemize}
-%
-%\section{Designing Parallel Algorithms}
-%\begin{itemize}
-%\item There are no rules whatsoever, yet - as (very) often - it is a matter of experience
-%\item The following points can/should be considered:
-%\begin{itemize}
-%\item Where do the basic units of computation (tasks) come from? 
-%\begin{itemize}
-%\item This is sometimes called ``partitioning'' or ``decomposition''
-%\item Depending on the problem partitioning in terms of input and/or output can make sense or functional decomposition might yield better results
-%\end{itemize}
-%\item How do the tasks interact? 
-%\begin{itemize}
-%\item We have to consider the dependencies between tasks (dependency, interaction graphs)
-%\item Dependencies will be expressed in implementations as communication, synchronization and sharing (depending upon the machine model)
-%\end{itemize}
-%\item Are the natural tasks of a suitable granularity? 
-%\begin{itemize}
-%\item Depending upon the machine, too many small tasks may incur high overheads in their interaction. Should they be collected together into super-tasks?
-%\end{itemize}
-%\item How should we assign tasks to processors? 
-%\begin{itemize}
-%\item In the presence of more tasks than processors, this is related to scaling down
-%\item The``owner compute'' rule is natural for some algorithms which have been devised with a data-oriented partitioning
-%\item We need to ensure that tasks which interact can do so as (quickly) as possible.
-%\end{itemize}
-%\end{itemize}
-%\item D\&C is a very important technique and particularly helpful in PP since the recursive step can instead be parallelized
-%\item Number of threads to be used: 
-%\begin{itemize}
-%\item ``Runtime.getRuntime().availableProcessors()'' might be the right amount but your program may not get access to all cores
-%\item too few threads are bad because core(s) is/are idle
-%\item too many threads can be bad because of the overhead\footnote{This depends on the actual overhead the language introduces (in Java rather big)}
-%\end{itemize}
-%\item Sorting : If the array is sorted the following condition must hold (equal only if $A_i=A_j$): 
-%\begin{itemize}
-%\item $A_i\leq A_j$  for $i<j$
-%\item features of a sorting algorithm:
-%\begin{itemize}
-%\item stable (duplicate data is allowed and the algorithm does not change duplicate's original ordering relative to each other), in-place ($\mathcal{O}(1)$ auxiliary space), non-comparison
-%\item horrible $\Omega(n^2 )$: bogo, stooge
-%\item simple $\mathcal{O}(n^2 )$: insertion\footnote{At step $k$, put the $k^{th}$ input element in the correct position among the first elements} , selection\footnote{At step $k$, find the smallest element among the unsorted elements and put it at position $k$} , bubble, shell
-%\item fancier $\mathcal{O}(n \log⁡ n )$: heap, merge, quick sort (on average!)
-%\item specialized $\mathcal{O}(n)$: bubble, radix
-%\end{itemize}
-%\end{itemize}
-%\item Linked Lists and Big Data: 
-%\begin{itemize}
-%\item Mergesort can very nicely work directly on linked lists
-%\item Heapsort and Quicksort do not;
-%\item InsertionSort and SelectionSort can too but slower
-%\item Mergesort also the sort of choice for external sorting
-%\end{itemize}
-%\item Differences: 
-%\begin{itemize}
-%\item Quicksort and Heapsort jump all over the array
-%\item Mergesort scans linearly through arrays
-%\item In-memory sorting of blocks can be combined with larger sorts
-%\item Mergesort can leverage multiple disks
-%\end{itemize}
-%\item PRAM model: 
-%\begin{itemize}
-%\item processors working in parallel, each is trying to access memory values
-%\item when designing algorithms, the type of memory access required needs to be considered
-%\item scheme for naming different types: [concurrent $\mid$ exclusive]READ[concurrent $\mid$ exclusive]WRITE\footnote{Abbreviated as E/C and R/W; ERCW is never considered }
-%\item typically CR are not a problem since the memory isn’t changed whereas EW requires code to ensure writing is exclusive
-%\item PRAM is helpful to envision how it works and the needed data access pattern but isn’t necessarily the way processors are arranged in practice
-%\end{itemize}
-%\end{itemize}
-%
-%\section{Java GUIs - MVC - Parallelism}
-%\todo[inline]{Don’t get me wrong, but I’m having a hard time writing up this lecture…}
-%\begin{itemize}
-%\item (important) concepts: 
-%\begin{itemize}
-% \item MVC (model (application domain, state and behavior)
-%\item view (display layout and interaction views)
-%\item controller (user input, device interaction))
-%\item layout managers
-%\item event-driven design  (listener, worker\footnote{In Swing, this implements Runnable} , callback, fire/handle)
-%\item GUI (painting)
-%\end{itemize}
-%\item Swing threads: 
-%\begin{itemize}
-%\item initial\footnote{Main thread}
-%\item event dispatch\footnote{Drawing/painting the GUI}
-%\item worker thread\footnote{Background thread, can be used for (heavy) computation to keep GUI responsive}
-%\end{itemize}
-%\item MVC: 
-%\begin{itemize}
-%\item Model: complete, self-contained representation of object managed by the application, provides a number of services to manipulate the data, computation and persistence issues
-%\item View: tracks what is needed for a particular perspective of the data, presentation issues
-%\item Controller: gets input from the user, and uses appropriate information from the view to modify the model, interaction issues
-%\end{itemize}
-%\end{itemize}
-%
-%\section{Concurrent Message Passing}
-%\begin{itemize}
-%\item Goal: avoid (mutable) data sharing, instead use concurrent message passing (actor programming model) since many of the PP problems (so far) are due to shared state
-%\item isolated mutable state: 
-%\begin{itemize}
-%\item state is mutable, but not shared
-%\item each thread/task has its private state
-%\item tasks cooperate with message passing
-%\end{itemize}
-% \begin{figure}[ht]
-%\centering
-%\includegraphics[width=85mm]{image1.jpg}
-%\end{figure}
-%
-%\item shared memory architecture (left side in image)
-%\begin{itemize}
-%\item message passing and sharing state is used
-%\item message passing can be slower than sharing data yet is easier to implement and to reason about 
-%\end{itemize}
-%\item Distributed Memory Architecture (right side in image)
-%\begin{itemize}
-%\item sharing state is challenging and often inefficient, using almost exclusively message passing
-%\item additional concerns such as failures
-%\end{itemize}
-%\item Message passing works in both shared and distributed memory architectures making it more universal
-%\begin{itemize}
-%\item Example: shared state counting (i.e. atomic counter) with increase() and get(): 
-%\begin{enumerate}
-%\item[\#1:] one counter thread, the other threads ask for its value
-%\item[\#2:] every thread has its own (local) counter (Java: ThreadLocal), when sum is requested all threads return the value of their local counter
-%\end{enumerate}
-%\item Example: bank account: 
-%\begin{itemize}
-%\item sequential programing: single balance
-%\item PP shared state: single balance \& protection
-%\item PP distributed state: each thread has a local balance (budget), threads share balance coarsely 
-%\end{itemize}
-%\end{itemize}
-%\item distributed bank account (cont.): each task can operate independently, only communicate when needed
-%\item Synchronous vs. Asynchronous messages: 
-%\begin{itemize}
-%\item sync: send blocks until message is received (Java: SynchronousQueue)
-%\item async: send does not block ("fire-and-forget"), placed into a buffer for receiver to get (Java: BlockingQueue, async as long as there is enough space (to prevent memory overflow))
-%\end{itemize}
-%\item concurrent message passing programming models: 
-%\begin{itemize}
-%\item actors: state-full tasks communicating via messages (e.g. erlang)
-%\item channels\footnote{not an official term}: can be seen as a level of indirection over actors, Communicating Sequential Process (CSP) (e.g. go)
-%\end{itemize}
-%\item go (by Google): language support for: lightweight tasks (aka goroutines), typed channels for task communications which are synchronous (unbuffered) by default 
-%\item actor programming model: 
-%\begin{itemize}
-%\item a program is a set of actors that exchange (async) messages
-%\item actor embodies:
-%\begin{itemize}
-%\item state
-%\item communication
-%\item processing
-%\end{itemize}
-%\item An Actor may:
-%\begin{itemize}
-%\item process messages
-%\item send messages
-%\item change local state
-%\item create new actors
-%\end{itemize}
-%\end{itemize}
-%\item event-driven programming model: a program is written as a set of handlers (typical application: GUI)
-%\item Erlang: 
-%\begin{itemize}
-%\item functional language
-%\item developed for fault-tolerant applications, if no state is shared, recovering form errors becomes much easier
-%\item concurrent, following the actor model
-%\item open-source 
-%\end{itemize}
-%\item Actor examples: 
-%\begin{itemize}
-%\item Distributor: forward received messages to a set of names in a round-robin fashion
-%\begin{itemize}
-%\item State: an array of actors with the array index of the next actor to forward a message
-%\item Receive: messages $\rightarrow$ forward message and increase index (mod), control commands (e.g. add/remove actors)
-%\end{itemize}
-%\item Serializer: unordered input (e.g. due to different computation speed) $\rightarrow$ ordered output; 
-%\begin{itemize}
-%\item State: sorted list of received items, last item sent
-%\item Receive: if we receive an item that is larger than the last item plus one, add it to the sorted list; if we receive an item that is equal to the past item plus one: send the received item plus all consecutive items form the last and reset the last item
-%\end{itemize}
-%\end{itemize}
-%\item concurrent message passing in Java: 
-%\begin{itemize}
-%\item For simple applications, queues can be used which might be difficult especially for large tasks
-%\item Instead use Akka framework (written in Scala, interface for Java): follows the actor model (async messages), rich set of features\footnote{important methods to be overridden: preStart(), onReceive()} 
-%\end{itemize}
-%
-%\item Akka actors example: 
-%\begin{itemize}
-%\item ping-pong: client sends $n$ PINGs to server which responds with Pong upon receiving back to sender, master stops execution when receiving DONE
-%\item Version 2 with restart on DONE: add a message type SETUP to the client passing the server actor reference and the count, if the client receives SETUP before DONE it can either wait for DONE and the restart or discard the message
-%\end{itemize}
-%\item Collective operations: 
-%\begin{itemize}
-%\item Broadcast: send a message to all actors (related: multicast, sending a message to some actors), parallel broadcast using a tree where every parent forwards the message to its children until it reaches the leafs (top-down)
-%\item reduction: perform a computation from values of multiple nodes (e.g. balance of all bank accounts), using a tree where a parent receives the message from its children, performs operation and sends it to parent (bottom-up)
-%\end{itemize}
-%\end{itemize}
-%\section{Data Parallel Programming}
-%\subsection{Data Parallel Programming}
-%\begin{itemize}
-%\item Task vs Data parallelism: 
-%\begin{itemize}
-%\item Task: work is split into parts, by parallelizing the algorithm, very generic but cumbersome
-%\item Data: simultaneously applied operation on an aggregate of individual items (e.g. array), declarative (= what not how), splitting up the data for parallelism, less generic
-%\end{itemize}
-%\item Main Operations:
-%\begin{itemize}
-%\item map: 
-%\begin{itemize}
-%\item input: array $(x)$, operation $(f(\cdot))$
-%\item output: aggregate with applied operation $(f(x))$
-%\item parallel execution: split array into chunks and assign chunks to processors (scheduling)
-%\item generally more chunks leads to better load balancing (parallel slackness)
-%\item order of execution must not influence the result (since order depends on scheduling), given by pure functions (no side effects, same result for same argument)
-%\end{itemize}
-%\item reduce (reduction) : 
-%\begin{itemize}
-%\item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$, output: $x_1\bigoplus x_2\bigoplus\dots\bigoplus x_n$
-%\item result stays the same for sequential vs binary tree if operator is associative $((a+b)+c=a+(b+c))$
-%\item $f$ operation is commutative $(a+b=b+a)$, different scheduling is possible; e.g. sum, max
-%\end{itemize}
-%\item prefix scan: if it is an addition, it is a prefix sum
-%\begin{itemize}
-%\item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$
-%\item output: ordered aggregate $(x_1,x_1 \bigoplus x_2,\dots ,x_1 \bigoplus x_2\bigoplus\dots\bigoplus x_n)$
-%\end{itemize}
-%\item prefix  scan algorithm parallel version: 
-%\begin{itemize}
-%\item addition example: 
-%\begin{itemize}
-%\item 1st step is a reduction where two numbers are summed together and then pass their sum up the tree until it reaches the root i.e. bottom-up summing up all the values, two at a time
-%\item 2nd step is a down sweep where every node gets the sum of all the preceding leaf values passed whereas preceding is defined as pre-order 
-%\item Have a look at slides 18 - 21 if in doubt
-%\end{itemize}
-%\end{itemize}
-%\item application of pre-scan: 
-%\begin{itemize}
-%\item line-of-sight, visible points (e.g. mountain tops) from a given observation point: point $I$ is visible if no other point between $I$ and the observer has a greater vertical distance 
-%$\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
-%\item compute angle for every point, do a max-pre-scan on angle array (e.g. 0,10,20,10,30,20 $\rightarrow$ 0,0,10,20,20,30), if $\theta_i>maxprevangle_i$ then $visible_i  = true$ else $visible_i  =false$
-%\item parallelizable parts: 
-%\begin{itemize}
-%\item for loop to compute angles
-%\item for loop to compute visibility can be written as parfors (parallel for loops)
-%\end{itemize}
-%\end{itemize}
-%\item parfor: 
-%\begin{itemize}
-%\item iterations can be performed in parallel, work partitioning $\rightarrow$ partition iteration space
-%\item potential source of bugs if thought of as a sequential loop (data races; think factorial)
-%\end{itemize}
-%\end{itemize}
-%\end{itemize}
-%\subsection{Data Parallel Programming in Java 8}
-%\begin{itemize}
-%\item Functional programming crash course: 
-%\begin{itemize}
-%\item functions are first-class values (composition), pure functions (immutability)
-%\item such function are called lambdas or anonymous functions
-%\end{itemize}
-%\item Functions as values: functions can be passed to other functions as arguments (such functions accepting such arguments are called high-order functions), e.g. $map(f,list):f$, $filter(fn,list):f$
-%\item Lambdas make programming more convenient
-%\item Data parallel programming in Java 8 is done using streams, providing means to manipulate data in a declarative way, allowing for transparent parallel processing
-%\item Menu example: 
-%\begin{itemize}
-%\item input: stream
-%\item output: stream, map/filter/etc. are applied
-%\item collect in the end, doesn't create a stream
-%\item overall translates a stream into a collection
-%\end{itemize}
-%\item Parallel streams: created by applying .parallel() on a stream, splits it up into chunks for different threads; implemented using ForkJoin
-%\end{itemize}
+%=============== START OF MIDTERM 2, NEEDS REVISION ================
+\setcounter{section}{10}%required to start at chapter 11
+\section{Synchronization: Beyond Locks}
+\begin{itemize}
+\item Locks provide means to enforce atomicity via mutual exclusion 
+\item They lack means for threads to communicate about changes, e.g. changes in state
+\item Example: producer/consumer (p/c) queues (think: bakery)
+\begin{itemize}
+\item can be used for data-flow parallel programs, e.g. pipelines where a mean to transfer X from the producer to the consumer is needed
+\item There might be multiple producers or (not xor) multiple consumers
+\item For an implementation a circular buffer (with a fixed size) can be used with simple \textbf{dequeue()}/\textbf{enqueue()} and an “in” and “out” counter. Both functions use a shared (reentrant) lock and rely on helper functions to check for full/empty queue\footnote{Note: If you have a try-catch-finally block and there is a return statement (assume it will be called no matter what) in the ``try'' part and an unlock() in the ``finally'' part, the finally part will always be executed (and thus also the lock released!).}
+\item If you use a busy wait (while loop) there is a chance of a deadlock (and CPU running high). Using sleep for synchronization as another approach is generally discouraged
+\item The solution is a condition variable which (ideally) notifies the threads upon change
+\end{itemize}
+\item A condition interface provides the following methods:
+\begin{itemize}
+\item \textsl{await()}: the current thread waits until it is signaled. 
+\begin{itemize}
+\item Called with the lock held
+\item Releases the lock atomically and waits for thread to be signaled
+\item When returns, it is guaranteed to hold the lock
+\item Thread always needs to check condition
+\end{itemize}
+\item \textsl{signal()}: wakes up one waiting thread. Called with the lock held
+\item \textsl{signalAll()}: wakes up all waiting threads. Is called with the lock held
+\end{itemize}
+\textbf{\underline{Conditions are always associated with a lock}}
+\item Check then act! 
+\item Conditions can also be used with intrinsic locks where each object can act as a condition, implementing \textsl{.notify()}, \textsl{.notifyAll()}, .\textsl{wait()}. 
+\begin{itemize}
+\item They do not allow for multiple conditions (e.g. different condition for Full/Empty in P/C queues)
+\end{itemize}
+\item \textsl{Object.wait} and \textsl{Condition.await}: 
+\begin{itemize}
+\item always have a condition predicate
+\item always test the condition predicate: before calling wait and after returning from wait 
+\item always call wait in a loop
+\item Ensure state is protected by lock associated with condition
+\end{itemize}
+\item Semaphores\footnote{Language background: semaphore is fancy for traffic light in English (see also Spanish).} 
+\begin{itemize}
+\item Invented by Dijkstra
+\item Operations:
+\begin{itemize}
+\item \textbf{Initialize} to an integer value
+\begin{itemize}
+\item After initialization only wait/signal operations are allowed
+\end{itemize}
+\item \textbf{Acquire}:
+\begin{itemize}
+\item Integer value is decreased by one
+\item If $<0\to$ thread suspends execution
+\end{itemize}
+\item \textbf{release}
+\begin{itemize}
+\item Integer value is decreased by one
+\item If there is at least a thread waiting, one of the waiting threads resumes execution
+\end{itemize}
+\end{itemize}
+\item Notes on Semaphores:
+\begin{itemize}
+\item A thread cannot know the value of a semaphore, and thus cannot know whether its execution will be suspended if it calls \textsl{acquire()}
+\item There is no rule about what thread will continue its operation after \textsl{release()}
+\item Operations are traditionally also referred to as
+\begin{itemize}
+\item \textsl{P()}: acquire (also wait)
+\item \textsl{V()}: release (also signal)
+\end{itemize}
+\end{itemize}
+\item Building a lock with a semaphore:
+\begin{itemize}
+\item mutex\footnote{Mutual Exclusion Locks: make sure that at most one thread owns the lock} = Semaphore(1); Initialize mutex using a semaphore, and set it to unlocked (1)
+\item lock mutex $\to$ mutex.acquire(); only one thread is allowed into the critical section
+\item unlock mutex $\to$ mutex.release(); One other thread will be woken up
+\item Semaphore number:
+\begin{itemize}
+\item $1=$ unlocked
+\item $0=$ locked
+\item $-x=$ locked and $x$ threads are waiting to enter
+\end{itemize}
+\end{itemize}
+\item You can (of course) also use semaphore for p/c queues, however you need to use two semaphores to order the operations (and to prevent a deadlock).
+\end{itemize}
+
+\item Barriers
+\begin{itemize}
+\item Rendezvous for arbitrary number of threads i.e. every thread has to wait up for all other threads to arrive at a certain point
+\item Can be implemented for $n$ threads with:
+\begin{itemize}
+\item  two semaphores (and one count variable): 
+\begin{itemize}
+\item One as a mutex (used to atomically increment the counter) with default = 1 
+\item One as a barrier with default = 0 (which is released if count $== n$ and otherwise only acts as acquire-and-release-immediately).
+\end{itemize}
+
+\begin{lstlisting}
+count = 0
+mutex = Semaphore(1)
+barrier = Semaphore(0)
+
+mutex.acquire()
+   count = count + 1
+mutex.release()
+
+if (count == N){
+   barrier.release()
+}
+
+barrier.acquire()
+barrier.release()
+\end{lstlisting}
+\end{itemize}
+\item If you want a reusable barrier for n threads (aka 2-phase barrier) with semaphores, you need a count, a mutex and two barriers for it to be thread-safe.
+\begin{lstlisting}
+count=0; mutex = Semaphore(1); bar0 = Semaphore(0); bar1 = Semaphore(1);
+
+mutex.acquire()
+count +=1
+if (count == N){
+  bar1.acquire()
+  bar0.release()
+}
+mutex.release()
+
+bar0.acquire()
+bar0.release()
+
+mutex.acquire()
+count -= 1
+if (count == 0){
+  bar0.acquire()
+  bar1.release()
+}
+mutex.release()
+
+bar1.acquire()
+bar1.release()
+\end{lstlisting}
+
+\end{itemize}
+
+
+\end{itemize}
+
+\section{Advanced (and other) Topics}
+\begin{itemize}
+\item Locks can be implemented with low-level atomic operations (basic operations that are guaranteed to be atomic) and busy wait loops (a thread continuously checks a condition)
+\begin{itemize}
+\item Example: Peterson Lock
+\begin{lstlisting}
+AtomicBoolean t0 = new AtomicBoolean(false);
+AtomicBoolean t1 = new AtomicBoolean(false);
+AtomicInteger victim = new AtomicInteger(0);
+lock:
+    my_t.set(true)
+    victim.set(me);
+    while (other_t.get() == true &&victim.get() == me)
+        ;
+	
+	unlock:
+        my_t.set(false);
+\end{lstlisting}
+Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thread will be selected.
+\end{itemize}
+\item In order to make our life easier, we need rich(er) atomic operations for AtomicInteger: 
+\begin{itemize}
+\item \textbf{getAndSet(val)} (atomically { set to val, return old value })
+\item \textbf{getAndAdd(val)}
+\item \textbf{getAndIncrement}
+\item \textbf{getAndDecrement}
+\item \textbf{CompareAndSet} (CAS for short)
+\end{itemize}
+\item Lock using \textbf{getAndSet}: mutex is an AtomicBoolean which is set to either true or false on lock or unlock (resp.)
+\begin{lstlisting}
+mutex = new AtomicBoolean(false);
+lock:
+  while (mutex.getAndSet(true));
+unlock:
+  mutex.set(false);
+\end{lstlisting}
+\item CAS; performs atomically the following (optimistically): 
+\begin{lstlisting}
+atomic_int.compareAndSet(int old, int new)
+
+atomically {
+  if (current_val == old) {
+    current_val=new
+    return true
+  }
+  else {
+     return false
+  }
+}
+\end{lstlisting}
+\item Lock using \textbf{getAndSet}: 
+\begin{lstlisting}
+mutex = new AtomicBoolean(false);
+
+lock:
+  while (mutex.getAndSet(true));
+
+unlock:
+  mutex.set(false);
+\end{lstlisting}
+\item Busy-wait
+\begin{itemize}
+\item Check continuously for a value
+\item Wastes CPU-time 
+\item Alternative: exponential backoff
+\item Ideally we would like some sort of notification mechanism
+\end{itemize}
+\item Mutexes: 
+\begin{itemize}
+\item Locks that suspend the execution of threads while they wait are typically called mutexes (vs spinlocks)
+\item Scheduler (typically from the OS) support is required
+\item They do not waste CPU time but they have higher wakeup latency
+\item Hybrid approach: spin and then sleep
+\end{itemize}
+\item Locks performance: 
+\begin{itemize}
+\item Uncontended case: 
+\begin{itemize}
+\item When threads do not compete for the lock
+\item Lock implementations try to have minimal overhead, typically just the cost of an atomic operation
+\end{itemize}
+\item Contended case: 
+\begin{itemize}
+\item When threads do compete for the lock
+\item Can lead to significant performance degradation, as well as starvation
+\end{itemize}
+\end{itemize}
+\item Disadvantages of locking
+\begin{itemize}
+\item locks are pessimistic by design, they assume the worse/worst and enforce mutual exclusion
+\item Performance issues: 
+\begin{itemize}
+\item Overhead for each lock taken even in uncontended case
+\item Contended case leads to significant performance degradation
+\end{itemize}
+\item blocking semantics (wait until acquire lock)
+\begin{itemize}
+\item  if a thread is delayed for a reason (e.g., scheduler) when in a critical section $\rightarrow$ all threads suffer
+\item Leads to deadlocks (and also livelocks)
+\end{itemize}
+\end{itemize}
+\item Non-blocking algorithms: 
+\begin{itemize}
+\item Locks: a thread can indefinitely delay another thread
+\item Non-blocking: failure or suspension of one thread cannot cause failure or suspension of another thread
+\item Lock-free: at each step, some thread can make progress 
+\item Typically built using CAS operations(more powerful than plain-atomic)
+\begin{itemize}
+\item see lecture slides for stack example (Page 18)
+\item Non-blocking counter example:
+\begin{lstlisting}
+public class CasCounter {
+  private AtomicInteger value;
+
+  public int getVal() {
+    return value.get();
+  }
+
+  public int inc() {
+    int v;
+    do {
+       v = value.get();
+    } while (!value.compareAndSet(v, v+1));
+    return v+1;
+  }
+}
+\end{lstlisting}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\subsection{An overview of java.util.concurrent}
+\begin{itemize}
+\item Lock interface:
+\begin{lstlisting}
+void lock()
+void lockInterruptibly()
+
+boolean tryLock()
+boolean tryLock(long time, TimeUnit unit)
+
+void unlock()
+Condition newCondition()
+\end{lstlisting}
+Interface implemented by ReentrantLock
+
+
+\item Readers-Writer Lock
+\begin{itemize}
+\item Observation: multiple readers can concurrently access state
+\item Different roles:
+\begin{itemize}
+\item Readers: Allow to co-exist with other readers
+\item Writers: Exclusive access
+\end{itemize}
+\item Beneficial for ``read-mostly'' workloads
+\item Can be implemented with semaphores but fairness might be an issue leading to starvation\footnote{Starvation: when a particular thread cannot resume execution; different from deadlock, where all the threads are unable to proceed}  unless prevented by means to notify the read lock about waiting writers
+\end{itemize} 
+\item Java collections
+\begin{itemize}
+\item Aggregate Objects: Objects that group multiple elements into a single unit
+\item Interfaces (e.g. Collection, List, Set, SortedSet,\dots)
+\item Implementations (e.g. ArrayList and LinkedList for List)
+\item Algorithms (e.g. Sort)
+\end{itemize}
+$\to$ Based on Java Generics
+\item Synchronized Collections: 
+\begin{itemize}
+\item Vector, HashTable (JDK 1.0)
+\item java.util.collections (JDK 1.2):
+\begin{itemize}
+\item synchronizedList(List$<$T$>$ list)
+\item synchronizedMap(Map$<$K,V$>$ m)
+\item synchronizedSet(Set$<$T$>$ s)
+\item synchronizedSortedMap(SortedMap$<$K,V$>$ m)
+\item synchronizedCollection(Collection$<$T$>$ c)
+\end{itemize}
+\item They are synchronized wrapper classes
+\item Wrap every public method in a synchronized block
+\item Thread-safe
+\item Client-side locking for compound actions (e.g. iteration, put-if-absent)
+\item Poor concurrency: single, collection-wide lock
+\end{itemize}
+\item Concurrent Collections: 
+\begin{itemize}
+\item Thread-safe
+\item Not governed by a single lock
+\begin{itemize}
+\item Cannot be locked for exclusive access
+\item No client-side locking
+\item Common compound operations added (e.g. put-if-absent, replace-if-equal,\dots)
+\end{itemize}
+\item Examples:
+\begin{itemize}
+\item ConcurrentHashMap 
+\begin{itemize}
+\item As a replacement for synchronized hash-based map
+\end{itemize}
+\item ConcurrentSkipListMap, ConcurrentSkipListSet
+\begin{itemize}
+\item As a replacement for synchronized tree-based impls.
+\end{itemize}
+\item CopyOnWriteArrayList, CopyOnWriteArrayList
+\begin{itemize}
+\item Frequent reads, infrequent writes
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Queues: 
+\begin{itemize}
+\item BlockingQueue
+\begin{itemize}
+\item ArrayBlockingQueue, LinkedBlockingQueue (FIFO)
+\item PriorityBlockingQueue (ordered)
+\end{itemize}
+\item TransferQueue: allows to wait until a consumer receives item; 
+\item SynchronousQueue: hand-of, no internal capacity 
+\item Dequeue/BlockingDeque: 
+\begin{itemize}
+\item Allows efficient removal/insertion at both ends (head/tail)
+\item Work stealing pattern
+\end{itemize}
+\end{itemize}
+\item Synchronizers: 
+\begin{itemize}
+\item Semaphores
+\item CyclicBarrier (Java's barrier)
+\item CountDownLatch (thread wait until countdown reaches zero)
+\begin{itemize}
+\item CountDownLatch(int count) - initialize latch
+\item \textsl{.await()} - wait for event
+\item \textsl{.countDown()} - decrement count
+\end{itemize}
+\end{itemize}
+\item Future: \\
+interface Future$<$V$>$
+\begin{itemize}
+\item Represents a result (type T) for an asynchronous computation
+\item \textsl{.get()} - wait for result
+\item \textsl{.isDone()} - check if task is completed
+\item \textsl{.cancel()} - attempt to cancel computation
+\end{itemize}
+\end{itemize}
+
+%%%% FROM HERE!
+\section{Parallel Tasks}
+Example for most of this section: $\sum x_i$
+\begin{lstlisting}
+public static int sum(int[] xs) {
+	int sum = 0;
+	for (int x: xs)
+		sum += x;
+ 	return sum;
+}
+\end{lstlisting}
+\begin{itemize}
+\item When writing a parallel program, write a sequential version first! This is useful for knowing the results are correct and evaluate the performance of the parallel program
+\item Divide-and-conquer approach: recursive sum with the lower and upper half of the remaining part which cuts off at size = 1 is a lot slower $(\times 10)$. 
+\item Task parallel model, basic operations: 
+\begin{itemize}
+\item create a parallel task and wait for the parallel tasks to complete
+\item  when using D\&C a task for the first and second part (one each) are created, and upon finishing the operations, their results are combined
+\end{itemize}
+\item One thread per task: expensive to create, consumes many resources and is scheduled by the OS - generally inefficient
+\begin{itemize}
+\item In General: using one thread per task is highly inefficient 
+\end{itemize}
+\item ExecutorService: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
+\item Note: Runnable doesn’t return a result, Callable does
+\item ExecutorService and recursive sum\footnote{Have a look at the code in the slides, pp36-38} : task is described as the array to be summed and the region for which the task is responsible for, additionally an instance to the ExecutorService is passed so that the task can spawn other tasks; problems (observation: no result returned): Tasks create other tasks and then wait for results, when they are waiting they are keeping threads busy, other tasks need to run so that the recursion reaches its bottom, system does not know that tasks waiting need to be removed so that other tasks can run due to: tasks create other tasks (which is not supported) and work partitioning (splitting up work) is part of the task - we can decouple work partitioning from solving the problem
+\item Fork/Join framework with ForkJoinTask 
+\begin{itemize}
+\item \textbf{fork()} creates a new task
+\item \textbf{join()} returns the result when task is done
+\item \textbf{invoke()} executes task without creating a new task
+\item subclasses need to define \textbf{compute()}
+\end{itemize}
+implements Future and ForkJoinPool implements ExecutorService. Note \textbf{fork()}, , \textbf{join()}, \textbf{join()} doesn’t work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
+\begin{lstlisting}
+t1.fork(), r2 = t2.compute()
+return r2 + t1.join()
+\end{lstlisting}
+\item Problems of overhead: bad speedup due to too much overhead (scheduling etc.), can be solved by making each task work more, here: increase cutoff
+\end{itemize}
+
+\section{Transactional Memory (TM)}
+\begin{itemize}
+\item Aims at removing the burden of having to deal with locks from the programmer and place it on the system instead
+\item Problems with locks: 
+\begin{itemize}
+\item ensuring ordering and correctness is really hard and locks are not composable
+\item locks are pessimistic, performance overhead
+\item locking mechanism is hard-wired to the program (separation not possible and change of synchronization scheme results in changing all of the program)
+\end{itemize}
+\item With TM, the programmer explicitly defines atomic code sections and is only concerned with the \textsl{what} and not the \textsl{how} (declarative approach)
+\item TM benefits: 
+\begin{itemize}
+\item easier, less error-prone, higher semantics, composable, optimistic by design
+\item changes made by a transaction are made visible atomically
+\item  transactions run in isolation - while a transaction is running, effects from other transactions are not observed (as if transaction takes a snapshot of the global state when it begins and operates on that snapshot)
+\item Note: while locks enforce atomicity via mutual exclusion, transaction does not require that
+\end{itemize}
+\item TM is inspired by transactions in databases where transactions are vital 
+\begin{itemize}
+\item ACID: \textbf{A}tomicity, \textbf{C}onsistency, \textbf{I}solation, \textbf{D}urability
+\end{itemize}
+\item Implementation of TM:
+\begin{itemize}
+\item Keep track of operations performed by each transaction
+\item Concurrency control, system ensures atomicity and isolation properties
+\end{itemize}
+\item Transactions can be aborted if a conflict has been detected by the concurrency control (CC) mechanism 
+\begin{itemize}
+\item aborts are possible e.g. if there’s a deadlock
+\item on abort, a transaction can be retried automatically or the user is notified
+\end{itemize}
+\item Where TM is/can be implemented: 
+\begin{itemize}
+\item Hardware TM : can be fast but cannot handle big transactions
+\item Software TM (STM) : in the language, greater flexibility, performance might be challenging
+\item Hybrid TM; TM is still work in progress with many different approaches and is still under active development
+\end{itemize}
+\item Design choice: 
+\begin{itemize}
+\item strong vs weak isolation:
+\begin{enumerate}
+\item[Q.] What happens when shared state accessed by a transaction, is also accessed outside of a transaction? Are the transactional guarantees still maintained? 
+\item[A.]
+\begin{itemize}
+\item Strong isolation: Yes, 
+\begin{itemize}
+\item easier for porting existing code
+\item difficult to implement, overhea
+\end{itemize}
+\item Weak isolation: No
+\end{itemize}
+\end{enumerate}
+\item Nesting:
+\begin{enumerate}
+\item[Q.] What are the semantics of nested transactions? (Note: nested transactions are important for composability)
+\item[A.]
+\begin{itemize}
+\item flat nesting (inner aborts $\rightarrow$ outer aborts)
+\item inner commits $\rightarrow$ changes visibly only if outer commits, closed nesting (inner abort does not result in an abort for the outer transaction
+\item inner transaction commits $\rightarrow$ changes visible to outer transaction but not to other transaction
+\item only when outer transaction commits, changes of inner transactions become visible), other approaches (e.g. open nesting)
+\end{itemize}
+\end{enumerate}
+\end{itemize}
+\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement ,too (need to check every memory operation)
+\item Reference-based STMs: mutable state is put into special variables
+\begin{itemize}
+\item  these variables can only be modified inside a transaction, everything else is immutable (or not shared; see functional programming)
+\end{itemize}
+\item Mechanism of retry: 
+\begin{itemize}
+\item implementations need to track what reads/writes a transaction performed to detect conflicts, typically called read-/write-set of a transaction
+\item when retry is called, transaction aborts and will be retried when any of the variables that were read, change
+\end{itemize}
+\item Issues with transactions:
+\begin{itemize}
+\item it is not clear what the best semantics for transactions are
+\item getting good performance can be challenging
+\item I/O operations: can we perform I/O operations in a transaction?
+\end{itemize}
+\item I/O  in transactions: in general, I/O operations cannot be rolled-back and thus generally cannot be aborted
+\begin{itemize}
+\item that is why I/O operations are not allowed in transactions
+\item one of the big issues with using TM
+\item (some) STMs allow registering I/O operations to be performed when the transaction is committed
+\end{itemize}
+\end{itemize}
+
+\section{Designing Parallel Algorithms}
+\begin{itemize}
+\item There are no rules whatsoever, yet - as (very) often - it is a matter of experience
+\item The following points can/should be considered:
+\begin{itemize}
+\item Where do the basic units of computation (tasks) come from? 
+\begin{itemize}
+\item This is sometimes called ``partitioning'' or ``decomposition''
+\item Depending on the problem partitioning in terms of input and/or output can make sense or functional decomposition might yield better results
+\end{itemize}
+\item How do the tasks interact? 
+\begin{itemize}
+\item We have to consider the dependencies between tasks (dependency, interaction graphs)
+\item Dependencies will be expressed in implementations as communication, synchronization and sharing (depending upon the machine model)
+\end{itemize}
+\item Are the natural tasks of a suitable granularity? 
+\begin{itemize}
+\item Depending upon the machine, too many small tasks may incur high overheads in their interaction. Should they be collected together into super-tasks?
+\end{itemize}
+\item How should we assign tasks to processors? 
+\begin{itemize}
+\item In the presence of more tasks than processors, this is related to scaling down
+\item The``owner compute'' rule is natural for some algorithms which have been devised with a data-oriented partitioning
+\item We need to ensure that tasks which interact can do so as (quickly) as possible.
+\end{itemize}
+\end{itemize}
+\item D\&C is a very important technique and particularly helpful in PP since the recursive step can instead be parallelized
+\item Number of threads to be used: 
+\begin{itemize}
+\item ``Runtime.getRuntime().availableProcessors()'' might be the right amount but your program may not get access to all cores
+\item too few threads are bad because core(s) is/are idle
+\item too many threads can be bad because of the overhead\footnote{This depends on the actual overhead the language introduces (in Java rather big)}
+\end{itemize}
+\item Sorting : If the array is sorted the following condition must hold (equal only if $A_i=A_j$): 
+\begin{itemize}
+\item $A_i\leq A_j$  for $i<j$
+\item features of a sorting algorithm:
+\begin{itemize}
+\item stable (duplicate data is allowed and the algorithm does not change duplicate's original ordering relative to each other), in-place ($\mathcal{O}(1)$ auxiliary space), non-comparison
+\item horrible $\Omega(n^2 )$: bogo, stooge
+\item simple $\mathcal{O}(n^2 )$: insertion\footnote{At step $k$, put the $k^{th}$ input element in the correct position among the first elements} , selection\footnote{At step $k$, find the smallest element among the unsorted elements and put it at position $k$} , bubble, shell
+\item fancier $\mathcal{O}(n \log⁡ n )$: heap, merge, quick sort (on average!)
+\item specialized $\mathcal{O}(n)$: bubble, radix
+\end{itemize}
+\end{itemize}
+\item Linked Lists and Big Data: 
+\begin{itemize}
+\item Mergesort can very nicely work directly on linked lists
+\item Heapsort and Quicksort do not;
+\item InsertionSort and SelectionSort can too but slower
+\item Mergesort also the sort of choice for external sorting
+\end{itemize}
+\item Differences: 
+\begin{itemize}
+\item Quicksort and Heapsort jump all over the array
+\item Mergesort scans linearly through arrays
+\item In-memory sorting of blocks can be combined with larger sorts
+\item Mergesort can leverage multiple disks
+\end{itemize}
+\item PRAM model: 
+\begin{itemize}
+\item processors working in parallel, each is trying to access memory values
+\item when designing algorithms, the type of memory access required needs to be considered
+\item scheme for naming different types: [concurrent $\mid$ exclusive]READ[concurrent $\mid$ exclusive]WRITE\footnote{Abbreviated as E/C and R/W; ERCW is never considered }
+\item typically CR are not a problem since the memory isn’t changed whereas EW requires code to ensure writing is exclusive
+\item PRAM is helpful to envision how it works and the needed data access pattern but isn’t necessarily the way processors are arranged in practice
+\end{itemize}
+\end{itemize}
+
+\section{Java GUIs - MVC - Parallelism}
+\todo[inline]{Don’t get me wrong, but I’m having a hard time writing up this lecture…}
+\begin{itemize}
+\item (important) concepts: 
+\begin{itemize}
+ \item MVC (model (application domain, state and behavior)
+\item view (display layout and interaction views)
+\item controller (user input, device interaction))
+\item layout managers
+\item event-driven design  (listener, worker\footnote{In Swing, this implements Runnable} , callback, fire/handle)
+\item GUI (painting)
+\end{itemize}
+\item Swing threads: 
+\begin{itemize}
+\item initial\footnote{Main thread}
+\item event dispatch\footnote{Drawing/painting the GUI}
+\item worker thread\footnote{Background thread, can be used for (heavy) computation to keep GUI responsive}
+\end{itemize}
+\item MVC: 
+\begin{itemize}
+\item Model: complete, self-contained representation of object managed by the application, provides a number of services to manipulate the data, computation and persistence issues
+\item View: tracks what is needed for a particular perspective of the data, presentation issues
+\item Controller: gets input from the user, and uses appropriate information from the view to modify the model, interaction issues
+\end{itemize}
+\end{itemize}
+
+\section{Concurrent Message Passing}
+\begin{itemize}
+\item Goal: avoid (mutable) data sharing, instead use concurrent message passing (actor programming model) since many of the PP problems (so far) are due to shared state
+\item isolated mutable state: 
+\begin{itemize}
+\item state is mutable, but not shared
+\item each thread/task has its private state
+\item tasks cooperate with message passing
+\end{itemize}
+ \begin{figure}[ht]
+\centering
+\includegraphics[width=85mm]{image1.jpg}
+\end{figure}
+
+\item shared memory architecture (left side in image)
+\begin{itemize}
+\item message passing and sharing state is used
+\item message passing can be slower than sharing data yet is easier to implement and to reason about 
+\end{itemize}
+\item Distributed Memory Architecture (right side in image)
+\begin{itemize}
+\item sharing state is challenging and often inefficient, using almost exclusively message passing
+\item additional concerns such as failures
+\end{itemize}
+\item Message passing works in both shared and distributed memory architectures making it more universal
+\begin{itemize}
+\item Example: shared state counting (i.e. atomic counter) with increase() and get(): 
+\begin{enumerate}
+\item[\#1:] one counter thread, the other threads ask for its value
+\item[\#2:] every thread has its own (local) counter (Java: ThreadLocal), when sum is requested all threads return the value of their local counter
+\end{enumerate}
+\item Example: bank account: 
+\begin{itemize}
+\item sequential programing: single balance
+\item PP shared state: single balance \& protection
+\item PP distributed state: each thread has a local balance (budget), threads share balance coarsely 
+\end{itemize}
+\end{itemize}
+\item distributed bank account (cont.): each task can operate independently, only communicate when needed
+\item Synchronous vs. Asynchronous messages: 
+\begin{itemize}
+\item sync: send blocks until message is received (Java: SynchronousQueue)
+\item async: send does not block ("fire-and-forget"), placed into a buffer for receiver to get (Java: BlockingQueue, async as long as there is enough space (to prevent memory overflow))
+\end{itemize}
+\item concurrent message passing programming models: 
+\begin{itemize}
+\item actors: state-full tasks communicating via messages (e.g. erlang)
+\item channels\footnote{not an official term}: can be seen as a level of indirection over actors, Communicating Sequential Process (CSP) (e.g. go)
+\end{itemize}
+\item go (by Google): language support for: lightweight tasks (aka goroutines), typed channels for task communications which are synchronous (unbuffered) by default 
+\item actor programming model: 
+\begin{itemize}
+\item a program is a set of actors that exchange (async) messages
+\item actor embodies:
+\begin{itemize}
+\item state
+\item communication
+\item processing
+\end{itemize}
+\item An Actor may:
+\begin{itemize}
+\item process messages
+\item send messages
+\item change local state
+\item create new actors
+\end{itemize}
+\end{itemize}
+\item event-driven programming model: a program is written as a set of handlers (typical application: GUI)
+\item Erlang: 
+\begin{itemize}
+\item functional language
+\item developed for fault-tolerant applications, if no state is shared, recovering form errors becomes much easier
+\item concurrent, following the actor model
+\item open-source 
+\end{itemize}
+\item Actor examples: 
+\begin{itemize}
+\item Distributor: forward received messages to a set of names in a round-robin fashion
+\begin{itemize}
+\item State: an array of actors with the array index of the next actor to forward a message
+\item Receive: messages $\rightarrow$ forward message and increase index (mod), control commands (e.g. add/remove actors)
+\end{itemize}
+\item Serializer: unordered input (e.g. due to different computation speed) $\rightarrow$ ordered output; 
+\begin{itemize}
+\item State: sorted list of received items, last item sent
+\item Receive: if we receive an item that is larger than the last item plus one, add it to the sorted list; if we receive an item that is equal to the past item plus one: send the received item plus all consecutive items form the last and reset the last item
+\end{itemize}
+\end{itemize}
+\item concurrent message passing in Java: 
+\begin{itemize}
+\item For simple applications, queues can be used which might be difficult especially for large tasks
+\item Instead use Akka framework (written in Scala, interface for Java): follows the actor model (async messages), rich set of features\footnote{important methods to be overridden: preStart(), onReceive()} 
+\end{itemize}
+
+\item Akka actors example: 
+\begin{itemize}
+\item ping-pong: client sends $n$ PINGs to server which responds with Pong upon receiving back to sender, master stops execution when receiving DONE
+\item Version 2 with restart on DONE: add a message type SETUP to the client passing the server actor reference and the count, if the client receives SETUP before DONE it can either wait for DONE and the restart or discard the message
+\end{itemize}
+\item Collective operations: 
+\begin{itemize}
+\item Broadcast: send a message to all actors (related: multicast, sending a message to some actors), parallel broadcast using a tree where every parent forwards the message to its children until it reaches the leafs (top-down)
+\item reduction: perform a computation from values of multiple nodes (e.g. balance of all bank accounts), using a tree where a parent receives the message from its children, performs operation and sends it to parent (bottom-up)
+\end{itemize}
+\end{itemize}
+\section{Data Parallel Programming}
+\subsection{Data Parallel Programming}
+\begin{itemize}
+\item Task vs Data parallelism: 
+\begin{itemize}
+\item Task: work is split into parts, by parallelizing the algorithm, very generic but cumbersome
+\item Data: simultaneously applied operation on an aggregate of individual items (e.g. array), declarative (= what not how), splitting up the data for parallelism, less generic
+\end{itemize}
+\item Main Operations:
+\begin{itemize}
+\item map: 
+\begin{itemize}
+\item input: array $(x)$, operation $(f(\cdot))$
+\item output: aggregate with applied operation $(f(x))$
+\item parallel execution: split array into chunks and assign chunks to processors (scheduling)
+\item generally more chunks leads to better load balancing (parallel slackness)
+\item order of execution must not influence the result (since order depends on scheduling), given by pure functions (no side effects, same result for same argument)
+\end{itemize}
+\item reduce (reduction) : 
+\begin{itemize}
+\item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$, output: $x_1\bigoplus x_2\bigoplus\dots\bigoplus x_n$
+\item result stays the same for sequential vs binary tree if operator is associative $((a+b)+c=a+(b+c))$
+\item $f$ operation is commutative $(a+b=b+a)$, different scheduling is possible; e.g. sum, max
+\end{itemize}
+\item prefix scan: if it is an addition, it is a prefix sum
+\begin{itemize}
+\item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$
+\item output: ordered aggregate $(x_1,x_1 \bigoplus x_2,\dots ,x_1 \bigoplus x_2\bigoplus\dots\bigoplus x_n)$
+\end{itemize}
+\item prefix  scan algorithm parallel version: 
+\begin{itemize}
+\item addition example: 
+\begin{itemize}
+\item 1st step is a reduction where two numbers are summed together and then pass their sum up the tree until it reaches the root i.e. bottom-up summing up all the values, two at a time
+\item 2nd step is a down sweep where every node gets the sum of all the preceding leaf values passed whereas preceding is defined as pre-order 
+\item Have a look at slides 18 - 21 if in doubt
+\end{itemize}
+\end{itemize}
+\item application of pre-scan: 
+\begin{itemize}
+\item line-of-sight, visible points (e.g. mountain tops) from a given observation point: point $I$ is visible if no other point between $I$ and the observer has a greater vertical distance 
+$\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
+\item compute angle for every point, do a max-pre-scan on angle array (e.g. 0,10,20,10,30,20 $\rightarrow$ 0,0,10,20,20,30), if $\theta_i>maxprevangle_i$ then $visible_i  = true$ else $visible_i  =false$
+\item parallelizable parts: 
+\begin{itemize}
+\item for loop to compute angles
+\item for loop to compute visibility can be written as parfors (parallel for loops)
+\end{itemize}
+\end{itemize}
+\item parfor: 
+\begin{itemize}
+\item iterations can be performed in parallel, work partitioning $\rightarrow$ partition iteration space
+\item potential source of bugs if thought of as a sequential loop (data races; think factorial)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\subsection{Data Parallel Programming in Java 8}
+\begin{itemize}
+\item Functional programming crash course: 
+\begin{itemize}
+\item functions are first-class values (composition), pure functions (immutability)
+\item such function are called lambdas or anonymous functions
+\end{itemize}
+\item Functions as values: functions can be passed to other functions as arguments (such functions accepting such arguments are called high-order functions), e.g. $map(f,list):f$, $filter(fn,list):f$
+\item Lambdas make programming more convenient
+\item Data parallel programming in Java 8 is done using streams, providing means to manipulate data in a declarative way, allowing for transparent parallel processing
+\item Menu example: 
+\begin{itemize}
+\item input: stream
+\item output: stream, map/filter/etc. are applied
+\item collect in the end, doesn't create a stream
+\item overall translates a stream into a collection
+\end{itemize}
+\item Parallel streams: created by applying .parallel() on a stream, splits it up into chunks for different threads; implemented using ForkJoin
+\end{itemize}
 
 
 
