@@ -1056,7 +1056,88 @@ classDatum {
 	 			\end{itemize}
 	 	\end{itemize}
 \end{itemize}
-
+\section{Threads}
+	\begin{itemize}
+		\item Multitasking
+			\begin{itemize}
+				\item Concurrent execution of multiple tasks
+				\item Time multiplexing of CPU
+					\begin{itemize}
+						\item Creates impression of parallelism, even on single core/CPU system
+					\end{itemize}
+				\item Allows for asynchronous I/O
+					\begin{itemize}
+						\item I/O devices and CPU are truly parallel
+						\item 10ms waitinf for HDD allows other proceses to execute $>10^{10}$ instructions
+					\end{itemize}
+			\end{itemize}
+		\item Process ontext
+			\begin{itemize}
+				\item Multiple concurrent instances of \textbf{same program} (e.g., mutiple browser windows)
+				\item Multiple applications (=processes) in parallel
+				\item Each process has a \textbf{context}
+					\begin{itemize}
+						\item Instruction counter
+						\item Register content
+						\item Variable vaues
+						\item Stack content
+						\item Resourcing (device access, open files)
+					\end{itemize}
+			\end{itemize}
+		\item Process States\\
+		\begin{center}
+		\includegraphics[scale=1]{Figures/ProcessState2.jpg}
+		\end{center}
+		\item Process management
+			\begin{itemize}
+				\item Proceses need resources
+					\begin{itemize}
+						\item CPU time, Memory, etc.
+					\end{itemize}
+				\item OS manages processes:
+					\begin{itemize}
+						\item Starts processes
+						\item Terminates processes (frees resources)
+						\item Controls resource usage (prevents monopolizing CPU tim)
+						\item Schedules CPU time
+						\item Synchronizes processes if necessary
+						\item Allows for inter process communication
+					\end{itemize}
+			\end{itemize}
+		\item Process control blocks (PCB)\\
+		\begin{center}
+			\includegraphics[scale=1.5]{Figures/PCB.jpg}
+		\end{center}
+\end{itemize}
+\subsection*{Java Threads}
+	\begin{itemize}
+		\item Threads (light weight processes)
+			\begin{itemize}
+				\item \textbf{Threads} (of control) are independent sequences of execution, but multiple threads \textbf{share the same address space}
+					\begin{itemize}
+						\item Threads are not shielded from eachother
+						\item Threads share resources and can communicate moer easily
+					\end{itemize}
+				\item Context switching between threads is much more efficient for threads
+					\begin{itemize}
+						\item No change of address space
+						\item No autmoatic scheduling
+						\item No saving / (re-)loading of PCB state
+					\end{itemize}
+				\item Many more thread changes possible than process switches per unit of time
+			\end{itemize}
+		\item Advantages of MUltithreading
+			\begin{itemize}
+				\item Reactive systems-constantly monitoring
+				\item More responsive to user input-GUI application can interrupt a time-consuming task
+				\item Server can handle multiple clients simultaneously
+				\item Can take advantage of parallel processing
+			\end{itemize}
+		\item Multithreading conceptually\\
+			\begin{center}
+				\includegraphics[scale=1]{Figures/MultithreadingConceptually.jpg}
+			\end{center}
+	\end{itemize}
 
 
 %=============== START OF MIDTERM 2, NEEDS REVISION ================
