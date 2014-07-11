@@ -2,6 +2,34 @@
 \usepackage{todonotes}
 \usepackage{amsmath}
 
+\usepackage{listings}
+\usepackage{color}
+\usepackage{enumerate}
+
+%Colors for the listings
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+%style setup for the listings
+\lstset{frame=tb,
+  language=Eiffel,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{blue},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
+
+\newcommand{\inline}[1]{\lstinline!#1!}%Inline code
+
 
 \begin{document}
 
@@ -208,6 +236,172 @@ The regular grammar is generally used to describe the terminal construct, which 
 \item Fully implemented features are called \textbf{effective}, otherwise one may call them \textbf{deferred}
 \end{itemize}
 \item Contracts 
+\begin{itemize}
+\item The \textbf{invariant} of a class automatically includes the invariant clause from all its parents, and-ed
+\item If no pre-/post condition is explicitly stated, features inherit the contracts from their parents
+\item One can weaken the precondition with the keyword \inline{require else}, resulting in a precondition \inline{orig_pre} and \inline{new_pre}
+\item One can strengthen the postcondition with the keyword \inline{ensure then}, resulting in a postcondition \inline{orig_post} and \inline{new_post}
 \end{itemize}
+\end{itemize}
+
+\subsubsection{Multiple Inheritance}
+\begin{itemize}
+\item \textbf{Name clash}: If \inline{C} inherits both from \inline{A} and \inline{B}, which both have a feature \inline{f}, then we have a name clash. To resolve it, we can redefine one feature as \inline{A_f}. A name clash must be resolved, unless it is:
+\begin{itemize}
+\item Under repeated inheritance (the feature of \inline{f} in \inline{A} and \inline{B} comes from a common ancestor, for instance \inline{ANY})
+\item If at most one of the features \inline{f} is effective, and all others are deferred. In that case (only one feature is effective), the features are said to be \textbf{merged}. Merging also works when one or more features are renamed. The merging happens after renaming!
+\item If more than one feature are effective, merging can still help. We can \textbf{undefine} effective features, so that they are deferred again. Syntax: \inline{undefine a,b,c end}. It is even possible to fist rename a feature, undefine it and then merge it. 
+\end{itemize}
+\item Repeated Inheritance
+\begin{itemize}
+\item Features, not renamed along any of the inheritance paths, will be shared
+\item Features, inherited under different names will be replicated
+\item A potential ambiguity arises because of polymorphism and dynamic binding when class \inline{C} inherits from \inline{B} and \inline{A}, but \inline{A} redefines now copy (a feature of the common ancestor \inline{ANY}). In this case, a simple rename will not be enough, we have to select (\inline{select copy, f end}) the features from one parent, and rename the ones from the other.
+\end{itemize}
+\end{itemize}
+
+\subsection{Genericity}
+\begin{itemize}
+\item Terminology:
+\begin{itemize}
+\item A \textbf{formal generic paameter} is the parameter in the class, e.g. \inline{LIST[G]} with \inline{G} as formal generic parameter.
+\item An \textbf{actual generic parameter} is the actual type passed as parameter in a type, e.g. \inline{LIST[INTEGER]} with \inline{INTEGER} being the actual generic parameter. 
+\item One can obtain a \textbf{generic derivation} of a generic class by passing a type
+\end{itemize}
+\item Types
+\begin{itemize}
+\item \textbf{Unconstrained} genericity: Any generic type is allowed. Example: \inline{LIST[G]}, which is the same as \inline{LIST[G->ANY]}
+\item \textbf{Constrained} genericity: Only descendants are allowed as generic type. Example: \inline{LIST[G->NUMERIC]}
+\end{itemize}
+\end{itemize}
+
+\subsection{Static Typing}
+\begin{itemize}
+\item \textbf{Type-safe call} (during execution). A feature call \inline{x.f} such that the object attached to \inline{x} has a feature corresponding to \inline{f}
+\item \textbf{Static type checker} is a program-processing tool (such as a compiler) that guarantees for any program that it accepts, that any call in any execution will be type-safe
+\item A programming language is called \textbf{statically typed language} if it is possible to write a static type checker
+\end{itemize}
+
+\subsection{Polymorphism}
+\begin{itemize}
+\item \textbf{Polymorphism} is the existence of the following possibilities:
+\begin{itemize}
+\item An \textbf{attachment} (assignment or argument passing) is \textbf{polymorphic} if its target variable and source expression have different types.
+\item An entity or expression is polymorphic if it may at runtime, as a result of polymorphic attachments, become attached to objects of different types. 
+\item A \textbf{container data structure} is polymorphic if it may contain references to objects of different types.  
+\end{itemize}
+\item The \textbf{static type} of an entity is the type used in its declaration in the class text. Similarly, the \textbf{dynamic type} of an entity is the type of the object, it is attached to. The type system ensures that the dynamic type of an entity will always conform to its static type.
+\item \textbf{Conformance}
+\begin{itemize}
+\item A reference type \inline{U} \textbf{conforms} to a reference type \inline{T} if either:
+\begin{itemize}
+\item They have no generic parameters, and \inline{U} is a descendant of \inline{T}
+\item They both are generic derivations with the same number of actual generic parameters, the base class of \inline{U} is a descendant of the base class of \inline{T}, and every actual parameter of \inline{U} (recursively) conforms to the corresponding actual parameter of \inline{T}
+\end{itemize}
+\item An expanded type only conforms to itself
+\end{itemize}
+\item \textbf{Object test}. Test the dynamic type of an object, e.g. \inline{if \{r:TYPE\} obj then ... end}
+\begin{itemize}
+\item \inline{ \{r:TYPE\} } is the object-test local, and only available in the \inline{then}-part, not in the \inline{else}-clause.
+\item \inline{obj} is the object to be tested
+\end{itemize}
+\item \textbf{Assignment attempt}. Earlier mechanism for the object test. \inline{a?=b} assigns \inline{b} to \inline{a} if and only if \inline{b} is attached to an object whose type conforms to the type of \inline{a}. Otherwise, \inline{a} will be void
+\end{itemize}
+
+\subsection{Dynamic Binding}
+\begin{itemize}
+\item \textbf{Dynamic bonding} as a semantic rule is the property that any execution of a feature call will use the vesion of the feature best adapted to the type of the target object.
+\end{itemize}
+
+\section{Recursion}
+\begin{itemize}
+\item \textbf{Definition}: A definition is recursive if it involves one or more instances of the concept itself. Recursion is the use of a recursive definition. 
+\item Recursion can be either direct (routine \inline{r} calls \inline{r}) or indirect (routine \inline{r_1} calls \inline{r_2} .. calls \inline{r_n} calls \inline{r_1})
+\item To be useful, a recursive definition should ensure that:
+\begin{enumerate}[R1:]
+\item There is at least one non-recursive branch
+\item Every recursive branch occurs in a context that differs from the original
+\item For every recursive branch, the change of context R2 brings it closer to at least one of the non-recursive cases R1
+\end{enumerate}
+\item Recursive calls cause (without further optimization) a run-time penalty: the stack of preserved calls needs to be maintained. Various optimizations are possible:
+\begin{itemize}
+\item Recursive schemes can sometimes be replaced by a loop (\textbf{recursive elimination})
+\item \textbf{Tail recursion} (last instruction of a routine is a recursive call) can usually be eliminated 
+\end{itemize}
+\item \textbf{Recursive variant}: Every recursive routine should use a recursion variant, an integer quantity associated with any call, such that
+\begin{itemize}
+\item The variant is always $\geq 0$
+\item If a routine execution starts with variant value $v$, the value $v'$ for any call satisfies $0\leq v'\leq v$
+\end{itemize}
+\end{itemize}
+
+\section{Data Structures}
+\subsection{Trees}
+\subsubsection{Binary Trees}
+\begin{itemize}
+\item A binary tree \inline{G}, for an arbitrary data type \inline{G}, is a finite set of items called nodes, each containing a value of type \inline{G}, such that the nodes, if any, are divided into three disjoint parts:
+\begin{itemize}
+\item A single node, called the root of the binary tree
+\item (Recursively) two binary trees over \inline{G}, called the left and right sub-tree
+\end{itemize}
+\item \textbf{Theorem:} For any node of a binary tree, there is a single downward path connecting the root to the node through successive applications of \inline{left} and \inline{right} links.
+\item \textbf{Traversals}
+\begin{itemize}
+\item \textbf{In-order}: traverse left sub-tree, visit root, traverse right sub-tree
+\item \textbf{Pre-order}: visit root, traverse left sub-tree, traverse right sub-tree
+\item\textbf{Post-order}: traverse left sub-tree, traverse right sub-tree, visit root
+\end{itemize}
+\item \textbf{Binary search tree}: This is a tree over a sorted set \inline{G} if for every node \inline{n}:
+\begin{itemize}
+\item For every node \inline{x} of the left sub-tree of \inline{n}: \inline{x.item} $\leq$ \inline{n.item}
+\item For every node \inline{x} of the right sub-tree of \inline{n}: \inline{x.item} $\geq$ \inline{n.item}
+\end{itemize}
+\item In a binary search tree, average behavior for insertion, deletion and search is $O\left( \log(n)\right)$, only worst case is $O(n)$
+\end{itemize}
+\todo[inline]{Add binary search tree image}
+
+\subsection{Container data structures}
+\begin{itemize}
+\item Containers contain other objects, and store them in numerous ways. They differ in various properties, like the available operations, the speed of these operations and storage requirements. Some fundamental operations on a container:\\
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Insertion & Add an item\\\hline
+Removal & Remove an occurence (if any) of an item\\\hline
+Wipeout & Remove remove all occurences of an item\\\hline
+Search & Find out if a given item is present \\\hline
+Iteration (or trasversal) & Apply a given operation to every item\\\hline
+\end{tabular}
+\end{center}
+\item The \inline{EiffelBase} classes use standard names for basic operations:
+\begin{itemize}
+\item Queries:
+\begin{itemize}
+\item \inline{is_empty: BOOLEAN}
+\item\inline{has(v:G): BOOLEAN}
+\item \inline{count: INTEGER}
+\item \inline{item: G}
+\end{itemize}
+\item Commands
+\begin{itemize}
+\item \inline{make}
+\item \inline{put(v:G)}
+\item\inline{remove(v:G)}
+\item\inline{wipe_out}
+\item\inline{start, finish}
+\item\inline{forth, back}
+\end{itemize}
+\end{itemize}
+\item The \textbf{cursor} is present in many containers. It ranges from $0$ to $count+1$, and \inline{before} and \inline{after} hold if the cursor is not on an item. In an empty list, the cursor is at position $0$
+\item \textbf{Alias notation}. A feature may be declared as follows: \inline{item(i: INTEGER) alias "[]": G assign put}. It is then possible to do \inline{a[i]} for \inline{a.item(i)} and \inline{a.item(i) := x} or \inline{a[i] := x} for \inline{a.put(x,i)}
+\end{itemize}
+\subsubsection{Lists}
+\begin{itemize}
+\item A list is a sequence of elements of a certain type. List is a general concept and has various implementations, including \inline{LINKED_LIST}, \inline{TWO_WAY_LIST}, \inline{ARRAYED_LIST}, etc.
+\item Lists have a \textbf{cursor}. The current cursor position can be obtained by the query \inline{index}. The element at this position is generally obtained by \inline{item} and there are many other queries about the cursor position: \inline{after}, \inline{before}, \inline{off}, \inline{is_first}, \inline{is_last}
+\item There are also various commands for \textbf{cursor movement}: \inline{start}, \inline{finish}, \inline{forth}, \inline{back}, \inline{go_i_th}
+\item \textbf{Adding and removing} elements is done using: \inline{put_front}, \inline{put_left}, \inline{put_right}, \inline{extend}, \inline{remove} (item at cursor position)
+\end{itemize}
+\subsubsection{Arrays}
 
 \end{document}
