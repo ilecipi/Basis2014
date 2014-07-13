@@ -305,7 +305,7 @@ We list a few useful rules for predicate logic
 \section{Some Proof Patterns and Techniques}
 What is to be proven (e.g. a statement called a theorem) is given by a logical formula $F$, or by a sentence in natural language that could be made precise as (and hence stands for) a logical formula $F$. Typically $F$ is a proposition, i.e. it is either true or false, and for formulas in predicate logic the universe is understood. 
 \subsection{Modus Ponens}
-The following theorem states than in order to prove $G$ one can try to identify a formula $F$ such that one can prove both $F$ as well as $F\to G$. The proof is similar to the proof of theorem 2.2, using the fact that the propositional formula 
+The following theorem states that in order to prove $G$ one can try to identify a formula $F$ such that one can prove both $F$ as well as $F\to G$. The proof is similar to the proof of theorem 2.2, using the fact that the propositional formula 
 \[\left((A\land (A\to B)) \right)\to B\]
 is a tautology. 
 \subsubsection*{Theorem 2.3}
@@ -380,7 +380,7 @@ The number of elements of a finite set $A$ is called its \textbf{cardinality} an
 \end{definition}
 
 \subsection{Set Description}
-A natural way to specify a finite set is by listing its elements. We use the standard notation $A=\{a,b,c\}$ to say that the set contains the three elements $a,b,c$ and no other element. If two elements in the list are equal, then one of them an be dropped. 
+A natural way to specify a finite set is by listing its elements. We use the standard notation $A=\{a,b,c\}$ to say that the set contains the three elements $a,b,c$ and no other element. If two elements in the list are equal, then one of them can be dropped. 
 
 \subsubsection*{Example 3.2}
 \[\{1,2,3\}=\{1,2,3,1,3\}=\{3,1,2\}=\left\{2,\frac{18}{6},\frac{6}{3},1\right\}\]
@@ -495,7 +495,7 @@ The \emph{inverse} of a relation $\rho$ from $A$ to $B$ is the relation $\wideha
 \end{definition}
 An alternative notation for the inverse of $\rho$ is $\rho^{-1}$\\
 
-In the matrix representation, taking the inverse of a relation corresponds to the transposition of the matrix. In the graph representation, it taking the inverse corresponds to inverting the direction of all edges.
+In the matrix representation, taking the inverse of a relation corresponds to the transposition of the matrix. In the graph representation, taking the inverse corresponds to inverting the direction of all edges.
 
 \subsection{Composition of Relations}
 \begin{definition}{3.13}
@@ -511,7 +511,7 @@ Let $\rho$ be a relation from $A$ to $B$ and let $\sigma$ be a relation from $B$
 
 \subsection{Special Properties of Relations}
 \begin{definition}{3.14}
-A relation $\rho$ on a st $A$ is called \emph{reflexive} if $a\rho a$ for every $a\in A$, i.e. if $\text{id}\subseteq\rho$
+A relation $\rho$ on a set $A$ is called \emph{reflexive} if $a\rho a$ for every $a\in A$, i.e. if $\text{id}\subseteq\rho$
 \end{definition}
 In other words, a relation is reflexive if it contains the equality relation ($=$). In the matrix representation of relations, reflexive means that the diagonal is all 1. In a graph representation, reflexive means that every vertex has a loop (an edge from the vertex to itself).
 
@@ -593,7 +593,7 @@ If any two elements of a poset $(A;\preceq)$ are comparable, then $A$ is called 
 A poset $(A;\preceq)$ is \emph{well-ordered} if it is totally ordered and if every non-empty subset of $A$ has a least element
 \end{definition}
 
-Note that every totally ordered finite poset is well-ordered. The property of being well-ordered is of interest inly for infinite posets. Any subset of the natural numbers is also well-ordered. 
+Note that every totally ordered finite poset is well-ordered. The property of being well-ordered is of interest only for infinite posets. Any subset of the natural numbers is also well-ordered. 
 
 \subsection{Hasse Diagrams}
 \begin{definition}{3.28}
@@ -633,7 +633,7 @@ is a partial order relation.\footnote{As mentioned earlier, for a partial order 
 Let $(A;\preceq)$ be a poset, and let $S\subseteq A$ be some subset of $A$. Then 
 \begin{enumerate}
 \item $a\in S$ is a \emph{minimal (maximal) element} of $S$ if there exists no $b\in S$ with $b\prec a$ $(b\succ a)$
-\item $a\in S$ is the \emph{least (greates) element} of $S$ if $a\preceq b$ $(a\succeq b)$ for all $b\in S$
+\item $a\in S$ is the \emph{least (greatest) element} of $S$ if $a\preceq b$ $(a\succeq b)$ for all $b\in S$
 \item $a\in A$ is a \emph{lower (upper) bound} of $S$ if $a\preceq b$ $(a\succ b)$ for all $b\in S$
 \item $a\in A$ is the \emph{greatest lower bound (least upper bound)} of $S$ if $a$ is the greatest (least) element of the set of all lower (upper) bounds of $S$ 
 \end{enumerate}

@@ -1136,6 +1136,24 @@ classDatum {
 			\begin{center}
 				\includegraphics[scale=1]{Figures/MultithreadingConceptually.jpg}
 			\end{center}
+		\item Two options to create Java Threads
+			\begin{itemize}
+				\item Extend \inline{java.lang.Thread} class
+					\begin{itemize}
+						\item Override run method (must be overridden
+						\item run() is called when execution of the thread begins
+						\item A thread terminates when run() returns
+						\item start() method invokes run()
+						\item Calling run() does not create a new thread
+					\end{itemize}
+				\item Implement \inline{java.an.Runnable} thread
+					\begin{itemize}
+						\item If already intheriting another class (i.e., JApplet)
+						\item Single method: public vodi rn()
+						\item Thread classh implements Runnable
+					\end{itemize}
+			\end{itemize}
+
 	\end{itemize}
 
 
