@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -939,6 +939,65 @@ $$g(T_1 \cup T_2)=g(T_1)+g(T_2) \geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2
 \end{itemize}
 \end{mytheorem}
 Come diretta conseguenza find(x) impiega al massimo log(n) passi. Le altre operazioni sono fattibili in tempo costante.
+
+\chapter{Geometrische Algorithmen}
+\section{Konvexe Hülle (pag 472)}
+Di seguito presenterò soltanto la soluzione migliore che si può trovare senza utilizzare il principio Scan line, vale a dire Graham's scan. La Konvexe Hülle altro non è che una figura che contiene tutti i punti (noi siamo interessati nella minima, quindi quella formata da meno segmenti).
+\subsection{Graham's scan}
+Si sceglie inizialmente un qualsiasi punto (al centro) e si calcolano le equazioni delle rette che connettono il punto scelto con gli altri punti. Dopodiché si ordinano i punti in base all'angolo (dato dalla pendenza), partendo da ore sei e procedendo in senso antiorario (vedi immagine). Dopodiché non rimane che collegare i punti seguendo questo ordine. Dato che siamo interessati alla minima Konvexe Hülle, se un segmento va verso sinistra (in relazione al senso di marcia antiorario) per poi tornare verso destra significa che questi due segmenti possano essere sostituiti da un segmento più lungo. Bisogna in seguito anche ricontrollare i segmenti precedenti. 
+\begin{center}
+\includegraphics[scale=0.7]{Figures/graham.png}
+\end{center}
+Secondo l'analisi ammortizzata ogni segmento candidato può essere allontanato al massimo una volta, quindi O(n). Il costo dell'algoritmo è quindi dato dal sort, quindi si tratta di $O(n\log (n))$.
+
+\section{Scan line principle}
+\subsection{Il principio (pag 478)}
+Il principio consiste nell'analizzare il problema utilizzando una linea verticale (o anche orizzontale), la scan line, che si ferma ad ogni punto discreto analizzando il problema. Risulta quindi necessario ordinare questi punti in base ad una determinata coordinata. La scan line divide gli oggetti geometrici in tre tipi: attivi (sulla scan line), morti(a sinistra) e inattivi (a destra). Di seguito l'algoritmo:
+\begin{lstlisting}
+	Q=insieme di punti discreti (Haltepunkten)
+	L=null //punti attivi
+	while !Q.isEmpty()
+		//scegli il prossimo punto p da Q ed allontanalo da Q
+		update(L,p) //aggiorna gli oggetti attivi
+		//risolvi la parte del problema
+\end{lstlisting}
+\subsection{Sichtbarkeitsproblem (pag 480)}
+Come esempio facile osserviamo questo problema. Dato un insieme di segmenti orizzontali ritorna le coppie visibili tra di loro, vale a dire che possono essere collegati da una retta verticale senza che essa si incroci con altri segmenti.
+\begin{lstlisting}
+Q=punti di inizio e fine segmento ordinati secondo l'asse Ox
+L=null
+while !Q.isEmpty
+	p=Q.next
+	if (p punto sinistro del segmento s)
+		L.add(s)
+		//trova i vicini f e g di s in L
+		//ritorna le coppie (s,f) e (s,g)
+	else
+		//trova i vicini f e g di s in L	
+		L.remove(s)
+		//ritorna (f,g)
+\end{lstlisting}
+L'algoritmo impiega $O(n \log (n))$ e uno spazio di O(n).
+\subsection{Schnittproblem für iso-orientierte Liniensegmente (pag 483)}
+Il problema è quello di trovare i tutti punti di intersezione, dato un disegno composto di segmenti verticali e orizzontali.
+\begin{lstlisting}
+Q=insieme delle coordinate x dei punti di inizio e di fine dei segmenti
+L=null //insieme dei segmenti orizzontali attivi secondo le coordinate y
+while !Q.isEmpty
+	p=Q.next
+	if (p punto sinistro di un segmento orizzontale s)
+		L.add(s)
+	else if (p punto destro di un segmento orizzontale s)
+		L.remove(s)
+	else 
+		/*p coordinata x di un segmento verticale s con delimitato da
+		  (p,yu) e (p,yo) */
+		//trova tutti i segmenti t di L con yu<=y(t)<=yo
+		//ritorna questi punti   		
+\end{lstlisting}
+Non ci rimane che trovare la struttura dati ideale per L. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare L come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
+\todo{Aggiungere immagine a pagina 485}
+Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r$ passi, dove r è il numero di elementi tra a e b. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove k è il numero di segmenti che si incrociano.
 
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (pag 597)}
