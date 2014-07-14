@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
+\usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -998,6 +998,29 @@ while !Q.isEmpty
 Non ci rimane che trovare la struttura dati ideale per L. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare L come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
 \todo{Aggiungere immagine a pagina 485}
 Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r$ passi, dove r è il numero di elementi tra a e b. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove k è il numero di segmenti che si incrociano.
+\subsection{Caso generale}
+Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. A $>x$ B se la retta vericale passante da x taglia sia A sia B e la coordinata y di A in quel punto è maggiore di quella di B.
+\begin{lstlisting}
+Q=2n estremi sinistri e destri dei segmenti ordinati secondo l'asse Ox
+L=null //insieme dei segmenti attivi ordinati secondo >x
+found=false
+while (!Q.isEmpty && !found)
+	p=Q.next
+	if (p estremo sinistro di s)
+		L.add(s)
+		f=figlio di s in L
+		g=padre di s in L
+		if (s interseca f) || (s interseca g)
+			found=true
+	else
+		f=figlio di s in L
+		g=padre di s in L
+		L.remove(s)
+		if (f interseca g)
+			found=true		
+\end{lstlisting}
+Quest'algoritmo ha una complessità $O(n\log (n))$ e occupa O(n) spazio extra.
+\todo{Completare con algoritmo più complicato}
 
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (pag 597)}
