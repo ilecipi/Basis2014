@@ -717,14 +717,48 @@ The \emph{multiplication principle} for finite sets states the obvious fact that
 \end{framed}
 
 %Page 55 very top
+\begin{framed}
+\noindent\emph{Bijection Principle}: If there is a bijection (or one-to-one correspondence) between the finite sets $A$ and $B$, then $\abs{A}=\abs{B}$
+\end{framed}
 
+\subsection{The Inclusion-Exclusion Priniciple}
+We now consider the generalization of the addition principle when the sets $A_1,\dots, A_n$ are not disjoint. We have \[\abs{A\cup B}=\abs{A}+\abs{B}-\abs{A\cap B}\] which is obvious when drawing a Venn diagram. More formally, $A\cup B$ is the union of three disjoint sets $A-B$, $A\cap B$, and $B-A$, and we have $\abs{A-B}=\abs{A}-\abs{A\cap B}$ and $\abs{B-A}=\abs{B}-\abs{A\cap B}$. More generally
 
+\begin{framed}
+\vspace{-4mm}
+\[\abs{A\cup B\cup C}=\abs{A}+\abs{B}+\abs{C}-\abs{A\cap B} - \abs{A\cap C}-\abs{B\cap C}+\abs{A\cap B\cap C}\]
+\vspace{-6mm}
+\end{framed}
 
+\subsubsection*{Theorem 4.1}
+For any finite sets $A_1,\dots,A_n$
+\begin{align*}
+\abs{A_1\cup\dots\cup A_n}=&\sum\limits^n_{i=1}\abs{A_i}\\
+&-\sum\limits_{1\leq i_1 <i_2\leq n}\abs{A_{i_1}\cap A_{i_2}}\\
+&+\sum\limits_{1\leq i_1 <i_2<i_3\leq n}\abs{A_{i_1}\cap A_{i_2}\cap A_{i_3}}\\
+&-\dots\\
+&+\left( -1\right)^{n-1}\abs{A_1\cap \dots\cap A_n}
+\end{align*}
 
+\subsubsection*{Theorem 4.2}
+\[\abs{A_1\cup\dots\cup A_n}\geq \sum\limits_{i=1}^n\abs{A_i}-\sum\limits_{1\leq i_1 <i_2\leq n}\abs{A_{i_1}\cap A_{i_2}}\]
 
-
-
-
+\subsection{Drawing Elements From a Set}
+One of the most fundamental counting problems is to count the number of ways in which one can select $k$ elements from a set of cardinality $n$. There are four different flavors of this problem, depending on whether or not the $k$ selected elements must be distinct (with or without repetition), and whether or not the order in which they are drawn matters. We recall that $k!=1\cdot 2\cdot 3\dots (k-1)\cdot k$
+\begin{itemize}
+\item \textbf{Ordered selection with repetition}\\
+We have already seen earlier that there are $n^k$ strings of length $k$ over an alphabet of size $n$. There is an obvious one-to-one correspondence between these strings and all the ways of selecting an ordered list of $k$ objects (with repetitions allowed) from $n$ objects.
+\item \textbf{Ordered selection without repetition}\\
+If the $k$ elements must be distinct, there are $n$ choices for the first elements, $n-1$ choices for the second element, etc. In total there are:
+\[{n^{\underline{k}}}: = n(n - 1)(n - 2) \ldots (n - k + 1) = \prod\limits_{i = 0}^{k - 1} {(n - 1)}  = \frac{{n!}}{{(n - k)!}}\]
+possibilities\footnote{We define $0!:=1$}. For $n=k$, this corresponds to the number of permutations on $k$ elements, i.e. the number $k!$ of bijections from $\cur{1,2,\dots,k}$ to $\cur{1,2,\dots,k}$
+\item \textbf{Unordered selection without repetition}\\
+If the order in the above selection is irrelevant, then the $n^{\underline{k}}$ possibilities can be divided into equivalence classes of size $k!$, each class being characterized by the (unordered) set of selectd elements. Therefore the number of possibilities is:
+\begin{framed}
+\[\left( {\begin{array}{*{20}{c}}n\\k\end{array}} \right):=\frac{n^{\underline{k}}}{k!}= \frac{{n\left( {n - 1} \right)\left( {n - 2} \right) \ldots \left( {n - k + 1} \right)}}{{k!}} = \frac{{n!}}{{k!\left( {n - k} \right)!}}\]
+\end{framed}
+\item
+\end{itemize}
 
 
 \end{document}
