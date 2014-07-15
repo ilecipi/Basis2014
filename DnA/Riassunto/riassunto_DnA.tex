@@ -940,6 +940,67 @@ $$g(T_1 \cup T_2)=g(T_1)+g(T_2) \geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2
 \end{mytheorem}
 Come diretta conseguenza find(x) impiega al massimo log(n) passi. Le altre operazioni sono fattibili in tempo costante.
 
+\chapter{Tecniche per lo sviluppo di algoritmi}
+\section{Dynamische Programmierung}
+\subsection{Principio}
+Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo nm), mentre la complessità è O(mnc), dove c è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella (n,m) per poi procedere con il backtracking.
+\subsection{Rucksackproblem (pag 452)}
+Sia G la capienza massima dello zaino, w[i] il valore dell'itesimo oggetto e g[i] il peso di esso. La formula ricorisva per la soluzione del problema è la seguente:
+$$maxvalue(i,g)=\max \{maxvalue(i-1,g),w[i]+maxvalue(i-1,g-g[i])\}$$
+\begin{lstlisting}
+int maxvalue (int[] w, int[] g, int G)
+	int n=w.length
+	int[][] maxvalue=new int[n+1][G+1]
+	//initialize
+	for g=0:G
+		maxvalue[0][g]=0
+	for i=1:n
+		maxvalue[i][0]=0
+	//induction
+	for i=1:n	
+		for j=1:G
+			maxvalue[i][g]=maxvalue[i-1][g]
+			if g[i]<=g && maxvalue[i-1][g-g[i]]+w[i]>=maxvalue[i][g]
+				maxvalue[i][g]=maxvalue[i-1][g-g[i]]+w[i]
+\end{lstlisting}
+\subsection{Längste gemeinsame Teilfolge (pag 456)}
+In questo caso:
+$$
+LGT(n,m) =
+\left\{
+\begin{array}{rl}
+LGT(n-1,m-1)+1 & \mbox{se } a_n=b_m \\
+\max\{LGT(n-1,m),LGT(n,m-1)\} & \mbox{altrimenti} 
+\end{array}
+\right.
+$$
+In questo caso la tabella avrebbe la forma seguente:
+$$\begin{array}{ccccccc}
+LGT & - & K & R & I & S & E \\ 
+- & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+L & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+I & 0 & 0 & 0 & 1 & 1 & 1 \\ 
+E & 0 & 0 & 0 & 1 & 1 & 2 \\ 
+B & 0 & 0 & 0 & 1 & 1 & 2 \\ 
+E & 0 & 0 & 0 & 1 & 1 & 2
+\end{array} $$
+\section{Branch and bound}
+\begin{lstlisting}
+BranchAndBound(Problem P )
+1 Berechne globale untere Schranke, falls existent.
+2 while Optimum nicht gefunden do
+3 	if obere Schranke in jedem Blatt <= untere Schranke then
+4		Optimum gefunden. STOP
+5	Waehle Blatt v mit maximaler oberer Schranke
+6	if v hat keine gueltige Erweiterung then
+7		Markiere v als nicht erweiterbar
+8	for each gueltige Erweiterung der an v gespeicherten Teilloesung do
+9		Erzeuge einen Nachfolgerknoten w von v, der die entsprechend erweiterte Teilloesung s w speichert
+10 		Schliesse auf erzwungene Teile von s w
+11		Berechne obere Schranke von s w
+12		Aktualisiere untere Schranke, falls noetig
+\end{lstlisting}
+
 \chapter{Geometrische Algorithmen}
 \section{Konvexe Hülle (pag 472)}
 Di seguito presenterò soltanto la soluzione migliore che si può trovare senza utilizzare il principio Scan line, vale a dire Graham's scan. La Konvexe Hülle altro non è che una figura che contiene tutti i punti (noi siamo interessati nella minima, quindi quella formata da meno segmenti).
@@ -1136,7 +1197,36 @@ Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick
 \begin{center}
 \includegraphics[scale=0.6]{Figures/segtreew.png}
 \end{center}
-
+\subsection{Intervall Bäume (pag 512)}
+Vogliamo una struttura dati che riesca a contenere n intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la o-list è ordinata in base ai punti finali, mentre la o-list ai punti iniziali.
+\begin{lstlisting}
+//add an interval I=[a,b] to the node p
+add (Interval i, Node p)
+	if (p.key is in I)
+		//add I in the two lists and finish
+	else
+		if p.key<a
+			add(I,p.right_child)
+		else
+			add(I,p.left_child)	
+			
+report(Node p, Point x)
+	if x==p.key
+		//return the intervals in the o-list (or u-list)
+		//finish
+	else
+		if x<p.key
+			/*return all intervals I=[a,b] in the u-list with			
+			  a<=x */
+			report(p.left_child,x)
+		else	
+			/*return all intervals I=[a,b] in the o-list with			
+			  b>=x */ 
+			report(p.right_child,x)  
+\end{lstlisting}
+\begin{center}
+\includegraphics[scale=0.4]{Figures/rangetree.png}
+\end{center}
 
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (pag 597)}
@@ -1477,4 +1567,11 @@ Consideriamo il problema del matching ottimale tra due set. Le coppie possibili 
 \includegraphics[scale=0.5]{Figures/matching.jpg}
 \end{center}
 In questo caso, dato che il costo è sempre 1, la crescita del Restgraph consiste semplicemente nel cambiamento di direzione delle frecce. In un livello di astrazione più concreto questo corrisponde nel liberare una coppia per poterne formare altre due. L'esecuzione dell'algoritmo in questo speciale tipo di grafo richiede solamente $O(\sqrt{|V|}|E|)$.
+\subsection{Teoria sul matching}
+Sia G=(V,E) un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessu vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
+\begin{mytheorem}{Satz von Hall}
+Non esiste un matching perfetto in un grafo bipartito se esiste un insieme M di vertici per cui:
+$$|\Gamma (M)|<|M|$$
+dove $\Gamma (M)$ denota i vicini dei vertici in M.
+\end{mytheorem}
 \end{document}
