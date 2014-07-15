@@ -1001,7 +1001,7 @@ Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r$ passi, dove 
 \subsection{Caso generale}
 Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. A $>x$ B se la retta vericale passante da x taglia sia A sia B e la coordinata y di A in quel punto è maggiore di quella di B.
 \begin{lstlisting}
-Q=2n estremi sinistri e destri dei segmenti ordinati secondo l'asse Ox
+Q=2n estremi sinistri e destri dei segmenti ordinati secondo asse Ox
 L=null //insieme dei segmenti attivi ordinati secondo >x
 found=false
 while (!Q.isEmpty && !found)
@@ -1020,7 +1020,123 @@ while (!Q.isEmpty && !found)
 			found=true		
 \end{lstlisting}
 Quest'algoritmo ha una complessità $O(n\log (n))$ e occupa O(n) spazio extra.
-\todo{Completare con algoritmo più complicato}
+Per trovare tutti i punti di intersezione è necessario aggiungere i punti trovati all'insieme dei punti d'arresto Q per cambiare l'ordine dei segmenti. In questo caso è interessante implementare Q come una priority queue (in realtà è più efficiente un albero AVL e trovare ogni volta l'elemento minimo in tempo logaritmico). 
+\begin{lstlisting}
+Q=punti di arresto organizzati come priority queue
+L=null //segmenti attivi secondo l'ordine >x
+while !Q.isEmpty
+	p=Q.extractMin
+	if (p estremo sinistro di s)
+		L.add(s)
+		f=Nachfolger(s,L)
+		g=Vorganger(s,L)
+		if (s interseca f)
+			Q.add(punto di intersezione)
+		if (s interseca g)
+			Q.add(punto di intersezione)
+	else if (p estremo destro di s)
+			f=Nachfolger(s,L)
+			g=Vorganger(s,L)
+			if (f interseca g)
+				Q.add(punto di intersezione)
+			L.remove(s)
+	else
+		//p punto di intersezione tra f e g
+		//ritorna (f,g)
+		L.swap(f,g) //dopo l'intersezione cambia l'ordine dei segmenti
+		t=Vorganger(g,L)
+		if (g interseca t)
+			Q.add(punto di intersezione)
+		t=Nachfolger(f,L)
+		if (f interseca t)
+			Q.add(punto di intersezione)	 						
+\end{lstlisting}
+Da ricordarsi che i presupposti del corretto funzionamento dell'algoritmo sono che non esistano segmenti completamente verticali (quindi non hanno due volte la stessa coordinata x) e che un punto di intersezione non possa essere anche un estremo di un segmento. In ogni caso il tempo impiegato dall'algoritmo è $O((n+k)\log (n))$ dove k è il numero di intersezioni. Lo spazio occupato ammonta a $\Omega (n^2)$ ma può essere ridotto ad O(n).
+\subsection{Rechteckschnittproblem (pag 502)}
+In questo caso abbiamo la scan line che si muove dall'alto verso il basso. Il problema a due dimensioni viene ridotto ad una sola dimensione nel seguente modo: per ogni segmento orizzontale si cercano eventuali sovrapposizioni (Überlappungen) con altri segmenti orizzontali di rettangoli attivi.
+\begin{lstlisting}
+Q=successione di segmenti orizzontali ordinati in verticale
+L=null //insieme dei segmenti attivi
+while !Q.isEmpty
+	q=Q.next
+	if (q segmento superiore di R)
+		//q=[xl(R),xr(R)]
+		/*trova tutti i rettangoli T aventi un intervallo in L
+		[xl(T),xr(T)] che si sovrappone con q*/
+		L.add(q)
+	else
+		//q segmento inferiore
+		L.remove(q)			
+\end{lstlisting}
+Per trovare una sovrapposizione dobbiamo rispondere ad una cosiddetta Aufspiessfrage(stabbing query). Tramite gli Intervall-Bäume l'algoritmo impiega O(n log(n)+k) e uno spazio lineare.
+
+\section{Divide and conquer}
+\subsection{Segmentschnitt (pag 493)}
+Affrontiamo lo stesso problema del paragrafo 7.2.3 tramite divide and conquer.
+
+ReportCuts(S)
+\begin{itemize}
+\item Divide: dividi S con una linea verticale in S1 e S2. Se S contiene meno di due elementi non fare niente (non possono esserci intersezioni).
+\item Conquer: ReportCuts(S1), ReportCuts(S2).
+\item Merge: trova tutte le intersezioni di segmenti orizzontali con estremo sinistro in S1 o l'estremo destro in S2.
+\end{itemize}
+Come strutture dati utilizziamo (.h significa estremo sinistro, h. estremo destro):
+\begin{itemize}
+\item $L(S) = \{y(h)|\mbox{h è un segmento orizzontale con:} .h\in S, h.\not  \in S\}$
+\item $R(S) = \{y(h)|\mbox{h è un segmento orizzontale con:} h.\in S, .h\not  \in S\}$
+\item V(S) = insieme dei segmenti verticali di S
+\end{itemize}
+La complessità dell'algoritmo è di:
+$$T(n)=O(1)+2T\left(\frac{n}{2}\right)+O(n)$$
+Sappiamo che risolvendo la formula si ottiene O(n log(n)+k). Lo spazio è lineare.
+\subsection{Inklusion für Rechtecke (pag 498)}
+L'obiettivo è di trovare i punti contenuti in rettangoli.
+
+ReportInc(S)
+\begin{itemize}
+\item Divide: come in precedenza
+\item Conquer: ReportInc(S1), ReportInc(S2)
+\item Merge: trova tutte le coppie (p,R) contenute sul bordo della divisione
+\end{itemize}
+Anche in questo caso il tempo è quello del paragrafo 7.3.1.
+\subsection{Schnitt für Rechtecke (pag 501)}
+Unendo i due precedenti algoritmi si può risolvere il problema nello stesso tempo. Innanzitutto si rappresentano i rettangoli come quattro segmenti e i trova i punti di intersezione con altri rettangoli, dopodiché si riduce ogni rettangolo ad un punto rappresentativo (ad esempio il centro) e si usa il secondo algoritmo per trovare le inclusioni.
+
+\section{Strutture dati geometriche}
+\subsection{Segment Bäume (pag 505)}
+Praticamente si tratta di un albero binario semi dinamico (vale a dire non espandibile, viene creato una sola volta e riempito in seguito). Le foglie sono gli intervalli elementari, mentre i nodi interni l'unione dei due figli. La radice rappresenta dunque l'intervallo completo S.
+\begin{center}
+\includegraphics[scale=0.7]{Figures/segmenttree.png}
+\end{center}
+Ad ogni nodo/foglia è "appesa" una lista indicante i nomi degli intervalli.
+\begin{lstlisting}
+void add(Intervall I, Node p)
+	if (I(p) is in I)
+		//inserisci I nella lista di intervalli di p
+	else
+		if (p ha un figlio sinistro s) && (I(s) non si sovrappone con I)
+			add(I,s)
+		if (p ha un figlio destro d) && (I(d) non si sovrappone con I)
+			add(I,d)
+			
+/*cerchiamo intervallo elementare che contiene x e ritorniamo tutti gli 
+intervalli in cui x viene contenuto*/			
+report(Node p, Point x)
+	//dai tutti gli intervalli nella lista di p	
+	if (p ist ein Blatt)
+		//fine
+	else
+		if (p ha un figlio sinistro s) && (x is in I(s))
+			report(s,x)
+		if (p ha un figlio destro d) && (x is in I(d))
+			report(d,x)				
+\end{lstlisting}
+\todo{In add non dovrebbe essere il contrario e sovrapporsi!?}
+Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa O(n log(n)) di spazio.
+\begin{center}
+\includegraphics[scale=0.6]{Figures/segtreew.png}
+\end{center}
+
 
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (pag 597)}
