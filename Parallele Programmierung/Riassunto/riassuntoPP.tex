@@ -1545,7 +1545,7 @@ interface Future$<$V$>$
 \end{itemize}
 \end{itemize}
 
-%%%% FROM HERE!
+
 \section{Parallel Tasks}
 Example for most of this section: $\sum x_i$
 \begin{lstlisting}
@@ -1564,41 +1564,96 @@ public static int sum(int[] xs) {
 \item create a parallel task and wait for the parallel tasks to complete
 \item  when using D\&C a task for the first and second part (one each) are created, and upon finishing the operations, their results are combined
 \end{itemize}
-\item One thread per task: expensive to create, consumes many resources and is scheduled by the OS - generally inefficient
+\item One thread per task model: 
 \begin{itemize}
-\item In General: using one thread per task is highly inefficient 
+\item expensive to create
+\item consumes many resources 
+\item Scheduled by the OS
+\item Generally Inefficient!
 \end{itemize}
-\item ExecutorService: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
-\item Note: Runnable doesn’t return a result, Callable does
-\item ExecutorService and recursive sum\footnote{Have a look at the code in the slides, pp36-38} : task is described as the array to be summed and the region for which the task is responsible for, additionally an instance to the ExecutorService is passed so that the task can spawn other tasks; problems (observation: no result returned): Tasks create other tasks and then wait for results, when they are waiting they are keeping threads busy, other tasks need to run so that the recursion reaches its bottom, system does not know that tasks waiting need to be removed so that other tasks can run due to: tasks create other tasks (which is not supported) and work partitioning (splitting up work) is part of the task - we can decouple work partitioning from solving the problem
-\item Fork/Join framework with ForkJoinTask 
+\item \textbf{ExecutorService}: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
+\item Future (\inline{interface Future<V>}):
 \begin{itemize}
-\item \inline{fork()} creates a new task
-\item \inline{join()} returns the result when task is done
-\item \inline{invoke()} executes task without creating a new task
+\item represents a result (Type \inline{T}) for an asynchronous computation
+\item \inline{.get()} - wait for result
+\item \inline{.isDone()} - check if task is completed
+\item \inline{.cancel()} - attempt to cancel computation
+\end{itemize}
+\item Note: Callable vs Runnable:
+\begin{itemize}
+\item Interface Runnable: \inline{void run()}
+\item Interface Callable$<$V$>$: \inline{V cal()}
+\item Runnable doesn’t return a result, Callable does
+\end{itemize}
+\item Executor service for recursive sum\footnote{Have a look at the code in the slides, pp36-38}: 
+\begin{itemize}
+\item Task is described as 
+\begin{itemize}
+\item The array to be summed
+\item The region for which the task is responsible for
+\end{itemize}
+\item Additionally, an instance to the ExecutorService is passed so that the task can spawn other tasks
+\item Problems (observation: no result returned): 
+\begin{itemize}
+\item Tasks create other tasks and then wait for results
+\item When they are waiting they are keeping threads busy
+\item Other tasks need to run so that the recursion reaches its bottom
+\item System does not know that tasks waiting need to be removed so that other tasks can run. 
+\end{itemize}
+\item Problems with this approach:
+\begin{itemize}
+\item Tasks create other tasks (which is not supported)
+\item Work partitioning (splitting up work) is part of the task
+\item We can decouple work partitioning from solving the problem
+\end{itemize}
+\end{itemize}
+\item Fork/Join framework:
+\begin{itemize}
+\item \inline{ForkJoinTask<V>}: implements \inline{Future<V>}
+\item \inline{ForkJoinPool}: implements \inline{ExecutorService}
+\item \inline{.fork()}: creates a new task
+\item \inline{.join()}: returns the result when task is done
+\item \inline{.invoke()}: executes task without spawning a new task (in-place)
 \item subclasses need to define \inline{compute()}
 \end{itemize}
-implements Future and ForkJoinPool implements ExecutorService. Note \inline{fork()}, , \inline{join()}, \inline{join()} doesn’t work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
+Note \inline{fork()}, , \inline{join()}, \inline{join()} don't work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
 \begin{lstlisting}
 t1.fork(), r2 = t2.compute()
 return r2 + t1.join()
 \end{lstlisting}
-\item Problems of overhead: bad speedup due to too much overhead (scheduling etc.), can be solved by making each task work more, here: increase cutoff
+\item Problems of overhead: 
+\begin{itemize}
+\item Bad speedup due to too much overhead\footnote{Overheads are time costs that have nothing to do with the computation} (scheduling etc.)
+\item If the work of each task is small, overheads dominates
+\begin{itemize}
+\item can be solved by making each task work more, here: increase cutoff
+\end{itemize}
+\end{itemize}
 \end{itemize}
 
 \section{Transactional Memory (TM)}
+\todo[inline]{REM1: If I remember correctly, this was already discussed, maybe remove?}
 \begin{itemize}
-\item Aims at removing the burden of having to deal with locks from the programmer and place it on the system instead
-\item Problems with locks: 
+\item Problems using locks:
 \begin{itemize}
-\item ensuring ordering and correctness is really hard and locks are not composable
-\item locks are pessimistic, performance overhead
-\item locking mechanism is hard-wired to the program (separation not possible and change of synchronization scheme results in changing all of the program)
+\item Ensuring ordering (and correctness) is \textbf{really hard}
+\item Locks are not composable
+\item Locks are pessimistic
+\item Locking mechanism is hard-wired to the program
 \end{itemize}
+\todo[inline]{END REM1}
+
+\item Aims at removing the burden of having to deal with locks from the programmer and place it on the system instead
 \item With TM, the programmer explicitly defines atomic code sections and is only concerned with the \textsl{what} and not the \textsl{how} (declarative approach)
 \item TM benefits: 
 \begin{itemize}
-\item easier, less error-prone, higher semantics, composable, optimistic by design
+\item Easier and less error-prone
+\item Higher semantics
+\item Composable
+\item Optimistic by design
+\end{itemize}
+%HERE!! PAGE 14
+
 \item changes made by a transaction are made visible atomically
 \item  transactions run in isolation - while a transaction is running, effects from other transactions are not observed (as if transaction takes a snapshot of the global state when it begins and operates on that snapshot)
 \item Note: while locks enforce atomicity via mutual exclusion, transaction does not require that
