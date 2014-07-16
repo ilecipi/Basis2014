@@ -14,7 +14,8 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \newenvironment{mytheorem}[1]{\subsubsection*{Theorem #1}}{\begin{flushright}$\blacksquare$\end{flushright}}
-
+\newcommand{\inline}[1]{\lstinline!#1!}%Inline code
+\newcommand{\lstIndent}{4}
 \lstset{frame=tb,
   language=Java,
   aboveskip=3mm,
@@ -34,6 +35,7 @@
 \author{Sandro Marcon}
 \title{Riassunto DnA}
 \begin{document}
+\tableofcontents
 \chapter{Introduzione}
 \section{Notazione O-$\Omega$-$\Theta$ (pag 4)}
 Per semplificare l'analisi asintotica degli algoritmi sono state introdotte le 
@@ -54,7 +56,7 @@ oppure, scritto in un altro modo:
 In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
 \section{Maximum subarray (pag 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent][tabsize=\lstIndent]
 //A=array da 1, ... n	
 max=0	
 scan=0
@@ -79,12 +81,12 @@ Selection sort consiste nel cercare ogni volta il minimo tra la posizione $i$ e 
 {\Rightarrow}&2&4&{15}&{17}&{43}
 \end{array}\]
 \subsubsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int i,j, min, temp
 for i=1:n-1
 	min=i
 	for j=(i+1):n
-		if a[j]$<$ a[min]
+		if a[j]< a[min]
 			min=j
 	temp=a[min]
 	a[min]=a[i]
@@ -92,7 +94,7 @@ for i=1:n-1
 \end{lstlisting}
 \subsubsection*{Analisi}
 
-Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) O(n) scambi. Da notare che per trovare il minimo sono necessari almeno $n-1$ confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
+Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) $O(n)$ scambi. Da notare che per trovare il minimo sono necessari almeno $n-1$ confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
 \section{Sortieren durch Einfügen (pag 85)}
 In inglese si chiama insertion sort. Per induzione i numeri fino a $i-1$ sono già ordinati. Il principio consiste di piazzare l'$i-$tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
 \[\begin{array}{*{20}{c}}
@@ -102,7 +104,7 @@ In inglese si chiama insertion sort. Per induzione i numeri fino a $i-1$ sono gi
 {\Rightarrow}&2&4&{15}&{17}&{43}&/
 \end{array}\]
 \subsubsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int i,j,t
 for i=2:n
 	j=i
@@ -113,7 +115,7 @@ for i=2:n
 		j=j-1
 	a[j]=t
 \end{lstlisting}
-Si nota subito che se implementato così l'algoritmo può non fermarsi se $t$ è il più piccolo numero. Serve quindi un elemento di stop, ad esempio inserendo $a[0]=t$ prima del while loop.
+Si nota subito che se implementato così l'algoritmo può non fermarsi se $t$ è il numero più piccolo. Serve quindi un elemento di stop, ad esempio inserendo $a[0]=t$ prima del \inline{while} loop.
 
 \subsubsection*{Analisi}
 
@@ -130,7 +132,7 @@ Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scam
 {\Rightarrow}&2&4&{15}&{17}&{43}
 \end{array}\]
 \subsubsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 do
 	flag=true
 	for i=1:n-1
@@ -165,7 +167,7 @@ quicksort(array, 1, 6)
 \begin{center}quicksort(array, 1, 2), quicksort(array, 3, 6)\end{center}
 \subsection*{Implementazione}
 
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 quicksort(int[ ] a, int l, int r)
 	if r>l
 		i=l-1
@@ -205,17 +207,17 @@ Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni 
 \end{array}\]
 
 \subsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 //costruiamo l'heap
 for (i=n/2; i>=1; i--)
 	versickere(a,i,n) //array a da i a N
 //heapsort	
-for (i=n	; i>=2; i--)
+for (i=n; i>=2; i--)
 	swap(a[1],a[i])
 	versickere(a,1,i-1)
 \end{lstlisting}                                                                          
 Dove versickere è:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 versickere(int[] a, int i, int m)
 	int j
 	while 2*i<=m //a[i] ha un figlio a sinistra
@@ -231,7 +233,7 @@ versickere(int[] a, int i, int m)
 				i=m //fine		
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
-La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
+La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso\todo{??} l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 
 \section{Mergesort (pag 112)}
 Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
@@ -240,7 +242,7 @@ Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi
 $A=\{2, 1, 3, 9, 5, 4\}$. Esso viene dunque diviso in due, vale a dire in $A_1 =\{2,1,3\}$ e $A_2 =\{9,5,4\}$. Per ricorsione essi vengono ordinati, quindi rimane da unire $A_1 =\{1,2,3\}$ e $A_2 =\{4,5,9\}$. Il passo merge prevede l'unione dei due insiemi, quindi si ottiene il risultato finale.
 
 \subsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 mergesort (int[] a, int l, int r)
 	if l<r //altrimenti caso base: array rimane invariato
 		m=(l+r)/2 //posizione media
@@ -279,7 +281,7 @@ L'algoritmo può anche essere reso totalmente iterativo. Esso si chiama ``reines
 {\Rightarrow}&1&{2}&{3}&{9|}&5&6\\
 {\Rightarrow}&1&{2}&{3}&5&{6}&{9|}\\
 \end{array}\]
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 straightmergesort(int[] a, int l,r)
 	int size, ll, mm, rr
 	size=1
@@ -305,7 +307,7 @@ L'unica differenza da straight 2-way merge sort è che al posto di unire success
 {\Rightarrow}&1&{2}&{3}&5&{6}&{9|}\\
 \end{array}\]
 A livello di implementazione dobbiamo soltanto aggiungere la ricerca delle successioni già ordinate.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 straightmergesort(int[] a, int l,r)
 	int ll, mm, rr
 	do
@@ -327,7 +329,7 @@ In questo modo cambiano anche le performance dell'algoritmo. Compare difatti un 
 \section{Radixsort (pag 121)}
 Radixsort si basa sulla comparazione delle cifre dei rispettivi numeri. Noi tratteremo solo la forma duale, ma il tutto funziona con qualsiasi forma, compresa quella decimale. Ammettiamo sempre che esista una funzione $z(i,k)$ che ritorna l'$i-$tesima cifra a partire dalla meno significativa del numero $k$. Ad esempio $z(0,517)=7$ e $z(2, 517)=5$.
 \subsection{Radix-exchange sort}
-L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui $i-$tesimo bit è 0 vanno a sinistra, mentre se è uno vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' $(i-1)-$tesimo bit e sulle due parti dell'array.
+L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui $i-$tesimo bit è 0 vanno a sinistra, mentre se è 1 vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' $(i-1)-$tesimo bit e sulle due parti dell'array.
 \subsubsection*{Esempio}
 \[\begin{array}{*{20}{c}}
 {}&{1011}&{0010}&{1101}&{0011}&{|3}\\
@@ -337,7 +339,7 @@ L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi
 {\Rightarrow}&{0010}&{0011}&{1011}&{1101}
 \end{array}\]
 \subsubsection*{Implementazione}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 radixexchangesort(int[] a, int l,r,b)
 	int i,j
 	if r>l
@@ -377,8 +379,8 @@ La sequenza provvisoria diventa 40, 22, 13, 54, 15, 28. Secondo step:
 \end{array}\]
 Il risultato finale, letto da sinistra a destra e dal basso all'alto è quindi: 13, 15, 22, 28, 40, 54.
 \subsubsection*{Implementazione}
-Un approcio naiv sarebbe quello di creare $m$ bucket di dimensione $n$, in modo che nel peggior caso tutti i valori starebbero in un solo bucket. Questo però comporterebbe a $O(mn)$ spazio extra, quando realmente ne serve solo $\Theta (n)$ (ci sono sempre esattamente $n$ elementi). Ci sono due possibili soluzioni al problema. La prima è di usare liste lineari dalla dimensione non fissa, la seconda è quella di sondare quanti elementi andranno in ciascun bucket e dividere un array di dimensione fissa in $m$ scompartimenti tramite degli indici di divisione (Verteilungszahlen). Analizziamo dapprima la prima possibilità:
-\begin{lstlisting}
+Un approcio ``naiv'' sarebbe quello di creare $m$ bucket di dimensione $n$, in modo che nel peggior caso tutti i valori starebbero in un solo bucket. Questo però comporterebbe a $O(mn)$ spazio extra, quando realmente ne serve solo $\Theta (n)$ (ci sono sempre esattamente $n$ elementi). Ci sono due possibili soluzioni al problema. La prima è di usare liste lineari dalla dimensione non fissa, la seconda è quella di sondare quanti elementi andranno in ciascun bucket e dividere un array di dimensione fissa in $m$ scompartimenti tramite degli indici di divisione (Verteilungszahlen). Analizziamo dapprima la prima possibilità:
+\begin{lstlisting}[tabsize=\lstIndent]
 radixsort_list(int[] a)
 	List<Integer>[] l=new List<Integer>[m]
 	int i,j,t
@@ -398,8 +400,8 @@ radixsort_list(int[] a)
 				
 \end{lstlisting}
 
-Adesso la possibilità utilizzando un sondaggio prima della fase di divisione:
-\begin{lstlisting}
+\noindent Adesso la possibilità utilizzando un sondaggio prima della fase di divisione:
+\begin{lstlisting}[tabsize=\lstIndent]
 radixsort_sond(int[] a)
 	int[] b //array di dimensione n, numerato da 1 a n
 	int[] c //array di dimensione m, Verteilungszahlen, da 0 a m-1
@@ -431,34 +433,35 @@ Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne ra
 \begin{mytheorem}{2.4}
 Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare $n$ chiavi.
 \paragraph*{Dimostrazione}
-Per dimostrare questo teorema valutiamo tutte le possibili $n!$ permutazioni di $n$ chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo $i:j$ rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono $n!$ permutazioni possibili devono per forza esserci $n!$ foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con $k$ foglie sia di almeno $log_2 (k)$. In questo caso avremmo:
-$$ log (k!) \geq \log \left(\left(\frac{n}{2}\right)^{\frac{n}{2}}\right) = \frac{n}{2} \log \left(\frac{n}{2}\right) \in \Omega (n \log (n))$$
+Per dimostrare questo teorema valutiamo tutte le possibili $n!$ permutazioni di $n$ chiavi e le inseriamo in un albero binario. Inizialmente l'algoritmo generico non conosce nulla sulla permutazione corrente, ma man mano che compara le chiavi si sposta tra i rami fino a raggiungere la foglia contenente la giusta permutazione. Praticamente un nodo $i:j$ rappresenta una comparazione. Esso ha due figli: a sinistra se $a[i]<a[j]$ e a destra se $a[i] \geq a[j]$. Dato che ci sono $n!$ permutazioni possibili devono per forza esserci $n!$ foglie. Ora non ci rimane che dimostrare che l'altezza massima e media di un albero binario con $k$ foglie sia di almeno $\log_2 (k)$. In questo caso avremmo:
+$$ \log (k!) \geq \log \left(\left(\frac{n}{2}\right)^{\frac{n}{2}}\right) = \frac{n}{2} \log \left(\frac{n}{2}\right) \in \Omega (n \log (n))$$
 \end{mytheorem}
 \begin{mytheorem}{2.4.1}
-L'altezza massima e media di un albero binario con $k$ chiavi è di almeno $ log_2 (k)$.
+L'altezza massima e media di un albero binario con $k$ chiavi è di almeno $ \log_2 (k)$.
 \paragraph*{Dimostrazione}
-La prima parte è triviale, in quanto un albero di altezza $t$ può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia $T$ il più piccolo albero per cui l'ipotesi non regge. $T$ ha $k$ foglie, dunque $k \geq 2$ e $T$ deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ foglie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di $T$, allora le loro altezze medie devono essere maggiori di $log_2(k_1)$ e rispettivamente $log_2 (k_2)$. Ovviamente l'altezza media di $T$ deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
+La prima parte è triviale, in quanto un albero di altezza $t$ può avere al massimo $2^t$ foglie. La seconda parte viene dimostrata per assurdo. Sia $T$ il più piccolo albero per cui l'ipotesi non regge. $T$ ha $k$ foglie, dunque $k \geq 2$ e $T$ deve avere un Teilbaum $T_1$ con $k_1$ foglie a sinistra e $T_2$ con $k_2$ foglie a destra. Chiaramente $k_1+k_2=k$. Dato che sia $T_1$ sia $T_2$ sono più piccoli di $T$, allora le loro altezze medie devono essere maggiori di $\log_2(k_1)$ e rispettivamente $\log_2 (k_2)$. Ovviamente l'altezza media di $T$ deve essere maggiore di uno rispetto ai due Teilbäume. Quindi:
 \begin{eqnarray}
- altezza media(T) &=&  \frac{k_1}{k}(\mbox{altezza media}(T_1)+1)+\frac{k_2}{k}(altezza media(T_2)+1)      \nonumber \\
-   &\geq & \frac{k_1}{k}(log_2(k_1)+1)+\frac{k_2}{k}(log_2(k_2)+1) \nonumber \\
-   &=&\frac{1}{k}(log_2(2k_1)+log_2(2k_2)) = f(k_1,k_2)
+ altezza\_media(T) &=&  \frac{k_1}{k}(altezza\_media(T_1)+1)+\frac{k_2}{k}(altezza\_media(T_2)+1)      \nonumber \\
+   &\geq & \frac{k_1}{k}(\log_2(k_1)+1)+\frac{k_2}{k}(\log_2(k_2)+1) \nonumber \\
+   &=&\frac{1}{k}(\log_2(2k_1)+\log_2(2k_2)) = f(k_1,k_2)
 \end{eqnarray}
 Secondo la condizione che $k_1+k_2=k$, $f$ assume valore minimo quando $k_1=k_2=\frac{k}{2}$ quindi:
-$$ \mbox{altezza media}(T) \geq \frac{1}{k}\left(\frac{k}{2} log_2(k)+\frac{k}{2} log_2(k)\right)=log_2 (k)$$
+$$ altezza\_media(T) \geq \frac{1}{k}\left(\frac{k}{2} \log_2(k)+\frac{k}{2} \log_2(k)\right)=\log_2 (k)$$
 Si incappa dunque in una contraddizione.
 \end{mytheorem}
 \chapter{Search}
 \section{Auswahlproblem (pag 168)}
 Il primo approcio nel cercare di trovare l'$i-$tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi $i-1$ elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int dividi(int l,r, pivot)
 	/* divide a[l], ... , a[r] in due gruppi
 	   a[l], ..., a[m-1] sono < pivot
 	   a[m], ..., a[m] sono >= pivot
 	   restituisce il valore di m */
 \end{lstlisting}
-Una volta trovato $m$ abbiamo tre possibilità: la chiave si trova nel primo gruppo o nel secondo o l'abbiamo trovata.
-\begin{lstlisting}
+Una volta trovato $m$ abbiamo tre possibilità: la chiave si trova nel primo gruppo, o nel secondo, o l'abbiamo trovata.
+\todo[inline]{Dove c'è scritto ``scegliere pivot v'' non dovrebbe essere un commento??}
+\begin{lstlisting}[tabsize=\lstIndent]
 trova (int l,r,i)
 	int m,v
 	if r>l
@@ -467,7 +470,7 @@ trova (int l,r,i)
 		if i<=m-l
 			trova (l, m-1, i)
 		else
-			trova (m,r,i-m+l
+			trova (m,r,i-m+l)
 	else
 		//r=l, qundi i=1
 		//l'elemento si trova nella posizione a[l]	 			
@@ -479,11 +482,11 @@ T(n) &=& T(qn)+cn \nonumber \\
 \end{eqnarray}
 Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato ``median of median strategy''.
 \begin{enumerate}
-\item (caso base) se $n<$costante calcola l'$i-$tesimo più piccolo elemento direttamente.
-\item dividi gli $n$ elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
-\item ordina questi gruppi (in tempo costante) e per ogni gruppo trova la mediana. Se il gruppo ha un numero pari di elementi scegli il più grosso degli elementi medi. 
-\item applica l'algoritmo ricorsivamente alle $\lceil \frac{n}{5} \rceil$ mediane per trovare la mediana delle mediane.
-\item utilizza quest'elemento come pivot e procedi normalmente.
+\item (caso base) Se $n<$ costante calcola l'$i-$tesimo più piccolo elemento direttamente.
+\item Dividi gli $n$ elementi in $\lfloor \frac{n}{5} \rfloor$ gruppi di cinque elementi e un gruppo con i restanti. 
+\item Ordina questi gruppi (in tempo costante) e per ogni gruppo trova la mediana. Se il gruppo ha un numero pari di elementi scegli il più grosso degli elementi medi. 
+\item Applica l'algoritmo ricorsivamente alle $\lceil \frac{n}{5} \rceil$ mediane per trovare la mediana delle mediane.
+\item Utilizza quest'elemento come pivot e procedi normalmente.
 \end{enumerate}
 Questa strategia assicura che ci sono almeno 
 $$ 3\left(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2\right) \geq \frac{3n}{10} -6$$
@@ -491,7 +494,7 @@ elementi più piccoli di $v$. Segue quindi che l'algoritmo deve essere richiamat
 $$ T(n) \leq T\lceil \frac{n}{5} \rceil +T \lceil \frac{7n}{10} +6 \rceil + an \leq ... \leq cn \in O(n) $$
 \section{Sequenzielle Suche (pag 173)}
 Ammettiamo che le $n$ chiavi siano salvate in un array o in una lista. Il modo più semplice per sondare la sequenza è quello di controllare le $n$ chiavi fino ad a trovare l'elemento desiderato. Per fare in modo che l'algoritmo si fermi iniziamo dal fondo e mettiamo uno stopper alla posizione 0.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 sequentialsearch (int k)
 	int i
 	a[0]=k //stopper
@@ -509,12 +512,12 @@ $$ \frac{1}{n} \sum_{i=1}^n i = \frac{n+1}{2} \in O(n) $$
 \section{Binäre Suche (pag 174)}
 La ricerca binaria si basa su divide and conquer. Ammettendo di avere un array ordinato si può descrivere l'algoritmo come segue:
 \begin{enumerate}
-\item se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento $a[m]$ (posizione media).
-\item se $k < a[m]$ applica sulla sequenza $a[1],\dots, a[m-1]$ lo stesso procedimento.
-\item se $k \geq a[m]$ applica sulla sequenza $a[m],\dots, a[n]$ lo stesso procedimento.
-\item se $k = a[m]$ l'elemento è stato trovato.
+\item Se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento $a[m]$ (posizione media).
+\item Se $k < a[m]$ applica sulla sequenza $a[1],\dots, a[m-1]$ lo stesso procedimento.
+\item Se $k \geq a[m]$ applica sulla sequenza $a[m],\dots, a[n]$ lo stesso procedimento.
+\item Se $k = a[m]$ l'elemento è stato trovato.
 \end{enumerate}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 binsearch(int l,r,k)
 	int m=(l+r)/2
 	if l > r
@@ -528,7 +531,7 @@ binsearch(int l,r,k)
 			//a[m]=k, elemento trovato				
 \end{lstlisting}
 Un'altra variante iterativa è la seguente:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 binsearch(k)
 	int m,l,r
 	l=1
@@ -546,11 +549,11 @@ binsearch(k)
 	else
 		binsearch=0								
 \end{lstlisting}
-In questo modo una ricerca non impiega più che $\lceil log_2(n+1) \rceil \in O(n) $ passaggi.
+In questo modo una ricerca non impiega più che $\lceil \log_2(n+1) \rceil \in O(n) $ passaggi.
 \section{Interpolationsuche (pag 179)}
 Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico ``Bernasconi'' non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della $m$:
 $$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
-Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(log_2(log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega $O(n)$ paragoni.
+Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(\log_2(\log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega $O(n)$ paragoni.
 \section{Selbstanordnende lineare Liste (pag 180)}
 Ammettiamo di avere una lista contenente $n$ chiavi. Per cercare e dunque accedere all'$i-$tesimo elemento impieghiamo $i$ paragoni. Avrebbe senso spostare gli elementi più ricercati all'inizio della lista. Consideriamo pertanto alcune strategie: 
 \begin{itemize}
@@ -572,19 +575,15 @@ Nel nostro caso utilizziamo il cossiddeto Division-Rest-Methode, ma esistono anc
 $$ h(k)=k \mbox{ mod }m$$
 Una buona scelta per $m$ è che sia un numero primo.
 \section{Hashing perfetto ed universale}
-Se il numero di chiavi possibili è minore alla grandezza della tabella e già conosciuto in partenza possiamo costruire una funzione di hashing iniettiva che evita qualsiasi collisione. In questo caso si parla di hashing perfetto (perfektes Hashing).
+Se il numero di chiavi possibili è minore alla grandezza della tabella e già conosciuto in partenza, possiamo costruire una funzione di hashing iniettiva che evita qualsiasi collisione. In questo caso si parla di hashing perfetto (perfektes Hashing).
 Nella maggior parte dei casi non sappiamo però se è possibile evitare collisioni. Sia $H$ una collezione finita di hash functions. $H$ si chiama universale se per ogni diversa coppia di chiavi $x$ e $y$ vale:
 $$ \frac{\left|\{h\in H: h(x)=h(y)\}\right|}{|H|} \leq \frac{1}{m}$$
 In altre parole $H$ è universale se per ogni coppia di chiavi differenti al massimo la $m-$esima parte delle funzioni porta ad una collisione. La probabilità che due chiavi collidano con una funzione di $H$ è dunque al massimo $1\over m$. Per una funzione $h$ e due chiavi $x$ e $y$ definiamo:
-$$
-\delta (x,y,h) =
-\left\{
-\begin{array}{rl}
-1 & \mbox{ se h(x)=h(y) e } x\neq y  \\
-0 & \mbox{ altrimenti}
-\end{array}
-\right.
-$$
+\[
+\delta (x,y,h) = \begin{cases} 1 & \mbox{se }h(x)=h(y)\mbox{ e } x\neq y  \\
+0 & \mbox{altrimenti}\end{cases}
+\]
+
 Per un insieme di chiavi $Y$, rispettivamente di funzioni $H$:
 $$\delta (x,Y,h)= \sum_{y \in Y} \delta (x,y,h)$$
 $$\delta (x,y,H)= \sum_{h \in H} \delta (x,y,h)$$
@@ -605,7 +604,7 @@ La classe di funzioni $H=\{h_{a,b} : 1\leq a < p \mbox{ e } 0\leq b <p\}$ è una
 \section{Hashverfahren mit Verkettung der Überläufer (pag 198)}
 Penso sia anche chiamato separate chaining. In ogni caso si tratta di un metodo per gestire le collisioni. Quando due chiavi collidono esse vengono semplicemente salvate in una lista. Questo metodo può essere implementato in due modi differenti, rispettivamente separate Verkettung der Überläufer e direkte Verkettung der Überläufer. Nel primo caso gli elementi della Hashtabelle hanno due campi, uno per il valore e l'altro per il puntatore, mentre nel secondo caso c'è solo un puntatore e tutti gli elementi vengono salvati in una lista esterna. In questo caso la tabella presenta dimensioni più piccole, poiché in ogni voce è salvato solo un puntatore.
 \subsection*{Analisi}
-Poniamo che un indirizzo $j$ abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n$' verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
+Poniamo che un indirizzo $j$ abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n'$ verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
 $$ C_n '=\frac{n}{m}=\alpha $$
 $$ C_n = 1+\frac{\alpha}{2} $$
 Nell'altro caso cambia solo il tempo della ricerca infruttuosa:
@@ -617,11 +616,11 @@ $$(h(k)-s(j,k))\mbox{ mod }m$$
 Già a partire da questa definizione si può notare che l'allontanamento di una chiave è problematica. Ad esempio se $k'$ collide con $k$ esso verrà salvato in una voce differente. Eliminando $k$ risulta dunque impossibile ritrovare $k'$. La soluzione a questo problema è quella di indicare $k$ come eliminato senza però cancellarlo definitivamente finché non viene inserita una nuova chiave al suo posto.
 \subsection*{Vocabolario}
 \begin{itemize}
-\item Search(k): inizia dall'indirizzo $i=h(k)$. Finché $t[i]$ non è libero o l'elemento non è stato trovato vai avanti ed aumenta $j$. Se si giunge in una casella libera la ricerca è infruttuosa.
-\item Add(k): prima cerca $k$. Se è già stata inserita non fare nulla, altrimenti inseriscila nella prima posizione libera.
-\item Delete(k): cerca $k$ e marca l'indirizzo $i$ come eliminato. 
+\item \inline{Search(k)}: inizia dall'indirizzo $i=h(k)$. Finché $t[i]$ non è libero o l'elemento non è stato trovato vai avanti ed aumenta $j$. Se si giunge in una casella libera la ricerca è infruttuosa.
+\item \inline{Add(k)}: prima cerca $k$. Se è già stata inserita non fare nulla, altrimenti inseriscila nella prima posizione libera.
+\item \inline{Delete(k)}: cerca $k$ e marca l'indirizzo $i$ come eliminato. 
 \end{itemize}  
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 //Array t
 //Array mark
 
@@ -670,7 +669,7 @@ $$C_n '=\frac{1}{2} \left(1+\frac{1}{(1-\alpha)^2}\right) $$
 $$C_n =\frac{1}{2} \left(1+\frac{1}{(1-\alpha)}\right) $$
 \subsection{Quadratisches Sondieren}
 $$s(j,k)=\lceil \frac{j}{2} \rceil ^2(-1)^j$$
-In questo modo si riesce a sondare molto più velocemente, ma il fenomeno del sekundäre Häufung (secondary clustering) influenza l'efficienza. Due sinonimi hanno difatti la stessa sequenza dunrante la ricerca proprio come nel lineares Sondieren.
+In questo modo si riesce a sondare molto più velocemente, ma il fenomeno del sekundäre Häufung (secondary clustering) influenza l'efficienza. Due sinonimi hanno difatti la stessa sequenza durante la ricerca proprio come nel lineares Sondieren.
 $$C_n = 1+\ln \left( \frac{1}{1-\alpha}\right)-\frac{\alpha}{2}$$
 $$C_n '= \frac{1}{1-\alpha}-\alpha +\ln \left( \frac{1}{1-\alpha}\right)$$
 \subsection{Double hashing}
@@ -679,7 +678,7 @@ In cui $h'$ è una seconda hash function. Per scegliere una buona funzione $h'$ 
 $$ C_n '= \frac{1}{1-\alpha} $$
 $$ C_n = \frac{1}{\alpha} \ln \left(\frac{1}{1-\alpha}\right)$$
 Grazie all'algoritmo di Brent è però possibile migliorare il tempo della ricerca con successo:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 //hh = la seconda hash function
 
 BrentEinfuegen (Datensatz ds)
@@ -703,35 +702,35 @@ $$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
 \chapter{Bäume}
 A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
 \section{AVL-Tree (pag. 284)}
-Abbiamo visto che un albero binario naturale può degradare ad una lista. In tal caso la ricerca di un elemento richiede un tempo pari a $\Theta (n)$, poiché l'altezza dell'albero diventa n e non più log(n). Gli alberi AVL mantengono invece questa proprietà: essi sono difatti nominati balancierte Binärbäume (self-balancing binary trees). La condizione di base è difatti che per ogni nodo dell'albero l'altezza del figlio sinistro differisce da quello destro di al massimo 1. Può essere dimostrato che un albero AVL di altezza h contiene al minimo n elementi, dove:
-$$ n\geq F_{h+2} = 1,7171*1,618^h$$
+Abbiamo visto che un albero binario naturale può degradare ad una lista. In tal caso la ricerca di un elemento richiede un tempo pari a $\Theta (n)$, poiché l'altezza dell'albero diventa n e non più $\log(n)$. Gli alberi AVL mantengono invece questa proprietà: essi sono difatti nominati balancierte Binärbäume (self-balancing binary trees). La condizione di base è difatti che per ogni nodo dell'albero l'altezza del figlio sinistro differisce da quello destro di al massimo 1. Può essere dimostrato che un albero AVL di altezza h contiene al minimo n elementi, dove:
+$$ n\geq F_{h+2} = 1,7171\times 1,618^h$$
 Quindi risolvendo secondo l'altezza:
-$$ h\leq 1,44 log_2 (n)+1 \in O(log(n))$$
+$$ h\leq 1,44 \cdot\log_2 (n)+1 \in O(\log(n))$$
 \subsection*{Suchen}
-È dunque chiaro che applicando la ricerca come in normali alberi binari ordinati si impiega sempre O(log(n)).
+È dunque chiaro che applicando la ricerca come in normali alberi binari ordinati si impiega sempre $O(\log(n))$.
 \subsection*{Einfügen}
 Non è sempre detto che aggiungendo un elemento all'albero esso mantenga le sue proprietà AVL. Definiamo dunque:
-$$ bal(p)=\mbox{ Altezza del sottoalbero di destra - altezza sottoalbero di sinistra}$$
-Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura upin(p), dove p è il padre della nuova chiave. La condizione di uscita dal metodo upin è che bal(p) diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di O(log(n)) volte. Definiamo con pp il padre della chiave p. Ci sono due casi: p è il figlio sinistro di pp o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli ``aggiornamenti'' della variabile bal, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
+$$ bal(p)=\mbox{ Altezza del sottoalbero di destra $-$ altezza sottoalbero di sinistra}$$
+Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura \inline{upin(p)}, dove $p$ è il padre della nuova chiave. La condizione di uscita dal metodo \inline{upin} è che \inline{bal(p)} diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di $O(\log(n))$ volte. Definiamo con $pp$ il padre della chiave $p$. Ci sono due casi: $p$ è il figlio sinistro di $pp$, o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli ``aggiornamenti'' della variabile $bal$, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
 \begin{center}
 \includegraphics[scale=0.6]{Figures/singlerot.jpg}
 \includegraphics[scale=0.55]{Figures/doublerot.jpg}
 \end{center}
 \subsection*{Entfernen}
 \begin{enumerate}
-\item Se la chiave che si vuole allontanare non ha figli la si elimina direttamente e si chiama il metodo upout(p) al padre (analogo a upin)
-\item Se la chiave p ha un solo figlio q per forza q non può avere figli. q prende quindi la posizione di p, dopodiché viene chiamato upout(pp).
-\item Se p ha invece due figli si inverte la posizione di p con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 pag 293}. Anche in questo caso viene chiamato upout.
+\item Se la chiave che si vuole allontanare non ha figli la si elimina direttamente e si chiama il metodo \inline{upout(p)} al padre (analogo a \inline{upin})
+\item Se la chiave $p$ ha un solo figlio $q$ per forza $q$ non può avere figli. $q$ prende quindi la posizione di $p$, dopodiché viene chiamato \inline{upout(pp)}.
+\item Se $p$ ha invece due figli si inverte la posizione di $p$ con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 pag 293}. Anche in questo caso viene chiamato \inline{upout}.
 \end{enumerate}
-Il metodo upout è analogo ad upin, cambia soltanto l'invariante (condizione d'uscita quando bal$(pp)=1$) e l'ordine delle rotazioni:
+Il metodo \inline{upout} è analogo ad \inline{upin}, cambia soltanto l'invariante (condizione d'uscita quando $bal(pp)=1$) e l'ordine delle rotazioni:
 \begin{center}
 \includegraphics[scale=0.5]{Figures/avldeletion.png}
 \end{center}
 \section{Splay tree (pag. 328)}
-Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione splay(x). Quest'ultima è definita nella seguente maniera:
+Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione \inline{splay(x)}. Quest'ultima è definita nella seguente maniera:
 \begin{enumerate}
-\item Cerca x nell'albero. Sia p il nodo in cui finisce la ricerca, altrimenti il padre della foglia nel caso di una ricerca infruttuosa.
-\item Ripeti le seguenti operazioni di ordinamento (zig, zig-zig, zig-zag) finché p non diventa la radice.
+\item Cerca $x$ nell'albero. Sia $p$ il nodo in cui finisce la ricerca, altrimenti il padre della foglia nel caso di una ricerca infruttuosa.
+\item Ripeti le seguenti operazioni di ordinamento (zig, zig-zig, zig-zag) finché $p$ non diventa la radice.
 \end{enumerate}
 Non ci resta che elencare le operazioni:
 \begin{center}
@@ -739,18 +738,18 @@ Non ci resta che elencare le operazioni:
 \end{center}
 \subsection*{Vocabolario}
 \begin{itemize}
-\item Inserisci(x): eseguire innanzitutto splay(x). Se la radice è x non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave y che è il precedente/successivo simmetrico di x. Piazza dunque x come radice ed y come figlio sinistro rispettivamente destro.
-\item Allontana(x): splay(x). Se la radice non è uguale ad x l'elemento non appartiene all'albero, altrimenti x si trova alla radice. Elimina dunque x e cerca la chiave più grande nel sottoalbero di sinistra (può essere fatto con splay($\infty$)). 
-\item Cerca(x): splay(x). Se la radice è x l'elemento è stato trovato, altrimenti no.
+\item \inline{Inserisci(x)}: eseguire innanzitutto \inline{splay(x)}. Se la radice è $x$ non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave $y$ che è il precedente/successivo simmetrico di $x$. Piazza dunque $x$ come radice ed $y$ come figlio sinistro rispettivamente destro.
+\item \inline{Allontana(x)}: \inline{splay(x)}. Se la radice non è uguale ad $x$ l'elemento non appartiene all'albero, altrimenti $x$ si trova alla radice. Elimina dunque $x$ e cerca la chiave più grande nel sottoalbero di sinistra (può essere fatto con \inline{splay(}$\infty$\inline{)}). 
+\item \inline{Cerca(x)}: \inline{splay(x)}. Se la radice è $x$, l'elemento è stato trovato, altrimenti no.
 \end{itemize}
 Un'analisi ammortizzata, descritta completamente nel capitolo 5.4.2, porta al seguente teorema.
 \begin{mytheorem}{5.1}
-L'esecuzione di qualsiasi sequenza di m operazioni, in cui compare al massimo n volte inserisci, su uno splay tree inizialmente vuoto costa $O(m\log (n))$. 
+L'esecuzione di qualsiasi sequenza di $m$ operazioni, in cui compare al massimo $n$ volte inserisci, su uno splay tree inizialmente vuoto costa $O(m\log (n))$. 
 \end{mytheorem}
 \section{Optimal binary search tree (pag. 377)}
 In questo caso abbiamo i seguenti valori (che non cambiano nel tempo) e vogliamo costruire un albero di ricerca ottimale:
 \begin{itemize}
-\item $S=\{k_1,k_2, ..., k_n \}$ insieme di n chiavi, dove $k_1<k_2<...<k_n$.
+\item $S=\{k_1,k_2, ..., k_n \}$ insieme di $n$ chiavi, dove $k_1<k_2<...<k_n$.
 \item $a_i$ la probabilità assoluta che venga cercato $k_i$.
 \item $I=(k_0,k_{n+1})$ intervallo in cui appartengono le chiavi.
 \item $b_j$ probabilità assoluta che venga cercato un $x \in (k_j, k_{j+1})$, quindi che non venga trovato.
@@ -759,37 +758,39 @@ Definiamo dunque il peso dell'albero come:
 $$W=\sum_i a_i + \sum_j b_j$$
 La gewichtete Pfadlänge \todo{trovare traduzione decente} è invece:
 $$ P= \sum_{i=1}^n (altezza(k_i)+1)a_i+\sum_{j=0}^n (altezza(foglia(k_i,k_{i+1}))b_j$$
-Un albero di ricerca ottimale T è formato da sottoalberi anch'essi ottimali: 
-$$ P(T)= P(T_l)+\mbox{peso della radice}+P(T_r)+W(T_l)+W(T_r)=P(T_l)+P(T_r)+W(T)$$
-Se T è una foglia P(T)=0. Dividiamo dunque I in sempre più grossi intervalli fino ad ottenere l'albero ottimale secondo i principi della programmazione dinamica. Siano:
+Un albero di ricerca ottimale $T$ è formato da sottoalberi anch'essi ottimali: 
+$$ P(T)= P(T_l)+\mbox{ peso della radice }+P(T_r)+W(T_l)+W(T_r)=P(T_l)+P(T_r)+W(T)$$
+Se $T$ è una foglia $P(T)=0$. Dividiamo dunque $I$ in sempre più grossi intervalli fino ad ottenere l'albero ottimale secondo i principi della programmazione dinamica. Siano:
 \begin{itemize}
-\item T(i,j) l'albero ottimale per l'intervallo $(k_i,k_{j+1})$.
-\item W(i,j) il peso di T(i,j), dunque $W(i,j)=b_i+a_{i+1}+...+a_j+b_j$.
-\item P(i,j) la gewichtete Pfadlänge die T(i,j).
+\item $T(i,j)$ l'albero ottimale per l'intervallo $(k_i,k_{j+1})$.
+\item $W(i,j)$ il peso di $T(i,j)$, dunque $W(i,j)=b_i+a_{i+1}+...+a_j+b_j$.
+\item $P(i,j)$ la gewichtete Pfadlänge di $T(i,j)$.
 \end{itemize}
-Grazie alla formula precedente si può calcolare P(i,j) utilizzando l'indice l della radice di T(i,j) e i due sottoalberi T(i,l-1) e T(l,j). Definendo:
-$$W(i,i)=b_j$$
-$$W(i,j)=W(i,j-1)+a_j+b_j$$
-$$P(i,i)=0$$
-$$P(i,j)=W(i,j)+\min_{i<l\leq j} \{P(i,l-1)+P(l,j)\}$$
-e r(i,j) come gli indici delle radici di T(i,j) possiamo calcolare induttivamente su h=j-i (larghezza dell'albero) l'albero ottimale:
+Grazie alla formula precedente si può calcolare $P(i,j)$ utilizzando l'indice l della radice di $T(i,j)$ e i due sottoalberi $T(i,l-1)$ e $T(l,j)$. Definendo:
+\begin{align*}
+W(i,i)&=b_j\\
+W(i,j)&=W(i,j-1)+a_j+b_j\\
+P(i,i)&=0\\
+P(i,j)&=W(i,j)+\min_{i<l\leq j} \{P(i,l-1)+P(l,j)\}
+\end{align*}
+e $r(i,j)$ come gli indici delle radici di $T(i,j)$ possiamo calcolare induttivamente su $h=j-i$ (larghezza dell'albero) l'albero ottimale:
 \begin{itemize}
-\item h=j-i=0: T(i,i)=foglia ($k_i, k_{i+1}$). Poni W(i,i)=$b_i$, P(i,i)=0 e r(i,i) indefinito
-\item h=j-i=1 $\rightarrow$ j=i+1. Dunque T(i,i+1) ha $k_{i+1}$ come radice. 
-
-W(i,i+1)=W(i,i)+$a_{i+1}$+W(i+1,i+1)
-
-P(i,i+1)=W(i,i+1)
-
-r(i,i+1)=i+1
-\item $h\geq 2$: $W(i,j)=W(i,l-1)+W(l,j)+a_l$
-
-P(i,j)=P(i,l-1)+P(l,j)+W(i,j)
-
-r(i,j)=l
+\item $h=j-i=0$: $T(i,i)=$ foglia $(k_i, k_{i+1})$. Poni $W(i,i)=b_i$, $P(i,i)=0$ e $r(i,i)$ indefinito
+\item $h=j-i=1 \rightarrow j=i+1$. Dunque $T(i,i+1)$ ha $k_{i+1}$ come radice. 
+\begin{align*}
+W(i,i+1)&=W(i,i)+a_{i+1}+W(i+1,i+1)\\
+P(i,i+1)&=W(i,i+1)\\
+r(i,i+1)&=i+1
+\end{align*}
+\item $h\geq 2$: 
+\begin{align*}
+W(i,j)&=W(i,l-1)+W(l,j)+a_l\\
+P(i,j)&=P(i,l-1)+P(l,j)+W(i,j)\\
+r(i,j)&=l
+\end{align*}
 \end{itemize}
-Il procedimento elencato sopra necessita di $\Theta (n^2)$ di spazio. I casi con h=0 o h=1 possono essere completati in O(n), per il caso h>1:
-\begin{lstlisting}
+Il procedimento elencato sopra necessita di $\Theta (n^2)$ di spazio. I casi con $h=0$ o $h=1$ possono essere completati in $O(n)$, per il caso $h>1$:
+\begin{lstlisting}[tabsize=\lstIndent]
 for h=2:n
 	for i=0:(n-h)
 		j=i+h
@@ -802,8 +803,8 @@ Questo procedimento richiede un tempo di:
 $$\sum_{h=2}^n \sum_{i=0}^{n-h} O(h+1)=\sum_{h=2}^n O((n-h+1)(h+1))= O(n^3)$$
 Un possibile miglioramento deriva dal principio di monotonia, cioè:
 $$r(i,j-1)\leq r(i,j) \leq r(i+1,j)$$
-In questo modo la ricerca di l avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. In questo modo si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
-In ogni caso non è sempre conveniente cercare un albero ottimale con questo algoritmo, a volte basta un albero quasi ottimale. Ad esempio nella serie 12 è stato calcolato un albero ottimale basandosi semplicemente sul fatto che la somma dei pesi di due sottoalberi sia minore della probabilità del nodo.
+In questo modo la ricerca di $l$ avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. In questo modo si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
+In ogni caso non è sempre conveniente cercare un albero ottimale con questo algoritmo, a volte basta un albero quasi ottimale. Ad esempio nella Serie 12 è stato calcolato un albero ottimale basandosi semplicemente sul fatto che la somma dei pesi di due sottoalberi sia minore della probabilità del nodo.
 \begin{center}
 \includegraphics[scale=0.3]{Figures/optimaltree.jpg}
 \end{center} 
@@ -812,12 +813,12 @@ Abbiamo già in parte visto questa struttura per Heapsort. La sua principale car
 \paragraph*{Vocabolario}
 A seguire l'implementazione di un min heap. Poniamo che le chiavi siano salvate in un array di dimensioni sufficienti. Salviamo inoltre la variabile n, che indica il numero di elementi presenti nell'array.
 \begin{itemize}
-\item Min: ritorna A[1]
-\item Inserisci(x): incrementiamo n di uno e piazziamo x alla posizione A[n]. Per restaurare le proprietà dell'heap (x può essere minore del suo predecessore) chiamiamo bottom-up(i).
-\item Delete(i): chiamiamo replace(i,A[n]). Dopodiché la chiave A[n] compare due volte, quindi riduciamo la dimensione dell'heap di uno. 
-\item Replace(i,k): poniamo k'=A[i]. Innanzitutto A[i]=k, poi dobbiamo distinguere due casi: se k<k' chiamiamobottom-up(i), altrimenti shift-down(i). Da ricordarsi che shift-down(i) altro non è che versickere(i,n) trattato nel capitolo ``Sort''. In ogni caso è analogo a bottom-up(i).
+\item \inline{Min}: ritorna $A[1]$
+\item \inline{Inserisci(x)}: incrementiamo $n$ di 1 e piazziamo $x$ alla posizione $A[n]$. Per restaurare le proprietà dell'heap ($x$ può essere minore del suo predecessore) chiamiamo \inline{bottom-up(i)}.
+\item \inline{Delete(i)}: chiamiamo replace$(i,A[n])$. Dopodiché la chiave $A[n]$ compare due volte, quindi riduciamo la dimensione dell'heap di 1. 
+\item \inline{Replace(i,k)}: poniamo $k'=A[i]$. Innanzitutto $A[i]=k$, poi dobbiamo distinguere due casi: se $k<k'$ chiamiamo \inline{bottom-up(i)}, altrimenti \inline{shift-down(i)}. Da ricordarsi che \inline{shift-down(i)} altro non è che \\\inline{versickere(i,n)} trattato nel capitolo ``Sort''. In ogni caso è analogo a \inline{bottom-up(i)}.
 \end{itemize}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 bottom-up(int i)
 	while i>=2
 		int j=i/2
@@ -833,12 +834,12 @@ Ogni operazione del vocabolario può essere effettuata in tempo logaritmico.
 \section{Priority Queue (pag 404)}
 Le priority queue (in tedesco dette Vorrangswarteschlangen) sono semplicemente delle code in cui ad ogni elemento è abbinata una priorità. Ad esempio chi ha il numero più basso passa prima di chi ha il numero più alto. Esse possono essere implementate in due differenti modi.
 \paragraph*{Heap}
-Il primo e più efficiente metodo è quello di usare un heap come una coda prioritaria. È possibile estrarre il minimo in tempo costante, inserire e rimuovere elementi in tempo logaritmico. L'unico problema è unire due heap. Questo può essere effettuato demolendo le strutture precedenti e creando un nuovo albero in O(n+k) passi.
+Il primo e più efficiente metodo è quello di usare un heap come una coda prioritaria. È possibile estrarre il minimo in tempo costante, inserire e rimuovere elementi in tempo logaritmico. L'unico problema è unire due heap. Questo può essere effettuato demolendo le strutture precedenti e creando un nuovo albero in $O(n+k)$ passi.
 \paragraph*{Lista}
-Il metodo più intuitivo è forse quello di usare una semplice lista. Per unire due liste basta puntare il puntatore dell'ultimo elemento al primo della nuova lista. L'aggiunta di un nuovo elemento avviene in tempo costante, inserendolo o all'inizio o alla fine, mentre per rimuovere un elemento è necessario cercarlo in tutta la lista (quindi O(n)). La ricerca del minimo avviene anch'essa come nel caso della ricerca del massimo in un array, quindi in O(n). Una possibile variante è quella di ordinare gli elementi in ordine crescente. In questo caso il minimo può essere trovato in tempo costante, ma per inserire, rimuovere ed unire due liste si impiegherebbe O(n).
+Il metodo più intuitivo è forse quello di usare una semplice lista. Per unire due liste basta puntare il puntatore dell'ultimo elemento al primo della nuova lista. L'aggiunta di un nuovo elemento avviene in tempo costante, inserendolo o all'inizio o alla fine, mentre per rimuovere un elemento è necessario cercarlo in tutta la lista (quindi $O(n)$). La ricerca del minimo avviene anch'essa come nel caso della ricerca del massimo in un array, quindi in $O(n)$. Una possibile variante è quella di ordinare gli elementi in ordine crescente. In questo caso il minimo può essere trovato in tempo costante, ma per inserire, rimuovere ed unire due liste si impiegherebbe $O(n)$.
 \section{Fibonacci heap (pag 420)}
 I Fibonacci heap (anche chiamati F-Heap) sono collezioni di heap con insiemi di chiavi disgiunti. Le radici degli alberi sono collegate da una doppia lista lineare circolare. Ogni nodo ha un puntatore sul padre e su uno dei suoi figli. Inoltre i figli sono uniti da una doppia lista circolare. Il puntatore dell'heap indica direttamente l'elemento minimo, quindi la radice con il valore più piccolo.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 class HeapNode<Comparable>
 	//parametri salvati
 	HeapNode<E> destro, sinistro
@@ -850,13 +851,14 @@ class HeapNode<Comparable>
 \includegraphics[scale=0.5]{Figures/fheap.jpg}
 \end{center}
 \subsection*{Vocabolario}
-\paragraph*{Insert(x)} costruisci un F-Heap h' formato dalla sola chiave x ed uniscilo con h tramite meld(h').
-\paragraph*{Min} il minimo è indicato dal puntatore dell'heap.
-\paragraph*{Meld(h')} inserisci la radice di h' nella lista di radici di h. L'elemento più piccolo tra il minimo di h e quello di h' diventa l'elemento minimo del nuovo F-Heap.
-Chiaramente le precedenti operazioni possono essere eseguite in tempo costante. 
-\paragraph*{DeleteMin} I figli del minimo vengono inseriti nella lista delle radici, dopodiché il minimo viene rimosso. In seguito coppie di heap dallo stesso rango r vengono uniti in un heap dal rango r+1 (rendendo la radice più grande figlia di quella più piccola) finché nella Wurzelliste non rimangono più heap dallo stesso rango. Richiede O(log(n)).
-\paragraph*{Decrease-key(x,k)} Diminuiamo il valore della chiave x con k.
-\begin{lstlisting}
+\begin{itemize}
+\item \inline{Insert(x)}: costruisci un F-Heap $h'$ formato dalla sola chiave $x$ ed uniscilo con $h$ tramite \inline{meld(h}$'$\inline{)}.
+\item\inline{Min}: il minimo è indicato dal puntatore dell'heap.
+\item\inline{Meld(h}${}'$\inline{)}: inserisci la radice di $h'$ nella lista di radici di $h$. L'elemento più piccolo tra il minimo di $h$ e quello di $h'$ diventa l'elemento minimo del nuovo F-Heap. Chiaramente le precedenti operazioni possono essere eseguite in tempo costante. 
+\item \inline{DeleteMin}: I figli del minimo vengono inseriti nella lista delle radici, dopodiché il minimo viene rimosso. In seguito coppie di heap dallo stesso rango $r$ vengono uniti in un heap dal rango $r+1$ (rendendo la radice più grande figlia di quella più piccola) finché nella Wurzelliste non rimangono più heap dallo stesso rango. Richiede $O(\log(n))$.
+\item\inline{Decrease-key(x,k)}: Diminuiamo il valore della chiave $x$ con $k$.
+\end{itemize}
+\begin{lstlisting}[tabsize=\lstIndent]
 FIB-HEAP-DECREASE-KEY(H,x,k) 
 	if k > key[x]
 		//error "new key is greater than current key"
@@ -887,16 +889,19 @@ CASCADING-CUT(H,y)
 			CASCADING-CUT(H,z)
 \end{lstlisting}
 Praticamente se incontriamo un nodo già marcato (ha già perso un figlio in precedenza), lo tagliamo ed aggiungiamo nella lista delle radici finché non incontriamo un nodo non marcato o raggiungiamo la radice stessa. In questo caso abbiamo un tempo ammortizzato costante.
-\paragraph*{Delete(x)} per eliminare la chiave x la cambiamo con un valore più basso del minimo dell'heap tramite $decrease-key(x,-\infty)$ e poi eliminiamo il minimo. Otteniamo così un tempo ammortizzato pari a deleteMin, quindi logaritmico.
-\todo{capire analisi}
+\begin{itemize}
+\item \inline{Delete(x)}: Per eliminare la chiave $x$ la cambiamo con un valore più basso del minimo dell'heap tramite \inline{decrease-key(x,-}$\infty$\inline{)} e poi eliminiamo il minimo. Otteniamo così un tempo ammortizzato pari a \inline{deleteMin}, quindi logaritmico.
+\todo[inline]{capire analisi}
+\end{itemize}
+
 \section{Union-Find-Strukturen (pag 428)}
 Queste speciali strutture servono a manipolare delle classi di equivalenza, vale a dire formate da una relazione di equivalenza o semplicemente delle partizioni (guarda matematica discreta). Le operazioni di vocabolario sono:
 \begin{itemize}
-\item make-set(e,i): inserisce un nuovo insieme i con un unico elemento e. i è il nome dell'insieme, mentre si suppone che e non appartenga a nessun altro insieme (si tratta di partizioni).
-\item find(x): restituisce il nome della partizione che contiene x.
-\item union(i,j,k): i due insiemi i e j vengono uniti in un insieme k per poi essere eliminati dalla collezione.
+\item \inline{make-set(e,i)}: inserisce un nuovo insieme $i$ con un unico elemento $e$. $i$ è il nome dell'insieme, mentre si suppone che $e$ non appartenga a nessun altro insieme (si tratta di partizioni).
+\item \inline{find(x)}: restituisce il nome della partizione che contiene $x$.
+\item \inline{union(i,j,k)}: i due insiemi $i$ e $j$ vengono uniti in un insieme $k$ per poi essere eliminati dalla collezione.
 \end{itemize}
-Una possibile rappresentazione di un set è quella di un albero non ordinato. Ogni elemento ha un puntatore sul padre, mentre la radice punta su se stessa e contiene il nome dell'insieme. Una collezione è dunque un array di elementi abbinato ad un altro array p, contenente il padre degli elementi. Ad esempio:
+Una possibile rappresentazione di un set è quella di un albero non ordinato. Ogni elemento ha un puntatore sul padre, mentre la radice punta su se stessa e contiene il nome dell'insieme. Una collezione è dunque un array di elementi abbinato ad un altro array $p$, contenente il padre degli elementi. Ad esempio:
 \[\begin{array}{*{20}{c}}
 {x}&{:}&a&{b}&{c}&d&e&f\\
 {p[x]}&{:}&{a}&{a}&{a}&{b}&b&f\\
@@ -906,7 +911,7 @@ Questi array rappresentano la seguente collezione:
 \includegraphics[scale=0.4]{Figures/ufs.png}
 \end{center}
 Per evitare che un set degeneri ad una lista ci sono due soluzioni: l'unione in base alla grandezza o all'altezza. In entrambi i casi l'idea è di rendere l'albero più piccolo un sottoalbero di quello più grande. Necessitiamo dunque di un altro array in cui viene salvata la grandezza. Per semplicità adottiamo una nomenclatura diretta, vale a dire che un insieme porta il nome del suo primo elemento (radice).
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int[] size, p //di grandezza n
 //elementi da 1 a n
 
@@ -927,27 +932,29 @@ int find(x)
 	return y			
 \end{lstlisting}
 \begin{mytheorem}{6.3}
-Il processo ``unione per grandezza'' (Vereinigung nach Grösse) conserva la seguente caratteristica: un albero di altezza h ha almeno $2^h$ nodi.
+Il processo ``unione per grandezza'' (Vereinigung nach Grösse) conserva la seguente caratteristica: un albero di altezza $h$ ha almeno $2^h$ nodi.
 \paragraph*{Dimostrazione}
 Ammettiamo che dobbiamo unire gli alberi $T_1 \mbox{ e } T_2$ e che il primo sia più grande del secondo, quindi $g(T_1)\geq g(T_2)$. Secondo l'ipotesi $T_i \mbox{ ha almeno } 2^{h_i}$ nodi. 
 \begin{itemize}
-\item Caso 1: $altezza(T_1 \cup T_2)=max\{h_1,h_2\}$
+\item \textbf{Caso 1}: $altezza(T_1 \cup T_2)=max\{h_1,h_2\}$
 Quindi l'altezza dell'unione è per forza almeno $2^{altezza(T_1 \cup T_2)}$.
-\item Caso 2: l'altezza del $max\{h_1,h_2\}$ è cresciuta di uno. Questo è possibile solo se $altezza(T_1 \cup T_2)=h_2+1$. Quindi:
-$$g(T_1)\geq g(T_2) \geq 2^{h_2} $$
-$$g(T_1 \cup T_2)=g(T_1)+g(T_2) \geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2)}$$
+\item \textbf{Caso 2}: l'altezza del $max\{h_1,h_2\}$ è cresciuta di uno. Questo è possibile solo se $altezza(T_1 \cup T_2)=h_2+1$. Quindi:
+\begin{align*}
+g(T_1)&\geq g(T_2) \geq 2^{h_2} \\
+g(T_1 \cup T_2)=g(T_1)+g(T_2) &\geq 2*2^{h_2}=2^{h_2+1}=2^{altezza(T_1 \cup T_2)}
+\end{align*}
 \end{itemize}
 \end{mytheorem}
-Come diretta conseguenza find(x) impiega al massimo log(n) passi. Le altre operazioni sono fattibili in tempo costante.
+Come diretta conseguenza \inline{find(x)} impiega al massimo $\log(n)$ passi. Le altre operazioni sono fattibili in tempo costante.
 
 \chapter{Tecniche per lo sviluppo di algoritmi}
 \section{Dynamische Programmierung}
 \subsection{Principio}
-Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo nm), mentre la complessità è O(mnc), dove c è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella (n,m) per poi procedere con il backtracking.
+Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo $nm$), mentre la complessità è $O(mnc)$, dove c'è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella $(n,m)$ per poi procedere con il backtracking.
 \subsection{Rucksackproblem (pag 452)}
-Sia G la capienza massima dello zaino, w[i] il valore dell'itesimo oggetto e g[i] il peso di esso. La formula ricorisva per la soluzione del problema è la seguente:
+Sia $G$ la capienza massima dello zaino, $w[i]$ il valore dell'$i-$tesimo oggetto e $g[i]$ il peso di esso. La formula ricorisva per la soluzione del problema è la seguente:
 $$maxvalue(i,g)=\max \{maxvalue(i-1,g),w[i]+maxvalue(i-1,g-g[i])\}$$
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int maxvalue (int[] w, int[] g, int G)
 	int n=w.length
 	int[][] maxvalue=new int[n+1][G+1]
@@ -965,15 +972,14 @@ int maxvalue (int[] w, int[] g, int G)
 \end{lstlisting}
 \subsection{Längste gemeinsame Teilfolge (pag 456)}
 In questo caso:
-$$
-LGT(n,m) =
-\left\{
-\begin{array}{rl}
+
+\[
+LGT(n,m) =\begin{cases}
 LGT(n-1,m-1)+1 & \mbox{se } a_n=b_m \\
-\max\{LGT(n-1,m),LGT(n,m-1)\} & \mbox{altrimenti} 
-\end{array}
-\right.
-$$
+\max\{LGT(n-1,m),LGT(n,m-1)\} & \mbox{altrimenti}
+\end{cases}
+\]
+
 In questo caso la tabella avrebbe la forma seguente:
 $$\begin{array}{ccccccc}
 LGT & - & K & R & I & S & E \\ 
@@ -985,7 +991,7 @@ B & 0 & 0 & 0 & 1 & 1 & 2 \\
 E & 0 & 0 & 0 & 1 & 1 & 2
 \end{array} $$
 \section{Branch and bound}
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 BranchAndBound(Problem P )
 1 Berechne globale untere Schranke, falls existent.
 2 while Optimum nicht gefunden do
@@ -1009,12 +1015,12 @@ Si sceglie inizialmente un qualsiasi punto (al centro) e si calcolano le equazio
 \begin{center}
 \includegraphics[scale=0.7]{Figures/graham.png}
 \end{center}
-Secondo l'analisi ammortizzata ogni segmento candidato può essere allontanato al massimo una volta, quindi O(n). Il costo dell'algoritmo è quindi dato dal sort, quindi si tratta di $O(n\log (n))$.
+Secondo l'analisi ammortizzata ogni segmento candidato può essere allontanato al massimo una volta, quindi $O(n)$. Il costo dell'algoritmo è quindi dato dal sort, quindi si tratta di $O(n\log (n))$.
 
 \section{Scan line principle}
 \subsection{Il principio (pag 478)}
-Il principio consiste nell'analizzare il problema utilizzando una linea verticale (o anche orizzontale), la scan line, che si ferma ad ogni punto discreto analizzando il problema. Risulta quindi necessario ordinare questi punti in base ad una determinata coordinata. La scan line divide gli oggetti geometrici in tre tipi: attivi (sulla scan line), morti(a sinistra) e inattivi (a destra). Di seguito l'algoritmo:
-\begin{lstlisting}
+Il principio consiste nell'analizzare il problema utilizzando una linea verticale (o anche orizzontale), la scan line, che si ferma ad ogni punto discreto analizzando il problema. Risulta quindi necessario ordinare questi punti in base ad una determinata coordinata. La scan line divide gli oggetti geometrici in tre tipi: attivi (sulla scan line), morti (a sinistra) e inattivi (a destra). Di seguito l'algoritmo:
+\begin{lstlisting}[tabsize=\lstIndent]
 	Q=insieme di punti discreti (Haltepunkten)
 	L=null //punti attivi
 	while !Q.isEmpty()
@@ -1024,8 +1030,8 @@ Il principio consiste nell'analizzare il problema utilizzando una linea vertical
 \end{lstlisting}
 \subsection{Sichtbarkeitsproblem (pag 480)}
 Come esempio facile osserviamo questo problema. Dato un insieme di segmenti orizzontali ritorna le coppie visibili tra di loro, vale a dire che possono essere collegati da una retta verticale senza che essa si incroci con altri segmenti.
-\begin{lstlisting}
-Q=punti di inizio e fine segmento ordinati secondo l'asse Ox
+\begin{lstlisting}[tabsize=\lstIndent]
+Q=punti di inizio e fine segmento ordinati secondo l`asse Ox
 L=null
 while !Q.isEmpty
 	p=Q.next
@@ -1038,10 +1044,10 @@ while !Q.isEmpty
 		L.remove(s)
 		//ritorna (f,g)
 \end{lstlisting}
-L'algoritmo impiega $O(n \log (n))$ e uno spazio di O(n).
+L'algoritmo impiega $O(n \log (n))$ e uno spazio di $O(n)$.
 \subsection{Schnittproblem für iso-orientierte Liniensegmente (pag 483)}
 Il problema è quello di trovare i tutti punti di intersezione, dato un disegno composto di segmenti verticali e orizzontali.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 Q=insieme delle coordinate x dei punti di inizio e di fine dei segmenti
 L=null //insieme dei segmenti orizzontali attivi secondo le coordinate y
 while !Q.isEmpty
@@ -1056,12 +1062,12 @@ while !Q.isEmpty
 		//trova tutti i segmenti t di L con yu<=y(t)<=yo
 		//ritorna questi punti   		
 \end{lstlisting}
-Non ci rimane che trovare la struttura dati ideale per L. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare L come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
+Non ci rimane che trovare la struttura dati ideale per $L$. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare $L$ come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
 \todo{Aggiungere immagine a pagina 485}
-Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r$ passi, dove r è il numero di elementi tra a e b. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove k è il numero di segmenti che si incrociano.
+Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r)$ passi, dove $r$ è il numero di elementi tra $a$ e $b$. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove $k$ è il numero di segmenti che si incrociano.
 \subsection{Caso generale}
-Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. A $>x$ B se la retta vericale passante da x taglia sia A sia B e la coordinata y di A in quel punto è maggiore di quella di B.
-\begin{lstlisting}
+Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. $A >x B$ se la retta vericale passante da $x$ taglia sia $A$ sia $B$ e la coordinata $y$ di $A$ in quel punto è maggiore di quella di $B$.
+\begin{lstlisting}[tabsize=\lstIndent]
 Q=2n estremi sinistri e destri dei segmenti ordinati secondo asse Ox
 L=null //insieme dei segmenti attivi ordinati secondo >x
 found=false
@@ -1080,9 +1086,9 @@ while (!Q.isEmpty && !found)
 		if (f interseca g)
 			found=true		
 \end{lstlisting}
-Quest'algoritmo ha una complessità $O(n\log (n))$ e occupa O(n) spazio extra.
-Per trovare tutti i punti di intersezione è necessario aggiungere i punti trovati all'insieme dei punti d'arresto Q per cambiare l'ordine dei segmenti. In questo caso è interessante implementare Q come una priority queue (in realtà è più efficiente un albero AVL e trovare ogni volta l'elemento minimo in tempo logaritmico). 
-\begin{lstlisting}
+Quest'algoritmo ha una complessità $O(n\log (n))$ e occupa $O(n)$ spazio extra.
+Per trovare tutti i punti di intersezione è necessario aggiungere i punti trovati all'insieme dei punti d'arresto $Q$ per cambiare l'ordine dei segmenti. In questo caso è interessante implementare $Q$ come una priority queue (in realtà è più efficiente un albero AVL e trovare ogni volta l'elemento minimo in tempo logaritmico). 
+\begin{lstlisting}[tabsize=\lstIndent]
 Q=punti di arresto organizzati come priority queue
 L=null //segmenti attivi secondo l'ordine >x
 while !Q.isEmpty
@@ -1112,10 +1118,10 @@ while !Q.isEmpty
 		if (f interseca t)
 			Q.add(punto di intersezione)	 						
 \end{lstlisting}
-Da ricordarsi che i presupposti del corretto funzionamento dell'algoritmo sono che non esistano segmenti completamente verticali (quindi non hanno due volte la stessa coordinata x) e che un punto di intersezione non possa essere anche un estremo di un segmento. In ogni caso il tempo impiegato dall'algoritmo è $O((n+k)\log (n))$ dove k è il numero di intersezioni. Lo spazio occupato ammonta a $\Omega (n^2)$ ma può essere ridotto ad O(n).
+Da ricordarsi che i presupposti del corretto funzionamento dell'algoritmo sono che non esistano segmenti completamente verticali (quindi non hanno due volte la stessa coordinata $x$) e che un punto di intersezione non possa essere anche un estremo di un segmento. In ogni caso il tempo impiegato dall'algoritmo è $O((n+k)\log (n))$ dove $k$ è il numero di intersezioni. Lo spazio occupato ammonta a $\Omega (n^2)$ ma può essere ridotto ad $O(n)$.
 \subsection{Rechteckschnittproblem (pag 502)}
 In questo caso abbiamo la scan line che si muove dall'alto verso il basso. Il problema a due dimensioni viene ridotto ad una sola dimensione nel seguente modo: per ogni segmento orizzontale si cercano eventuali sovrapposizioni (Überlappungen) con altri segmenti orizzontali di rettangoli attivi.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 Q=successione di segmenti orizzontali ordinati in verticale
 L=null //insieme dei segmenti attivi
 while !Q.isEmpty
@@ -1129,35 +1135,35 @@ while !Q.isEmpty
 		//q segmento inferiore
 		L.remove(q)			
 \end{lstlisting}
-Per trovare una sovrapposizione dobbiamo rispondere ad una cosiddetta Aufspiessfrage(stabbing query). Tramite gli Intervall-Bäume l'algoritmo impiega O(n log(n)+k) e uno spazio lineare.
+Per trovare una sovrapposizione dobbiamo rispondere ad una cosiddetta Aufspiessfrage (stabbing query). Tramite gli Intervall-Bäume l'algoritmo impiega $O(n \log(n)+k)$ e uno spazio lineare.
 
 \section{Divide and conquer}
 \subsection{Segmentschnitt (pag 493)}
 Affrontiamo lo stesso problema del paragrafo 7.2.3 tramite divide and conquer.
 
-ReportCuts(S)
+\inline{ReportCuts(S)}\todo{Migliorare il layout??}
 \begin{itemize}
-\item Divide: dividi S con una linea verticale in S1 e S2. Se S contiene meno di due elementi non fare niente (non possono esserci intersezioni).
-\item Conquer: ReportCuts(S1), ReportCuts(S2).
-\item Merge: trova tutte le intersezioni di segmenti orizzontali con estremo sinistro in S1 o l'estremo destro in S2.
+\item Divide: dividi $S$ con una linea verticale in $S1$ e $S2$. Se $S$ contiene meno di due elementi non fare niente (non possono esserci intersezioni).
+\item Conquer: \inline{ReportCuts(S1)}, \inline{ReportCuts(S2)}.
+\item Merge: trova tutte le intersezioni di segmenti orizzontali con estremo sinistro in $S1$ o l'estremo destro in $S2$.
 \end{itemize}
-Come strutture dati utilizziamo (.h significa estremo sinistro, h. estremo destro):
+Come strutture dati utilizziamo ($.h$ significa estremo sinistro, $h.$ estremo destro):
 \begin{itemize}
-\item $L(S) = \{y(h)|\mbox{h è un segmento orizzontale con:} .h\in S, h.\not  \in S\}$
-\item $R(S) = \{y(h)|\mbox{h è un segmento orizzontale con:} h.\in S, .h\not  \in S\}$
+\item $L(S) = \{y(h)|\mbox{$h$ è un segmento orizzontale con: } .h\in S, h.\not  \in S\}$
+\item $R(S) = \{y(h)|\mbox{$h$ è un segmento orizzontale con: } h.\in S, .h\not  \in S\}$
 \item V(S) = insieme dei segmenti verticali di S
 \end{itemize}
 La complessità dell'algoritmo è di:
 $$T(n)=O(1)+2T\left(\frac{n}{2}\right)+O(n)$$
-Sappiamo che risolvendo la formula si ottiene O(n log(n)+k). Lo spazio è lineare.
+Sappiamo che risolvendo la formula si ottiene $O(n \log(n)+k)$. Lo spazio è lineare.
 \subsection{Inklusion für Rechtecke (pag 498)}
 L'obiettivo è di trovare i punti contenuti in rettangoli.
 
-ReportInc(S)
+\inline{ReportInc(S)}\todo{migliorare il Layout??}
 \begin{itemize}
 \item Divide: come in precedenza
-\item Conquer: ReportInc(S1), ReportInc(S2)
-\item Merge: trova tutte le coppie (p,R) contenute sul bordo della divisione
+\item Conquer: \inline{ReportInc(S1)}, \inline{ReportInc(S2)}
+\item Merge: trova tutte le coppie $(p,R)$ contenute sul bordo della divisione
 \end{itemize}
 Anche in questo caso il tempo è quello del paragrafo 7.3.1.
 \subsection{Schnitt für Rechtecke (pag 501)}
@@ -1165,12 +1171,12 @@ Unendo i due precedenti algoritmi si può risolvere il problema nello stesso tem
 
 \section{Strutture dati geometriche}
 \subsection{Segment Bäume (pag 505)}
-Praticamente si tratta di un albero binario semi dinamico (vale a dire non espandibile, viene creato una sola volta e riempito in seguito). Le foglie sono gli intervalli elementari, mentre i nodi interni l'unione dei due figli. La radice rappresenta dunque l'intervallo completo S.
+Praticamente si tratta di un albero binario semi dinamico (vale a dire non espandibile, viene creato una sola volta e riempito in seguito). Le foglie sono gli intervalli elementari, mentre i nodi interni l'unione dei due figli. La radice rappresenta dunque l'intervallo completo $S$.
 \begin{center}
 \includegraphics[scale=0.7]{Figures/segmenttree.png}
 \end{center}
-Ad ogni nodo/foglia è "appesa" una lista indicante i nomi degli intervalli.
-\begin{lstlisting}
+Ad ogni nodo/foglia è ``appesa'' una lista indicante i nomi degli intervalli.
+\begin{lstlisting}[tabsize=\lstIndent]
 void add(Intervall I, Node p)
 	if (I(p) is in I)
 		//inserisci I nella lista di intervalli di p
@@ -1193,13 +1199,13 @@ report(Node p, Point x)
 			report(d,x)				
 \end{lstlisting}
 \todo{In add non dovrebbe essere il contrario e sovrapporsi!?}
-Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa O(n log(n)) di spazio.
+Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa $O(n \log(n))$ di spazio.
 \begin{center}
 \includegraphics[scale=0.6]{Figures/segtreew.png}
 \end{center}
 \subsection{Intervall Bäume (pag 512)}
-Vogliamo una struttura dati che riesca a contenere n intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la o-list è ordinata in base ai punti finali, mentre la o-list ai punti iniziali.
-\begin{lstlisting}
+Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $o-$list ai punti iniziali.
+\begin{lstlisting}[tabsize=\lstIndent]
 //add an interval I=[a,b] to the node p
 add (Interval i, Node p)
 	if (p.key is in I)
@@ -1231,7 +1237,7 @@ report(Node p, Point x)
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (pag 597)}
 Topological sort non è altro che la creazione di una relazione di ordine totale a partire da una parziale (esse possono essere rappresentate in forma di grafi e matrici, vedi Diskrete Mathematik). Una relazione di ordine parziale richiede che il grafo non abbia cicli, quindi si presta bene come test a riguardo.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 ord //array che da un ordine ad ogni nodo
 
 topSortBasic(Graph G)
@@ -1247,7 +1253,7 @@ topSortBasic(Graph G)
 		//G ha cicli		
 \end{lstlisting}
 Questa è l'idea di base dell'algoritmo. Per trovare un nuovo nodo col grado di entrata 0 (nella relazione di ordine parziale non ha valori che lo precedono), si può seguire le frecce in ordine opposto partendo da un nodo qualsiasi. In questo modo si impiega $\Omega (n^2)$ passi per l'algoritmo. Una variante più efficiente è la seguente:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 topSort(Graph G)
 	int lfdNr=0
 	Stack<Node> degzero
@@ -1287,8 +1293,8 @@ topSort(Graph G)
 \end{lstlisting}
 L'algoritmo impiega $O(|V|+|E|)$.
 \section{Transitive Hülle}
-È esattamente la stessa cosa che la transitive closure (matematica discreta, capitolo relazioni). Dato un grafo G come matrice, l'algoritmo ritorna la matrice rappresentante la reflexive and transitive closure. Praticamente se A[i,j]=1 significa che esiste una via da i a j.
-\begin{lstlisting}
+È esattamente la stessa cosa che la transitive closure (matematica discreta, capitolo relazioni). Dato un grafo $G$ come matrice, l'algoritmo ritorna la matrice rappresentante la reflexive and transitive closure. Praticamente se $A[i,j]=1$ significa che esiste una via da $i$ a $j$.
+\begin{lstlisting}[tabsize=\lstIndent]
 for i=1:n
 	A[i,i]=1
 for j=1:n
@@ -1305,7 +1311,7 @@ Approssimativamente richiede $O(|V|^3)$, nel dettaglio $O(|V|^2+|E||V|)$.
 \includegraphics[scale=1]{Figures/bfs.JPG}
 \end{center}
 Da notare che se al posto della coda si utilizza uno stack si ottiene una depth first search.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 BFS(Graph G,Vertex v)
      create a queue Q
      create a set V
@@ -1335,7 +1341,7 @@ Esempio:
 \includegraphics[scale=0.7]{Figures/edgetype.png}
 \end{center}
 Con l'aiuto di questo algoritmo ricorsivo possiamo arrivare a tutte le informazioni:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 Set<Vertex> B=nullSet
 int dfbi=dfei=0
 Set<Edge> BP=VP=RP=SP=nullSet
@@ -1372,10 +1378,10 @@ DFS(Graph G, Node v,w)
 \end{lstlisting}
 In un grafo non diretto non ci sono cross edges. Interessante notare che invertendo l'ordine del DFEI si ottiene un topological sort (dimostrato in un esercizio, penso accada lo stesso senza invertire il DFBI in un grafo connesso e senza cicli). Un'altra possibile applicazione potrebbe essere quella di ricavare uno spanning tree.\todo{Supposizioni logiche, non sicure e non dimostrate} 
 \section{Kürzeste Weg (pag 619)}
-Per ogni lato definiamo una funzione c((v,u)) che ne associa il costo.
+Per ogni lato definiamo una funzione $c((v,u))$ che ne associa il costo.
 \subsection{Dijkstra}
-Ammettiamo che tutti i costi siano positivi. Se p=(a,...,f) è una via più corta tra a ed f, allora lo devono essere anche tutte le vie intermedie.
-\begin{lstlisting}
+Ammettiamo che tutti i costi siano positivi. Se $p=(a,...,f)$ è una via più corta tra $a$ ed $f$, allora lo devono essere anche tutte le vie intermedie.
+\begin{lstlisting}[tabsize=\lstIndent]
 int infinity //a big number
 Set<Node> R=nullSet
 	
@@ -1401,7 +1407,7 @@ fillR(Node v)
 			u.distance=v.distance+c((v,u))
 			R.add(u)				
 \end{lstlisting}
-L'efficienza dell'algoritmo dipende dalla struttura dati rappresentata da R, che necessita di eseguire le seguenti operazioni nel minor tempo possibile:
+L'efficienza dell'algoritmo dipende dalla struttura dati rappresentata da $R$, che necessita di eseguire le seguenti operazioni nel minor tempo possibile:
 \begin{enumerate}
 \item Inizializzare
 \item Controllare se è vuoto
@@ -1410,14 +1416,14 @@ L'efficienza dell'algoritmo dipende dalla struttura dati rappresentata da R, che
 \end{enumerate}
 Di seguito le possibili implementazioni con i loro costi:
 \paragraph*{Non salvarlo esplicitamente}
-Inizialmente tutti i nodi che non sono stati scelti appartengono a R. Dopodiché 1. e 4. non devono più essere eseguiti. Per 2. e 3. basta controllare tutti i nodi. Il tempo richiesto dall'algoritmo diventa dunque $O(|V|^2)$, molto efficiente solo se ci sono molti lati.
+Inizialmente tutti i nodi che non sono stati scelti appartengono a $R$. Dopodiché 1. e 4. non devono più essere eseguiti. Per 2. e 3. basta controllare tutti i nodi. Il tempo richiesto dall'algoritmo diventa dunque $O(|V|^2)$, molto efficiente solo se ci sono molti lati.
 \paragraph*{Heap}
 Le operazioni 1. e 2. richiedono tempo costante, mentre 3. e 4. tempo logaritmico. In totale $O(|E|\log (|V|))$.
 \paragraph*{Fibonacci Heap}
 1, 2, 4 possono essere eseguite in tempo ammortizzato costante, mentre 3. in tempo logaritmico. In totale $O(|E|+|V|\log (|V|))$.
 \subsection*{Bellman-Ford}
 Nel caso di un grafo con valori negativi il percorso più breve si lascia trovare nel seguente modo:
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 int infinity //a big number
 Set<Node> R=nullSet
 	
@@ -1441,7 +1447,7 @@ fillR(Node v)
 			R.add(u)				
 \end{lstlisting}
 Attenzione: se c'è un ciclo negativo il processo potrebbe non finire. Altrimenti il tempo impiegato è $O(|V||E|)$.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
      //controlla la presenza di cicli negativi
      for each arco uv in archi:
         u := uv.source
@@ -1460,7 +1466,7 @@ Qualsiasi algoritmo che rispetti le precisazioni fatte sopra garantisce l'invari
 \end{mytheorem}
 \subsection{Kruskal}
 Il principio dell'algoritmo è semplice: inizialmente ogni nodo rappresenta un albero minimale separato. Dopodiché avviene un'iterazione in base al prezzo degli archi: se l'arco appartiene già a uno dei sottoalberi non viene scelto, altrimenti sì, quindi i due sottoalberi vengono uniti. Per un'efficiente implementazione i lati devono essere ordinati in senso crescente già all'inizio e i nodi vengono salvati in una Union find structure. 
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 Set<Edge> S //solution
 UnionFind uf
 sort E
@@ -1473,15 +1479,15 @@ for (Edge (v,w):E)
 	
 \end{lstlisting}
 L'algoritmo impiega $O(|E|\log (|V|))$.
-\subsection{Prim,Dijkstra}
-Iniziamo con un nodo e finché non siamo alla fine, quindi n-1 passi, scegliamo ogni volta l'arco che possiede un solo nodo nell'albero e con costo minimo. In questo modo impieghiamo $O(|E|+|V|\log (|V|))$.
+\subsection{Prim, Dijkstra}
+Iniziamo con un nodo e finché non siamo alla fine, quindi $n-1$ passi, scegliamo ogni volta l'arco che possiede un solo nodo nell'albero e con costo minimo. In questo modo impieghiamo $O(|E|+|V|\log (|V|))$.
 \section{Flüsse in Netzwerken (pag 637)}
-Innanzitutto si cerca una via che collega q a s (Quelle und Senke). Dopodiché si costruisce un cosiddetto Restgraph nel modo seguente:
+Innanzitutto si cerca una via che collega $q$ a $s$ (Quelle und Senke). Dopodiché si costruisce un cosiddetto Restgraph nel modo seguente:
 \begin{center}
 \includegraphics[scale=0.8]{Figures/restgraph.jpg} 
 \end{center}
-Le frecce viola indicano la capacità utilizzata, mentre quelle blu ciò che ancora rimane. Finché esiste ancora un percorso nel grafo, che può essere trovato ad esempio tramite breadth first search, è ancora possibile aumentare la capacità su quella via. Intuitivamente si può capire che la capacità massima del flusso è limitata dal taglio minimo (min cut), più precisamente essi sono uguali.
-\begin{lstlisting}
+Le frecce viola indicano la capacità utilizzata, mentre quelle blu ciò che ancora rimane. Finché esiste ancora un percorso nel grafo, che può essere trovato ad esempio tramite breadth first search, è ancora possibile aumentare la capacità su quella via. Intuitivamente si può capire che la capacità massima del flusso è limitata dal taglio minimo (\inline{mincut}), più precisamente essi sono uguali.
+\begin{lstlisting}[tabsize=\lstIndent]
 //initialize
 for (Edge e:E)
 	f(e)=0
@@ -1490,10 +1496,10 @@ while (there is a path p from q to s)
 	r=min\{rest(e)|e is in p\}
 	grow f across p of r units
 \end{lstlisting}
-Si tratta di una semplice versione che richiede $O(|V||E|^2)$. Tramite l'inserimento di una soglia c approssimativa (Schwelle) che viene dimezzata ad ogni iterazione possiamo migliorarne il tempo. In questo caso consideriamo solo i lati con una capacità maggiore della soglia, aumentiamo la capacità per poi diminuire la soglia. Il tempo richiesto è di $O(\log (c)m^2)$. 
+Si tratta di una semplice versione che richiede $O(|V||E|^2)$. Tramite l'inserimento di una soglia $c$ approssimativa (Schwelle) che viene dimezzata ad ogni iterazione possiamo migliorarne il tempo. In questo caso consideriamo solo i lati con una capacità maggiore della soglia, aumentiamo la capacità per poi diminuire la soglia. Il tempo richiesto è di $O(\log (c)m^2)$. 
 
 Ecco una versione completa dell'algoritmo di base, estratta dall'API condivisa sul seguente link: \url{https://db.tt/ftsSt6j9}.
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=\lstIndent]
 package GraphAPI;
 import java.util.LinkedList;
 import DataStructure.Queue;
@@ -1568,10 +1574,10 @@ Consideriamo il problema del matching ottimale tra due set. Le coppie possibili 
 \end{center}
 In questo caso, dato che il costo è sempre 1, la crescita del Restgraph consiste semplicemente nel cambiamento di direzione delle frecce. In un livello di astrazione più concreto questo corrisponde nel liberare una coppia per poterne formare altre due. L'esecuzione dell'algoritmo in questo speciale tipo di grafo richiede solamente $O(\sqrt{|V|}|E|)$.
 \subsection{Teoria sul matching}
-Sia G=(V,E) un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessu vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
+Sia $G=(V,E)$ un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessu vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
 \begin{mytheorem}{Satz von Hall}
-Non esiste un matching perfetto in un grafo bipartito se esiste un insieme M di vertici per cui:
+Non esiste un matching perfetto in un grafo bipartito se esiste un insieme $M$ di vertici per cui:
 $$|\Gamma (M)|<|M|$$
-dove $\Gamma (M)$ denota i vicini dei vertici in M.
+dove $\Gamma (M)$ denota i vicini dei vertici in $M$.
 \end{mytheorem}
 \end{document}
