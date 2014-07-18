@@ -403,5 +403,149 @@ Iteration (or trasversal) & Apply a given operation to every item\\\hline
 \item \textbf{Adding and removing} elements is done using: \inline{put_front}, \inline{put_left}, \inline{put_right}, \inline{extend}, \inline{remove} (item at cursor position)
 \end{itemize}
 \subsubsection{Arrays}
+\begin{itemize}
+\item Even though arrays are of fixed size with a capacity of \inline{upper-lower+1}, they can be resized. Instead of \inline{put} you may use \inline{force}, which has no precondition and resizes the array when needed.
+\end{itemize}
+\subsubsection{Hash Tables}
+\begin{itemize}
+\item Both arrays and hash tables are indexed based structures: Item manipulation requires an index, or, in case of  hash tables, a key. 
+\item Unlike arrays, table allow keys other than integers: \inline{HASH_TABLE[ITEM_TYPE, KEY_TYPE->HASHABLE]}
+\item Hash tables depend on hash functions, which map $K$, the set of possible keys, into an integer interval $a\dots b$. A perfect hash function gives a different integer value for every element of $K$. Whenever two different keys give the same hash value, a collision occurs. 
+\item In reality hash functions are never perfect, so we need to deal with collisions. The following approaches deal with the problem:
+\begin{itemize}
+\item \textbf{Open hashing}: The data structure for this strategy is \inline{ARRAY[LINKED_LIST[G]]}. In each entry of the array, for a certain index $l$, you find the list of objects whose keys hash to $i$. The costs of search are $O(1)$ to find the correct array index by hashing the key and $O(c)$ to find the item in the linked list. $c$ is therefore a collision factor. With constant capacity of our array, the costs will become $O(\mathrm{count}/\mathrm{capacity})$, so this approach is somehow limited
+\item \textbf{Closed hashing} (used by \inline{HASH_TABLE}): Here we have a single \inline{ARRAY[G]} where at any time some of its positions are occupied and some free. If for an insertion the hash function yields an already occupied position, the mechanism will try a succession of other positions until it finds a free one.\\
+A common technique, of the hash function yields a first candidate position \inline{i=f(key) mod capacity}, is to try successive positions \inline{i+k*increment}, where increment is \inline{f(key) mod (capacity+1)}.\\
+These are remarkably good results, since search with a good hash function becomes essentially $O(1)$
+\end{itemize}
+\end{itemize}
 
+\subsubsection{Tuples}
+\begin{itemize}
+\item \inline{tup: TUPLE[number: INTEGER, street: STRING, resident: PERSON]}
+\item \inline{tup := [99, "Weg", god_himself]}
+\item One may think of tuples as of classes with only attributes. They therefore are also more interesting as a language mechanism to describe simple structures in a clear and simple way, rather than they are in the sense of a data structure.
+\item Tags (like \inline{number} in the above example) are optional, they do not affect the type of a Tuple. 
+\item A Tuple with no arguments can hold any tuple, one with only one argument may hold any tuples with at least one element with the first of same type, etc.
+\item \textbf{Conformance}: You may assign an expression of type \inline{TUPLE[A,B,C]} to a variable of same type, or one of the following: \inline{TUPLE[A,B]} or \inline{TUPLE[A]} or \inline{TUPLE}
+\end{itemize}
+
+\subsubsection{Dispensers}
+\begin{itemize}
+\item These structures use no key or other identifying information for items, you insert an item just by itself. You also cannot choose what element you get by the query \inline{item}, Note: \inline{item} follows the command/query separation and therefore does not remove the item returned (you would need to make your own function, day \inline{get}). The policy used to determine which item to return, may be one of the following:
+\begin{itemize}
+\item \textbf{LIFO} (\textbf{L}ast \textbf{In}, \textbf{F}irst \textbf{O}ut): Choose the element inserted most recently. Such dispenser is called \textbf{stack}, and the stack operations are known as:
+\begin{itemize}
+\item \textbf{push}: Pushes an item to the top of the stack (command \inline{put})
+\item \textbf{pop}: Pops the top item (command \inline{remove}). The body of a stack os what remains after popping
+\end{itemize}
+\item \textbf{FIFO} (\textbf{F}irst \textbf{In}, \textbf{F}irst \textbf{O}ut): Choose the oldest element not yet removed. Such dispenser is called \textbf{queue}.
+\begin{itemize}
+\item Queues do also have many applications, such as simulations (represent pending events) and GUI (handling user inputs)
+\item As with stacks you may use arrayed or linked implementations. The linked one is straightforward, where the arrayed needs some special treatment. Because we always add new items at the end of the array and remove old ones from the beginning, at some point we will reach the end. Therefore, \inline{ARRAYED_QUEUE} is conceptually a ring.
+\end{itemize}
+\item With a \textbf{priority queue}, items have an associated priority.
+\end{itemize}
+\end{itemize}
+
+\section{Agents}
+\begin{itemize}
+\item Applications include:
+\begin{itemize}
+\item Iteration
+\item Undoing (redo-undo)
+\item Event-driven programming
+\end{itemize}
+\item The type of an agent is one of the following:
+\begin{itemize}
+\item \inline{PROCEDURE [BASE_TYPE, OPEN_ARGS -> TUPLE]}
+\item \inline{FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE, RESULT_TYPE]}
+\item \inline{PREDICATE [BASE_TYPE, OPEN_ARGS -> TUPLE]}
+\end{itemize}
+\textbf{Note}: All these types inherit from the deferred class \inline{ROUTINE}, and \inline{PREDICATE} is furthermore a descendant of \inline{FUNCTION}
+\item The important features of agents include \inline{call([open_args])}, and \inline{last_result}
+\item \textbf{Open/closed arguments}: In an agent expression you may use an argument list, may replace any f the arguments by a question mark. These are known as open arguments to the agent, and the others, the ones given by normal values, as closed. The agent then represents a function of the open arguments only. If you omit the argument list, all arguments of the underlying function are considered open.
+\item \textbf{Open target}: It is also possible to keep the target of an agent open, but then you need to specify its type. The target is then passed as first item in the argument tuple to the agent.
+\item Here are some examples of agents:\\
+\begin{tabular}{r l|l}
+$-$ & \inline{u := agent {TARGET_TYPE}.f(?, ?, z)} & \inline{u.call([target,a,b])}\\
+$-$ & \inline{u := agent a0.f(x, ?)} & \inline{u.call([a])}\\
+$-$ & \inline{u := agent a0.f} & \inline{u.call([])}\\
+$-$ & \inline{u := agent {TARGET_TYPE}.f} & \inline{u.call([target])}\\
+\end{tabular}
+\item Some example types:
+\begin{itemize}
+\item \inline{PROCEDURE[ANY, TUPLE]} (no open arguments)
+\item \inline{PROCEDURE[ANY, TUPLE[X,Y,Z]]} (3 open args, with types \inline{X, Y, Z})
+\item \inline{FUNCTION[ANY, TUPLE[X,Y],RES]} (2 open args, result of type \inline{RES})
+\end{itemize}
+\end{itemize}
+
+\section{Event Driven Programming}
+\subsection{Terminology}
+\begin{itemize}
+\item An \textbf{event} is a run-time operation, executed by a software element to make some information (including that it occurred) available for potential use by the software elements not specified by the operation. The information associated with an event (other than it actually occurred) constitutes the event's \textbf{arguments}
+\item To \textbf{trigger} (or \textbf{publish}) an event is to execute it
+\begin{itemize}
+\item A software element that may trigger events is a \textbf{publisher}
+\item A software element that may use the event's information is a \textbf{subscriber}
+\end{itemize}
+\item Any event belongs to an \textbf{event type}, and therefore shares the same argument list \textbf{signature}
+\item Note: Event type/event may suggest corresponding to a type of OO programming, but in our model, an event is not an object! There is the \inline{EVENT_TYPE} in Eiffel, which denotes the \textbf{general idea} event types, and a particular event type is then an instance of this class.
+\end{itemize}
+\subsection{The event-driven scheme}
+\begin{itemize}
+\item Some elements, publishers, make known to the rest of the system what event types they may trigger
+\item Some elements, subscribers, are interested in handling events of certain event types. They register the corresponding actions.
+\item At any time, a publisher can trigger an event. This will cause execution of actions registered by subscribers for the event's type. These actions can use the event's arguments. 
+\item In event-driven design, a \textbf{context} is a Boolean expression specified by  a subscriber at registration time, but evaluated at triggering time, such that the registered action will only be executed if the evaluation yields true. 
+\end{itemize}
+
+\subsection{Publish-Subscribe program}
+In devising a software architecture supporting the publish-subscribe paradigm, we should consider the following requirements:
+\begin{itemize}
+\item Publishers must not need to know who the subscribers are
+\item Any event triggered by one publisher may be consumed by several subscribers
+\item The subscribers should not need to know about the publishers. \textbf{This goal cannot be provided by the observer pattern}
+\item The subscribers can register and deregister while the application is running
+\item It should be possible to make events dependent or not on a context
+\item It should be possible to connect publishers and subscribers with minimal work
+\end{itemize}
+\subsubsection{Observer Pattern}
+\begin{itemize}
+\item Note that this pattern is limited, and therefore should not be used. Regardless the existence of superior methods, the observer pattern is still used very frequently.
+\todo[inline]{Add observer pattern architecture picture}
+\item \textbf{Publisher}: Describes the properties of a typical publisher in charge of an event type. It can trigger events through \inline{publish}\todo{Not sure if it a command}, and subscribers can subscribe and unsubscribe
+\item \textbf{Subscriber}:  on the other hand do also have subscribe and unsubscribe to (un-) subscribe to a 
+particular publisher. The feature calls (un-)subscribe of the desired publisher, passing itself as 
+argument. Furthermore there is the deferred feature handle which expects a \inline{LIST} as 
+argument. This is not ideal, since there is no type safety with the \inline{LIST} as argument, but since 
+the very general classes \inline{PUBLISHER} and \inline{SUBSCRIBER} need to know about the arguments, there is not really a better way. We could only specify the two classes further (e.g. one for 
+each argument list), but therefore loosing generality. (Using genericity with tuples would 
+work, but who does have them other than Eiffel? And Eiffel can do better..)
+\item \textbf{Drawbacks} of the observer pattern:
+\begin{itemize}
+\item The argument business, see above
+\item Subscribers subscribe directly to publishers rather than event types
+\item A subscriber may register with only one publisher, with that publisher, it can register only one action
+\item It is not possible to directly reuse an existing routine. The classes need to inherit from \inline{PUBLISHER}/\inline{SUBSCRIBER} resulting in too much glue code
+\item The last problem gets even worse without multiple inheritance. 
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Event Type Library (A Much Better Approach)}
+\begin{itemize}
+\item There us only a single class \inline{EVENT_TYPE[ARGS -> TUPLE]} with a generic parameter, ensuring type safety. 
+\item One can create event types, for instance:
+\begin{lstlisting}
+left_click: EVENT_TYPE[TUPLE[x:REAL,y:REAL]]
+-- Event type representing left-button click events
+	once
+		create Result
+	end
+\end{lstlisting}
+\item This declaration can take place in ``facilities'' class to which all others who need have access to (no context required). But it is also possible to put it in an ordinary class like \inline{BUTTON}, then having something like \inline{your_button.left_click.subscribe(agent p)} (context required)
+\item To trigger an event, one may write: \inline{left_click.publish([your_x, your_y])}
+\item To subscribe to an event, one may write: \inline{left_click.subscribe(agent p)}, requiring that \inline{p} represents a function with proper signature.
+\end{itemize}
 \end{document}
