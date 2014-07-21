@@ -37,7 +37,7 @@
 \begin{document}
 \tableofcontents
 \chapter{Introduzione}
-\section{Notazione O-$\Omega$-$\Theta$ (pag 4)}
+\section{Notazione O-$\Omega$-$\Theta$ (Pag. 4)}
 Per semplificare l'analisi asintotica degli algoritmi sono state introdotte le 
 seguenti notazioni:
 
@@ -48,13 +48,13 @@ In entrambi i casi si tratta di classi di funzioni. Quando $f \in O(g)$ e $f \in
 \begin{mytheorem}{1}
 Date due funzioni $ f,g: N \rightarrow R^{+} $. Se $ \lim\limits_{x \rightarrow +\infty} \frac{f(n)}{g(n)} $ converge ad una costante $C\geq 0$ allora $f \in O(g)$.
 \end{mytheorem}
-\section{Algoritmo di Karatsuba (pag 12)}
+\section{Algoritmo di Karatsuba (Pag. 12)}
 Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguente:
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
 oppure, scritto in un altro modo:
 \[ab*cd=100*a*c+10*a*c+10*b*d+b*d+10(a-b)(d-c)\]
 In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
-\section{Maximum subarray (pag 20)}
+\section{Maximum subarray (Pag. 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
 \begin{lstlisting}[tabsize=\lstIndent][tabsize=\lstIndent]
 //A=array da 1, ... n	
@@ -71,7 +71,7 @@ for (i=1; i<=n; i++){
 In questo modo il problema viene risolto in tempo lineare.	
 \chapter{Sort}
 Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato $a$) contenente $n$ numeri (interi). In ogni caso con questi algoritmi è possibile ordinare qualsiasi oggetto appartenente ad un universo in cui vige un ordine totale.
-\section{Sortieren durch Auswahl (pag 82)}
+\section{Sortieren durch Auswahl (Pag. 82)}
 Selection sort consiste nel cercare ogni volta il minimo tra la posizione $i$ e $n$. Una volta trovato esso viene scambiato con l'$i-$tesimo numero. 
 \subsubsection*{Esempio}
 \[\begin{array}{*{20}{c}}
@@ -95,7 +95,7 @@ for i=1:n-1
 \subsubsection*{Analisi}
 
 Dal doppio loop si vede semplicemente che l'algoritmo impiega $\Theta (n^2)$ comparazioni e nel peggior caso (i numeri sono ordinati dal più grande al più piccolo) $O(n)$ scambi. Da notare che per trovare il minimo sono necessari almeno $n-1$ confronti (Satz 2.1), quindi l'algoritmo non può andare più veloce di così. 
-\section{Sortieren durch Einfügen (pag 85)}
+\section{Sortieren durch Einfügen (Pag. 85)}
 In inglese si chiama insertion sort. Per induzione i numeri fino a $i-1$ sono già ordinati. Il principio consiste di piazzare l'$i-$tesimo elemento al giusto posto, se necessario scalando i restanti a destra di una posizione. Esempio:
 \[\begin{array}{*{20}{c}}
 {}&2&{15}&/&{43}&{17}&4\\
@@ -121,7 +121,7 @@ Si nota subito che se implementato così l'algoritmo può non fermarsi se $t$ è
 
 Nel peggior caso $\Theta (n^2)$ comparazioni ed altrettanti spostamenti. Nel miglior caso $O(n^2)$ comparazioni e spostamenti. Il caso medio rispecchia il peggiore.
 
-\section{Bubblesort (pag 89)}
+\section{Bubblesort (Pag. 89)}
 Il principio di questo algoritmo è semplicissimo: ad ogni iterazione viene scambiato l'elemento $a[i]$ con $a[i+1]$ (chiaramente solo se maggiore). In questo modo l'elemento più grande si sposta verso destra. Esempio:
 \[\begin{array}{*{20}{c}}
 {}&{15}&2&{43}&{17}&4\\
@@ -145,7 +145,7 @@ while (!flag)
 
 Nel miglior caso, se l'array è già ordinato, abbiamo $n-1$ paragoni e nessuno scambio. Nel caso medio e peggiore l'algoritmo necessita di $\Theta (n^2)$ scambi e paragoni.
 
-\section{Quicksort (pag 92)}
+\section{Quicksort (Pag. 92)}
 Il principio di quicksort è quello di scegliere un elemento come pivot (nel libro è sempre l'ultimo, ma ne basta uno casuale) e dividere l'array in due. A sinistra del pivot si trovano tutti gli elementi minori, mentre a destra quelli maggiori. Dopodiché viene richiamato l'algoritmo in modo ricorsivo sui due blocchi. L'algoritmo può essere eseguito ``in situ'', vale a dire che non serve spazio extra per salvare i dati (chiaramente un numero costante di variabili temporanee è permesso). Si usa quindi un solo array e si aggiungono due argomenti al metodo, ad esempio $l$ ed $r$, ad indicare l'intervallo in cui eseguire quicksort. Per dividere i numeri rispettivamente a destra ed a sinistra del pivot si può semplicemente far scorrere verso il centro due puntatori (chiamati $i$ e $j$) che partono rispettivamente alla posizione $l$ e $r$. Quando $a[i] \geq pivot$ e $a[j] \leq pivot$, $a[i]$ ed $a[j]$ vengono scambiati. Alla fine, quando $i=j$, l'elemento $a[i]$ viene scambiato col pivot e viene richiamato l'algoritmo da $l$ ad $i-1$ e da $i+1$ a $r$ (il pivot si trova già alla posizione giusta). Di seguito un esempio:
 \subsubsection*{Esempio}
 \begin{center}
@@ -195,7 +195,7 @@ Nel peggior caso, ad esempio se la sequenza è già ordinata o più in generale 
 Per evitare un tempo di $O(n^2)$ nel caso di un array già ordinato sono state pensate alcune varianti dell'algoritmo, le quali concernono solamente la scelta del pivot. La prima è la cosiddetta 3-Median-Strategie (median of three values strategy), che consiste semplicemente nel prendere tre elementi campione, rispettivamente a destra, sinistra e nel mezzo, e scegliere come pivot il valore medio tra questi.
 L'altra strategia si chiama Zufalls-Strategie (randomized quicksort) e consiste nel scegliere il pivot casualmente. Chiaramente può ancora avvenire un caso in cui necessita di un tempo quadratico, ma non esiste più una successione di numeri per cui questo accade. Una variante per rendere l'algoritmo glatt (smooth), cioè che impiega in media $O(n \log (n))$ comparazioni e  solo $O(n)$ quando l'input consiste in n elementi uguali, è la seguente. Praticamente gli elementi che sono uguali al pivot vengono spostati all'estrema destra o sinistra, dopodiché i due blocchi vengono riportati al centro e l'algoritmo prosegue come di consueto. L'implementazione ed una spiegazione più dettagliata possono essere trovate a pagina 104.
 
-\section{Heapsort (pag 106)}
+\section{Heapsort (Pag. 106)}
 Heapsort si basa su insertion sort, ma invece di cercare il minimo/massimo ogni volta, che costa $O(n)$ paragoni, ci si affida ad un Heap (un tipo di albero binario). L'algoritmo è semplice ma efficace: finché l'albero non è vuoto si allontana la radice, nonché l'elemento massimo, e lo si scambia con l'ultimo elemento. Dopodiché tramite un indice si riduce l'albero di un elemento e si restaurano (tramite un metodo chiamato versickern) le sue proprietà (richiede un tempo di $O(\log (n))$). Rimane solo la parte iniziale, cioè la costruzione di un Heap a partire da un array qualsiaisi. Un metodo efficiente consiste nel eseguire il metodo ``versickern'' sulla sequenza delle chiavi $k_{\lfloor \frac{n}{2} \rfloor}, k_{\lfloor \frac{n}{2} \rfloor - 1}, ... , k_1$. Esempio:
 
 \[\begin{array}{*{20}{c}}
@@ -235,7 +235,7 @@ versickere(int[] a, int i, int m)
 \subsection*{Analisi}
 La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso\todo{??} l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 
-\section{Mergesort (pag 112)}
+\section{Mergesort (Pag. 112)}
 Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
 
 \subsection*{Esempio}
@@ -326,7 +326,7 @@ straightmergesort(int[] a, int l,r)
 	until ll=l								
 \end{lstlisting}
 In questo modo cambiano anche le performance dell'algoritmo. Compare difatti un best case, ad esempio quando l'input è già ordinato. In questo caso avremmo $\Theta (n)$ comparazioni e 0 spostamenti. Il caso medio ed il peggior caso rispecchiano invece straight merge sort, nonché le tempistiche della prima analisi.
-\section{Radixsort (pag 121)}
+\section{Radixsort (Pag. 121)}
 Radixsort si basa sulla comparazione delle cifre dei rispettivi numeri. Noi tratteremo solo la forma duale, ma il tutto funziona con qualsiasi forma, compresa quella decimale. Ammettiamo sempre che esista una funzione $z(i,k)$ che ritorna l'$i-$tesima cifra a partire dalla meno significativa del numero $k$. Ad esempio $z(0,517)=7$ e $z(2, 517)=5$.
 \subsection{Radix-exchange sort}
 L'algoritmo segue un principio abbastanza simile a quicksort: tutti gli elementi il cui $i-$tesimo bit è 0 vanno a sinistra, mentre se è 1 vanno a destra. Il modo più semplice è quello, come in quicksort, di far scorrere due puntatori verso il centro e scambiare i numeri che si trovano al posto sbagliato. Dopodiché si richiama l'algoritmo sull' $(i-1)-$tesimo bit e sulle due parti dell'array.
@@ -428,7 +428,7 @@ radixsort_sond(int[] a)
 \end{lstlisting}
 \subsection*{Analisi}
 Entrambe le implementazioni richiedono $O(l(m+n))$ passaggi e memoria di $O(n+m)$.
-\section{Untere Schranke (pag 153)}
+\section{Untere Schranke (Pag. 153)}
 Per ora tutti gli algoritmi che usano comparazioni (praticamente tutti tranne radix sort) impiegano almeno $\Omega (n \log (n))$. 
 \begin{mytheorem}{2.4}
 Ogni algoritmo di ordinamento impiega nel caso medio e nel caso peggiore almeno $\Omega (n \log (n))$ paragoni per ordinare $n$ chiavi.
@@ -450,7 +450,7 @@ $$ altezza\_media(T) \geq \frac{1}{k}\left(\frac{k}{2} \log_2(k)+\frac{k}{2} \lo
 Si incappa dunque in una contraddizione.
 \end{mytheorem}
 \chapter{Search}
-\section{Auswahlproblem (pag 168)}
+\section{Auswahlproblem (Pag. 168)}
 Il primo approcio nel cercare di trovare l'$i-$tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi $i-1$ elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
 \begin{lstlisting}[tabsize=\lstIndent]
 int dividi(int l,r, pivot)
@@ -492,7 +492,7 @@ Questa strategia assicura che ci sono almeno
 $$ 3\left(\lceil \frac{1}{2} \lceil \frac{n}{5} \rceil \rceil -2\right) \geq \frac{3n}{10} -6$$
 elementi più piccoli di $v$. Segue quindi che l'algoritmo deve essere richiamato al massimo $ \lceil \frac{7n}{10} + 6 \rceil$ volte ricorsivamente. Il tempo impiegato è dunque:
 $$ T(n) \leq T\lceil \frac{n}{5} \rceil +T \lceil \frac{7n}{10} +6 \rceil + an \leq ... \leq cn \in O(n) $$
-\section{Sequenzielle Suche (pag 173)}
+\section{Sequenzielle Suche (Pag. 173)}
 Ammettiamo che le $n$ chiavi siano salvate in un array o in una lista. Il modo più semplice per sondare la sequenza è quello di controllare le $n$ chiavi fino ad a trovare l'elemento desiderato. Per fare in modo che l'algoritmo si fermi iniziamo dal fondo e mettiamo uno stopper alla posizione 0.
 \begin{lstlisting}[tabsize=\lstIndent]
 sequentialsearch (int k)
@@ -509,7 +509,7 @@ sequentialsearch (int k)
 \end{lstlisting} 
 Chiaramente l'algoritmo impiega 0 passaggi nel miglior caso e $n$ nel peggiore. Nel caso medio:
 $$ \frac{1}{n} \sum_{i=1}^n i = \frac{n+1}{2} \in O(n) $$
-\section{Binäre Suche (pag 174)}
+\section{Binäre Suche (Pag. 174)}
 La ricerca binaria si basa su divide and conquer. Ammettendo di avere un array ordinato si può descrivere l'algoritmo come segue:
 \begin{enumerate}
 \item Se la sequenza è vuota la ricerca finisce senza successo, altrimenti guarda l'elemento $a[m]$ (posizione media).
@@ -550,11 +550,11 @@ binsearch(k)
 		binsearch=0								
 \end{lstlisting}
 In questo modo una ricerca non impiega più che $\lceil \log_2(n+1) \rceil \in O(n) $ passaggi.
-\section{Interpolationsuche (pag 179)}
+\section{Interpolationsuche (Pag. 179)}
 Nella ricerca binaria scegliamo ogni volta l'elemento a metà dell'array come pivot. Non sempre si tratta di una buona idea. Ad esempio se cerchiamo nell'elenco telefonico ``Bernasconi'' non lo apriamo al centro. L'unica differenza dalla ricerca binaria è dunque la scelta della $m$:
 $$m= \lceil l+ \frac{k-a[l]}{a[r]-a[l]}(r-l) \rceil$$
 Nel miglior caso impieghiamo un numero di paragoni costante, ma nel caso medio $O(\log_2(\log_2(n))$ comparazioni. Perdiamo però a causa della maggiore complessità delle operazioni aritmetiche e nel caso sfortunato, in cui impiega $O(n)$ paragoni.
-\section{Selbstanordnende lineare Liste (pag 180)}
+\section{Selbstanordnende lineare Liste (Pag. 180)}
 Ammettiamo di avere una lista contenente $n$ chiavi. Per cercare e dunque accedere all'$i-$tesimo elemento impieghiamo $i$ paragoni. Avrebbe senso spostare gli elementi più ricercati all'inizio della lista. Consideriamo pertanto alcune strategie: 
 \begin{itemize}
 \item Move to front: l'elemento ricercato viene spostato all'inizio della lista
@@ -601,7 +601,7 @@ Sia $|K|=p$ un numero primo e $a \in \{1, ..., p-1\},b \in \{0, ..., p-1\}$. La 
 $$ h_{a,b}(x)=((ax+b) \mbox{ mod } p) \mbox{ mod } m$$
 La classe di funzioni $H=\{h_{a,b} : 1\leq a < p \mbox{ e } 0\leq b <p\}$ è una classe universale di hash functions. Dimostrazione a pagina 197.
 \end{mytheorem}
-\section{Hashverfahren mit Verkettung der Überläufer (pag 198)}
+\section{Hashverfahren mit Verkettung der Überläufer (Pag. 198)}
 Penso sia anche chiamato separate chaining. In ogni caso si tratta di un metodo per gestire le collisioni. Quando due chiavi collidono esse vengono semplicemente salvate in una lista. Questo metodo può essere implementato in due modi differenti, rispettivamente separate Verkettung der Überläufer e direkte Verkettung der Überläufer. Nel primo caso gli elementi della Hashtabelle hanno due campi, uno per il valore e l'altro per il puntatore, mentre nel secondo caso c'è solo un puntatore e tutti gli elementi vengono salvati in una lista esterna. In questo caso la tabella presenta dimensioni più piccole, poiché in ogni voce è salvato solo un puntatore.
 \subsection*{Analisi}
 Poniamo che un indirizzo $j$ abbia la stessa probabilità di essere scelto indipendentemente dagli altri, quindi $p(j)=\frac{1}{m} \mbox{ , } \forall j$. Con $C_n'$ verrà indicato il tempo (in numero di elementi valutati) di una ricerca infruttuosa, mentre $C_n$ indica una ricerca in cui viene trovato un risultato. Nel caso della direkte Verkettung abbiamo:
@@ -701,7 +701,7 @@ $$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
 \todo[inline]{voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!?}
 \chapter{Bäume}
 A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
-\section{AVL-Tree (pag. 284)}
+\section{AVL-Tree (Pag. 284)}
 Abbiamo visto che un albero binario naturale può degradare ad una lista. In tal caso la ricerca di un elemento richiede un tempo pari a $\Theta (n)$, poiché l'altezza dell'albero diventa n e non più $\log(n)$. Gli alberi AVL mantengono invece questa proprietà: essi sono difatti nominati balancierte Binärbäume (self-balancing binary trees). La condizione di base è difatti che per ogni nodo dell'albero l'altezza del figlio sinistro differisce da quello destro di al massimo 1. Può essere dimostrato che un albero AVL di altezza h contiene al minimo n elementi, dove:
 $$ n\geq F_{h+2} = 1,7171\times 1,618^h$$
 Quindi risolvendo secondo l'altezza:
@@ -720,13 +720,13 @@ Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo inna
 \begin{enumerate}
 \item Se la chiave che si vuole allontanare non ha figli la si elimina direttamente e si chiama il metodo \inline{upout(p)} al padre (analogo a \inline{upin})
 \item Se la chiave $p$ ha un solo figlio $q$ per forza $q$ non può avere figli. $q$ prende quindi la posizione di $p$, dopodiché viene chiamato \inline{upout(pp)}.
-\item Se $p$ ha invece due figli si inverte la posizione di $p$ con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 pag 293}. Anche in questo caso viene chiamato \inline{upout}.
+\item Se $p$ ha invece due figli si inverte la posizione di $p$ con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 Pag. 293}. Anche in questo caso viene chiamato \inline{upout}.
 \end{enumerate}
 Il metodo \inline{upout} è analogo ad \inline{upin}, cambia soltanto l'invariante (condizione d'uscita quando $bal(pp)=1$) e l'ordine delle rotazioni:
 \begin{center}
 \includegraphics[scale=0.5]{Figures/avldeletion.png}
 \end{center}
-\section{Splay tree (pag. 328)}
+\section{Splay tree (Pag. 328)}
 Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione \inline{splay(x)}. Quest'ultima è definita nella seguente maniera:
 \begin{enumerate}
 \item Cerca $x$ nell'albero. Sia $p$ il nodo in cui finisce la ricerca, altrimenti il padre della foglia nel caso di una ricerca infruttuosa.
@@ -746,7 +746,7 @@ Un'analisi ammortizzata, descritta completamente nel capitolo 5.4.2, porta al se
 \begin{mytheorem}{5.1}
 L'esecuzione di qualsiasi sequenza di $m$ operazioni, in cui compare al massimo $n$ volte inserisci, su uno splay tree inizialmente vuoto costa $O(m\log (n))$. 
 \end{mytheorem}
-\section{Optimal binary search tree (pag. 377)}
+\section{Optimal binary search tree (Pag. 377)}
 In questo caso abbiamo i seguenti valori (che non cambiano nel tempo) e vogliamo costruire un albero di ricerca ottimale:
 \begin{itemize}
 \item $S=\{k_1,k_2, ..., k_n \}$ insieme di $n$ chiavi, dove $k_1<k_2<...<k_n$.
@@ -831,13 +831,13 @@ bottom-up(int i)
 \paragraph*{Analisi}
 Ogni operazione del vocabolario può essere effettuata in tempo logaritmico.
 \chapter{Manipolazioni di dati}
-\section{Priority Queue (pag 404)}
+\section{Priority Queue (Pag. 404)}
 Le priority queue (in tedesco dette Vorrangswarteschlangen) sono semplicemente delle code in cui ad ogni elemento è abbinata una priorità. Ad esempio chi ha il numero più basso passa prima di chi ha il numero più alto. Esse possono essere implementate in due differenti modi.
 \paragraph*{Heap}
 Il primo e più efficiente metodo è quello di usare un heap come una coda prioritaria. È possibile estrarre il minimo in tempo costante, inserire e rimuovere elementi in tempo logaritmico. L'unico problema è unire due heap. Questo può essere effettuato demolendo le strutture precedenti e creando un nuovo albero in $O(n+k)$ passi.
 \paragraph*{Lista}
 Il metodo più intuitivo è forse quello di usare una semplice lista. Per unire due liste basta puntare il puntatore dell'ultimo elemento al primo della nuova lista. L'aggiunta di un nuovo elemento avviene in tempo costante, inserendolo o all'inizio o alla fine, mentre per rimuovere un elemento è necessario cercarlo in tutta la lista (quindi $O(n)$). La ricerca del minimo avviene anch'essa come nel caso della ricerca del massimo in un array, quindi in $O(n)$. Una possibile variante è quella di ordinare gli elementi in ordine crescente. In questo caso il minimo può essere trovato in tempo costante, ma per inserire, rimuovere ed unire due liste si impiegherebbe $O(n)$.
-\section{Fibonacci heap (pag 420)}
+\section{Fibonacci heap (Pag. 420)}
 I Fibonacci heap (anche chiamati F-Heap) sono collezioni di heap con insiemi di chiavi disgiunti. Le radici degli alberi sono collegate da una doppia lista lineare circolare. Ogni nodo ha un puntatore sul padre e su uno dei suoi figli. Inoltre i figli sono uniti da una doppia lista circolare. Il puntatore dell'heap indica direttamente l'elemento minimo, quindi la radice con il valore più piccolo.
 \begin{lstlisting}[tabsize=\lstIndent]
 class HeapNode<Comparable>
@@ -894,7 +894,7 @@ Praticamente se incontriamo un nodo già marcato (ha già perso un figlio in pre
 \todo[inline]{capire analisi}
 \end{itemize}
 
-\section{Union-Find-Strukturen (pag 428)}
+\section{Union-Find-Strukturen (Pag. 428)}
 Queste speciali strutture servono a manipolare delle classi di equivalenza, vale a dire formate da una relazione di equivalenza o semplicemente delle partizioni (guarda matematica discreta). Le operazioni di vocabolario sono:
 \begin{itemize}
 \item \inline{make-set(e,i)}: inserisce un nuovo insieme $i$ con un unico elemento $e$. $i$ è il nome dell'insieme, mentre si suppone che $e$ non appartenga a nessun altro insieme (si tratta di partizioni).
@@ -951,7 +951,7 @@ Come diretta conseguenza \inline{find(x)} impiega al massimo $\log(n)$ passi. Le
 \section{Dynamische Programmierung}
 \subsection{Principio}
 Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo $nm$), mentre la complessità è $O(mnc)$, dove c'è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella $(n,m)$ per poi procedere con il backtracking.
-\subsection{Rucksackproblem (pag 452)}
+\subsection{Rucksackproblem (Pag. 452)}
 Sia $G$ la capienza massima dello zaino, $w[i]$ il valore dell'$i-$tesimo oggetto e $g[i]$ il peso di esso. La formula ricorisva per la soluzione del problema è la seguente:
 $$maxvalue(i,g)=\max \{maxvalue(i-1,g),w[i]+maxvalue(i-1,g-g[i])\}$$
 \begin{lstlisting}[tabsize=\lstIndent]
@@ -970,7 +970,7 @@ int maxvalue (int[] w, int[] g, int G)
 			if g[i]<=g && maxvalue[i-1][g-g[i]]+w[i]>=maxvalue[i][g]
 				maxvalue[i][g]=maxvalue[i-1][g-g[i]]+w[i]
 \end{lstlisting}
-\subsection{Längste gemeinsame Teilfolge (pag 456)}
+\subsection{Längste gemeinsame Teilfolge (Pag. 456)}
 In questo caso:
 
 \[
@@ -1008,7 +1008,7 @@ BranchAndBound(Problem P )
 \end{lstlisting}
 
 \chapter{Geometrische Algorithmen}
-\section{Konvexe Hülle (pag 472)}
+\section{Konvexe Hülle (Pag. 472)}
 Di seguito presenterò soltanto la soluzione migliore che si può trovare senza utilizzare il principio Scan line, vale a dire Graham's scan. La Konvexe Hülle altro non è che una figura che contiene tutti i punti (noi siamo interessati nella minima, quindi quella formata da meno segmenti).
 \subsection{Graham's scan}
 Si sceglie inizialmente un qualsiasi punto (al centro) e si calcolano le equazioni delle rette che connettono il punto scelto con gli altri punti. Dopodiché si ordinano i punti in base all'angolo (dato dalla pendenza), partendo da ore sei e procedendo in senso antiorario (vedi immagine). Dopodiché non rimane che collegare i punti seguendo questo ordine. Dato che siamo interessati alla minima Konvexe Hülle, se un segmento va verso sinistra (in relazione al senso di marcia antiorario) per poi tornare verso destra significa che questi due segmenti possano essere sostituiti da un segmento più lungo. Bisogna in seguito anche ricontrollare i segmenti precedenti. 
@@ -1018,7 +1018,7 @@ Si sceglie inizialmente un qualsiasi punto (al centro) e si calcolano le equazio
 Secondo l'analisi ammortizzata ogni segmento candidato può essere allontanato al massimo una volta, quindi $O(n)$. Il costo dell'algoritmo è quindi dato dal sort, quindi si tratta di $O(n\log (n))$.
 
 \section{Scan line principle}
-\subsection{Il principio (pag 478)}
+\subsection{Il principio (Pag. 478)}
 Il principio consiste nell'analizzare il problema utilizzando una linea verticale (o anche orizzontale), la scan line, che si ferma ad ogni punto discreto analizzando il problema. Risulta quindi necessario ordinare questi punti in base ad una determinata coordinata. La scan line divide gli oggetti geometrici in tre tipi: attivi (sulla scan line), morti (a sinistra) e inattivi (a destra). Di seguito l'algoritmo:
 \begin{lstlisting}[tabsize=\lstIndent]
 	Q=insieme di punti discreti (Haltepunkten)
@@ -1028,7 +1028,7 @@ Il principio consiste nell'analizzare il problema utilizzando una linea vertical
 		update(L,p) //aggiorna gli oggetti attivi
 		//risolvi la parte del problema
 \end{lstlisting}
-\subsection{Sichtbarkeitsproblem (pag 480)}
+\subsection{Sichtbarkeitsproblem (Pag. 480)}
 Come esempio facile osserviamo questo problema. Dato un insieme di segmenti orizzontali ritorna le coppie visibili tra di loro, vale a dire che possono essere collegati da una retta verticale senza che essa si incroci con altri segmenti.
 \begin{lstlisting}[tabsize=\lstIndent]
 Q=punti di inizio e fine segmento ordinati secondo l`asse Ox
@@ -1045,7 +1045,7 @@ while !Q.isEmpty
 		//ritorna (f,g)
 \end{lstlisting}
 L'algoritmo impiega $O(n \log (n))$ e uno spazio di $O(n)$.
-\subsection{Schnittproblem für iso-orientierte Liniensegmente (pag 483)}
+\subsection{Schnittproblem für iso-orientierte Liniensegmente (Pag. 483)}
 Il problema è quello di trovare i tutti punti di intersezione, dato un disegno composto di segmenti verticali e orizzontali.
 \begin{lstlisting}[tabsize=\lstIndent]
 Q=insieme delle coordinate x dei punti di inizio e di fine dei segmenti
@@ -1119,7 +1119,7 @@ while !Q.isEmpty
 			Q.add(punto di intersezione)	 						
 \end{lstlisting}
 Da ricordarsi che i presupposti del corretto funzionamento dell'algoritmo sono che non esistano segmenti completamente verticali (quindi non hanno due volte la stessa coordinata $x$) e che un punto di intersezione non possa essere anche un estremo di un segmento. In ogni caso il tempo impiegato dall'algoritmo è $O((n+k)\log (n))$ dove $k$ è il numero di intersezioni. Lo spazio occupato ammonta a $\Omega (n^2)$ ma può essere ridotto ad $O(n)$.
-\subsection{Rechteckschnittproblem (pag 502)}
+\subsection{Rechteckschnittproblem (Pag. 502)}
 In questo caso abbiamo la scan line che si muove dall'alto verso il basso. Il problema a due dimensioni viene ridotto ad una sola dimensione nel seguente modo: per ogni segmento orizzontale si cercano eventuali sovrapposizioni (Überlappungen) con altri segmenti orizzontali di rettangoli attivi.
 \begin{lstlisting}[tabsize=\lstIndent]
 Q=successione di segmenti orizzontali ordinati in verticale
@@ -1138,7 +1138,7 @@ while !Q.isEmpty
 Per trovare una sovrapposizione dobbiamo rispondere ad una cosiddetta Aufspiessfrage (stabbing query). Tramite gli Intervall-Bäume l'algoritmo impiega $O(n \log(n)+k)$ e uno spazio lineare.
 
 \section{Divide and conquer}
-\subsection{Segmentschnitt (pag 493)}
+\subsection{Segmentschnitt (Pag. 493)}
 Affrontiamo lo stesso problema del paragrafo 7.2.3 tramite divide and conquer.
 
 \inline{ReportCuts(S)}\todo{Migliorare il layout??}
@@ -1156,7 +1156,7 @@ Come strutture dati utilizziamo ($.h$ significa estremo sinistro, $h.$ estremo d
 La complessità dell'algoritmo è di:
 $$T(n)=O(1)+2T\left(\frac{n}{2}\right)+O(n)$$
 Sappiamo che risolvendo la formula si ottiene $O(n \log(n)+k)$. Lo spazio è lineare.
-\subsection{Inklusion für Rechtecke (pag 498)}
+\subsection{Inklusion für Rechtecke (Pag. 498)}
 L'obiettivo è di trovare i punti contenuti in rettangoli.
 
 \inline{ReportInc(S)}\todo{migliorare il Layout??}
@@ -1166,11 +1166,11 @@ L'obiettivo è di trovare i punti contenuti in rettangoli.
 \item Merge: trova tutte le coppie $(p,R)$ contenute sul bordo della divisione
 \end{itemize}
 Anche in questo caso il tempo è quello del paragrafo 7.3.1.
-\subsection{Schnitt für Rechtecke (pag 501)}
+\subsection{Schnitt für Rechtecke (Pag. 501)}
 Unendo i due precedenti algoritmi si può risolvere il problema nello stesso tempo. Innanzitutto si rappresentano i rettangoli come quattro segmenti e i trova i punti di intersezione con altri rettangoli, dopodiché si riduce ogni rettangolo ad un punto rappresentativo (ad esempio il centro) e si usa il secondo algoritmo per trovare le inclusioni.
 
 \section{Strutture dati geometriche}
-\subsection{Segment Bäume (pag 505)}
+\subsection{Segment Bäume (Pag. 505)}
 Praticamente si tratta di un albero binario semi dinamico (vale a dire non espandibile, viene creato una sola volta e riempito in seguito). Le foglie sono gli intervalli elementari, mentre i nodi interni l'unione dei due figli. La radice rappresenta dunque l'intervallo completo $S$.
 \begin{center}
 \includegraphics[scale=0.7]{Figures/segmenttree.png}
@@ -1203,7 +1203,7 @@ Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick
 \begin{center}
 \includegraphics[scale=0.6]{Figures/segtreew.png}
 \end{center}
-\subsection{Intervall Bäume (pag 512)}
+\subsection{Intervall Bäume (Pag. 512)}
 Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $o-$list ai punti iniziali.
 \begin{lstlisting}[tabsize=\lstIndent]
 //add an interval I=[a,b] to the node p
@@ -1235,7 +1235,7 @@ report(Node p, Point x)
 \end{center}
 
 \chapter{Graphenalgorithmen}
-\section{Topologisches Sortieren (pag 597)}
+\section{Topologisches Sortieren (Pag. 597)}
 Topological sort non è altro che la creazione di una relazione di ordine totale a partire da una parziale (esse possono essere rappresentate in forma di grafi e matrici, vedi Diskrete Mathematik). Una relazione di ordine parziale richiede che il grafo non abbia cicli, quindi si presta bene come test a riguardo.
 \begin{lstlisting}[tabsize=\lstIndent]
 ord //array che da un ordine ad ogni nodo
@@ -1328,7 +1328,7 @@ BFS(Graph G,Vertex v)
             	   enqueue u onto Q           
 \end{lstlisting}
 L'algoritmo impiega uno spazio di $O(|V|^2)$ e una complessità di $O(|V|+|E|)$. Da notare che ogni nodo viene raggiunto per la miglior via.
-\subsection{Depth first search (pag 607)}
+\subsection{Depth first search (Pag. 607)}
 Al posto di usare una coda usiamo uno stack. Nel caso di prima l'ordine con cui i lati vengono visitati sarebbe quindi: A, B, E, G, H, C, F, D. Possiamo usare questo algoritmo per apprendere alcune caratteristiche del grafo, quali la suddivisione dei vari tipi di lati. Definiamo l'albero risultate dai lati utilizzati dalla ricerca (Baumpfeile) come DFS-tree. Ad ogni nodo associamo un indice, che rappresenta l'ordine con cui viene visitato. Differenziamo il depth-first-begin-index (DFBI), che rappresenta l'ordine con cui vengono inseriti nello stack, e il depth-first-end-index (DFEI), l'ordine con cui vengono allontanati dallo stack. Definiamo dunque i tipi possibili di lati:
 \begin{itemize}
 \item Appartenenti al DFS-tree: Baumpfeile.
@@ -1377,7 +1377,7 @@ DFS(Graph G, Node v,w)
 			SP=SP+{(w,v)}			
 \end{lstlisting}
 In un grafo non diretto non ci sono cross edges. Interessante notare che invertendo l'ordine del DFEI si ottiene un topological sort (dimostrato in un esercizio, penso accada lo stesso senza invertire il DFBI in un grafo connesso e senza cicli). Un'altra possibile applicazione potrebbe essere quella di ricavare uno spanning tree.\todo{Supposizioni logiche, non sicure e non dimostrate} 
-\section{Kürzeste Weg (pag 619)}
+\section{Kürzeste Weg (Pag. 619)}
 Per ogni lato definiamo una funzione $c((v,u))$ che ne associa il costo.
 \subsection{Dijkstra}
 Ammettiamo che tutti i costi siano positivi. Se $p=(a,...,f)$ è una via più corta tra $a$ ed $f$, allora lo devono essere anche tutte le vie intermedie.
@@ -1455,14 +1455,14 @@ Attenzione: se c'è un ciclo negativo il processo potrebbe non finire. Altriment
         if v.distance > u.distance + uv.weight:
            error "Il grafo contiene un ciclo di peso negativo"
 \end{lstlisting}
-\section{Minimale spannende Baum (pag 631)}
+\section{Minimale spannende Baum (Pag. 631)}
 Per risolvere questo problema utilizziamo un procedimento greedy, vale a dire l'applicazione iterativa delle seguenti regole:
 \paragraph*{Regola 1} Tra due ``cut'' non connessi scegli l'arco dal costo minore.
 \paragraph*{Regola 2} Se ci troviamo in un ciclo, elimina il nodo dal costo maggiore.
 \paragraph*{Invariante} L'invariante dell'algoritmo è che l'applicazione di queste regole mantiene il minimum spanning tree parziale minimo. 
 \begin{mytheorem}{9.1}
 Qualsiasi algoritmo che rispetti le precisazioni fatte sopra garantisce l'invariante.
-\paragraph*{Dimostrazione} Fatta in classe e leggibile a pag 629 (abbastanza triviale).
+\paragraph*{Dimostrazione} Fatta in classe e leggibile a Pag. 629 (abbastanza triviale).
 \end{mytheorem}
 \subsection{Kruskal}
 Il principio dell'algoritmo è semplice: inizialmente ogni nodo rappresenta un albero minimale separato. Dopodiché avviene un'iterazione in base al prezzo degli archi: se l'arco appartiene già a uno dei sottoalberi non viene scelto, altrimenti sì, quindi i due sottoalberi vengono uniti. Per un'efficiente implementazione i lati devono essere ordinati in senso crescente già all'inizio e i nodi vengono salvati in una Union find structure. 
@@ -1481,7 +1481,7 @@ for (Edge (v,w):E)
 L'algoritmo impiega $O(|E|\log (|V|))$.
 \subsection{Prim, Dijkstra}
 Iniziamo con un nodo e finché non siamo alla fine, quindi $n-1$ passi, scegliamo ogni volta l'arco che possiede un solo nodo nell'albero e con costo minimo. In questo modo impieghiamo $O(|E|+|V|\log (|V|))$.
-\section{Flüsse in Netzwerken (pag 637)}
+\section{Flüsse in Netzwerken (Pag. 637)}
 Innanzitutto si cerca una via che collega $q$ a $s$ (Quelle und Senke). Dopodiché si costruisce un cosiddetto Restgraph nel modo seguente:
 \begin{center}
 \includegraphics[scale=0.8]{Figures/restgraph.jpg} 
@@ -1567,7 +1567,7 @@ public class MaxFlow {
     }
 }
 \end{lstlisting} 
-\subsection{Maximale Zuordnung in bipartiten Graphen (pag 646)}
+\subsection{Maximale Zuordnung in bipartiten Graphen (Pag. 646)}
 Consideriamo il problema del matching ottimale tra due set. Le coppie possibili possono essere semplicemente modellate come un grafo bipartito, che a sua volta può essere trasformato nella forma utilizzata per i flussi:
 \begin{center}
 \includegraphics[scale=0.5]{Figures/matching.jpg}
