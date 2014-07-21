@@ -233,7 +233,7 @@ versickere(int[] a, int i, int m)
 				i=m //fine		
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
-La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in complesso\todo{??} l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
+La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in totale l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
 
 \section{Mergesort (Pag. 112)}
 Anche mergesort si basa su divide and conquer. Si basa sul fatto che due blocchi dell'array sono già ordinati, quindi possono semplicemente essere uniti in tempo lineare, lasciando scorrere due indici nelle rispettive parti e salvando i valori in ordine crescente in un array temporaneo.
@@ -460,12 +460,12 @@ int dividi(int l,r, pivot)
 	   restituisce il valore di m */
 \end{lstlisting}
 Una volta trovato $m$ abbiamo tre possibilità: la chiave si trova nel primo gruppo, o nel secondo, o l'abbiamo trovata.
-\todo[inline]{Dove c'è scritto ``scegliere pivot v'' non dovrebbe essere un commento??}
+
 \begin{lstlisting}[tabsize=\lstIndent]
 trova (int l,r,i)
 	int m,v
 	if r>l
-		scegliere pivot v
+		//scegliere pivot v
 		m=teile(l,r,v)
 		if i<=m-l
 			trova (l, m-1, i)
@@ -830,6 +830,41 @@ bottom-up(int i)
 \end{lstlisting}
 \paragraph*{Analisi}
 Ogni operazione del vocabolario può essere effettuata in tempo logaritmico.
+
+\section{B-Bäume}
+In questa sezione trattiamo di un tipo di albero bilanciato molto importante se si lavora su una memoria esterna. Ci sono due tipi di memorie esterne: quelle con accesso sequenziale, ad esempio una banda magnetica, e quelle che permettono un accesso diretto, come ad esempio i cd e gli hard disk. In questo caso il supporto è diviso in blocchi, accessibili tramite un determinato indirizzo. Nel caso che gli indirizzi possano essere totalmente salvati nella memoria interna è sufficiente fare una "Indextabelle", organizzata ad esempio come albero AVL. Il tempo di accesso ad un indice può essere in questa maniera tralasciato, poiché impiega molto meno che l'accesso e la lettura del blocco da parte del disco rigido. Se però gli indici non possono essere salvati nella memoria del computer è dunque necessario ricorrere a questa particolare struttura dati, in cui i nodi rappresentano le pagine ed ogni nodo contiene chiavi e puntatori verso altri nodi. 
+\paragraph{Definizione} Un B-Baum dell'ordine m (anche $\lceil \frac{m}{2} \rceil -m-Baum$) è definito nel seguente modo:
+\begin{itemize}
+\item Tutte le foglie hanno la stessa altezza
+\item Ogni nodo interno tranne la radice e chiaramente le foglie ha almeno $\lceil \frac{m}{2}\rceil$ figli
+\item La radice ha almeno 2 figli
+\item Ogni nodo ha al massimo m figli
+\item Ogni nodo con i fligli contiene i-1 chiavi
+\item Per ogni nodo p con l chiavi $s_1, ..., s_l$ e (l+1) figli $p_0, ..., p_{l+1}$ tutte le chiavi del sottoalbero $T_{p_{i-1}}$ minori di $s_i$ che a sua volta è minore di tutte le chiavi in $T_{p_i}$
+\end{itemize}
+In numero di foglie è sempre superiore di uno a quello delle chiavi. Da qui segue che:
+\begin{mytheorem}{}
+$N_{min}=2\lceil\frac{m}{2}\rceil ^{h-1}\leq N+1\leq m^h=N_{max}$, quindi che:
+$$\log_m(N+1)\leq 1+\log_{\lceil \frac{m}{2}\rceil} \left(\frac{n+1}{2}\right)$$
+L'altezza dell'albero appartiene dunque alla classe O(log(n)). Dimostrazione a pagina 343 (deriva direttamente dai sei punti di definizione).
+\end{mytheorem}
+\begin{center}
+\includegraphics[scale=0.7]{Figures/bbaumex.jpg}
+\end{center}
+\paragraph{Search}
+La ricerca di una chiave può essere vista come una generalizzazione della ricerca bianria. Da notare che la ricerca all'interno di un nodo avviene nella memoria principale (poiché il blocco viene interamente caricato), quindi può essere trascurata.
+\paragraph{Extend}
+Per aggiungere una nuova chiave si cerca innanzitutto nell'albero. La ricerca finisce senza successo in una foglia rappresentante la posizione in cui avrebbe dovuto trovarsi la chiave (chiamiamola x). Sia p il padre di questa foglia con l chiavi. 
+\begin{itemize}
+\item Se p ha ancora meno di m-1 chiavi inserisci x nelle chiavi di p e crea una nuova foglia (bisogna aggiungere anche un puntatore).
+\item Se p ha già m-1 chiavi aggiungiamo  dividiamo in due il nodo (da una parte tutte le chiavi >x e dall'altra tutte quelle <). Dopodiché aggiungiamo x al padre di p assieme ad un puntatore che punta su una delle due parti (vedi immagine). 
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.5]{Figures/bbaumadd.png}
+\end{center}
+Dato che l'altezza dell'albero è logaritmica è chiaro che la ricorsione va avanti per massimo O(log(n)) volte.
+\paragraph{Remove}
+Funziona in modo analogo ad extend ma con una ricorsione al contrario: se dopo l'eliminazione ci sono meno chiavi del numero consentito si unisce il nodo con un fratello.
 \chapter{Manipolazioni di dati}
 \section{Priority Queue (Pag. 404)}
 Le priority queue (in tedesco dette Vorrangswarteschlangen) sono semplicemente delle code in cui ad ogni elemento è abbinata una priorità. Ad esempio chi ha il numero più basso passa prima di chi ha il numero più alto. Esse possono essere implementate in due differenti modi.
