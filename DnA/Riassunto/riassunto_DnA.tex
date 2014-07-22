@@ -697,8 +697,45 @@ BrentEinfuegen (Datensatz ds)
 \end{lstlisting}
 Grazie a questo algoritmo il tempo diventa il seguente:
 $$C_n = 1+\frac{\alpha}{2}+\frac{\alpha ^3}{4}+... <2,5$$
-\section{Dynamische Hashverfahren}
-\todo[inline]{voi sapete cosa hanno fatto, perché mi sembra impossibile che in mezza mattina abbiano coperto l'intero capitolo!?}
+\section{Dynamische Hashverfahren (Pag. 225)}
+In questa sezione tratteremo di un sistema di hashing dinamico, vale a dire in cui la dimensione della tabella hash varia in base al numero di elementi che ospita. Risulta quindi necessario trovare una funzione hash che cambi col tempo. Questo principio si applica molto bene quando la hash table si situa in una memoria esterna, ad esempio un hard disk. Anche in questo caso (come nei B-Bäume) dividiamo il disco rigido (Festplatte) in $m$ blocchi, ognuno dei quali ospita $b$ elementi. Siano $m$ il numero di blocchi, $n$ il numero di elementi e $ds$ un dato. Da notare che gli indirizzi dei blocchi vanno in questo caso da $0$ ad $m-1$. Di seguito ecco il principio generale:
+\begin{lstlisting}
+add (Dato ds)
+	while (hd con m blocchi e n chiavi troppo piccolo per ds)
+		//inserisci un nuovo blocco all'indirizzo m
+		//scegli un indirizzo i tra 0 ed m-1
+		//adatta la funzione h
+		//dividi i dati del blocco i in funzione di h tra i ed m
+		m=m+1
+	//inserisci ds al blocco con indirizzo h(ds.key)	
+\end{lstlisting}
+La ricerca consiste soltanto nel controllare il contenuto del blocco $h(k)$. Per la rimozione di un elemento si procede in modo analogo all'inserimento, riducendo di un blocco la tabella se troppo grande.
+\subsection{Lineares Hashing (Pag. 227)}
+Nell'hashing lineare la funzione $h$ consiste in due funzioni $h_1$ ed $h_2$. Per una grandezza iniziale di $m_0$ blocchi vale sempre che: $m_0 2^ l\leq m \leq m_0 2^{l+1}$, dove $l$ indica il Dateilevel, nonché il numero di volte che si è dovuto raddoppiare la dimensione dei blocchi. Per ogni chiave vale $h_2(k)=h_1(k)$ oppure $h_2(k)=h_1(k)+m_02^l$. Un esempio concreto di funzioni è il seguente: $h_1(k)=k \mbox{ mod } (m_02^l)$, $h_2(k)=k \mbox{ mod } (m_02^l)$. Le collisioni vengono trattate nel seguente modo: finché c'è spazio nel blocco primario vengono aggiunte le chiavi, dopodiché viene inserito un puntatore ad un blocco esterno (blocco secondario). Da notare che questo blocco secondario è da contare come memoria extra utilizzata. Il fattore per aumentare la dimensione della tabella di un blocco è il fattore di occupazione $\frac{n}{bm}$. Quando questo fattore supera una certa soglia viene aggiunto un nuovo blocco.
+\paragraph*{Esemmpio} In questo esempio utilizziamo la seguente funzione: rappresentando i numeri in forma binaria essi vanno a finire nel blocco il cui indirizzo corrisponde ai most significant bit della chiave (letti al contrario). 
+\begin{center}
+\includegraphics[scale=0.5]{Figures/bsp1.png}
+\includegraphics[scale=0.5]{Figures/bsp2.png}
+\includegraphics[scale=0.6]{Figures/bsp3.png}
+\end{center}
+\begin{lstlisting}
+add (Datensatz ds, int m,n,i,l, double schwelle)
+	if (n+1)/(b*m)>schwelle
+		//riserva un blocco con indirizzo m
+		//dividi i dati del blocco i secondo h(l+1)
+		m++
+		if i<m0*2^l-1
+			i++
+		else
+			i=0
+			l++
+	n++
+	if (i<=h(l)(ds.key) && h(l)(ds.key)<=m0*2^l-1)
+		//scrivi ds nel blocco h(l)(ds.key)
+	else
+		//scrivi ds nel blocco h(l+1)(ds.key)	
+\end{lstlisting}
+
 \chapter{Bäume}
 A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
 \section{AVL-Tree (Pag. 284)}

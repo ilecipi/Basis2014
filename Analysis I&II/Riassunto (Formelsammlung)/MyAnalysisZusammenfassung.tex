@@ -1,0 +1,1147 @@
+\documentclass[a4paper, 9pt, DIV=24]{scrartcl}
+\usepackage[utf8]{inputenc}
+
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage{fancyhdr}
+
+\usepackage{enumitem}
+
+%opening
+\title{Analysis II -- Zusammenfassung}
+\author{Sandro Marcon}
+
+\DeclareMathOperator{\clos}{clos}
+\DeclareMathOperator{\Int}{int}
+\DeclareMathOperator{\arcsinh}{arcsinh}
+\DeclareMathOperator{\arccosh}{arccosh}
+\DeclareMathOperator{\arctanh}{arctanh}
+\DeclareMathOperator{\grad}{grad}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\Div}{div}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Zusammenfassung Analysis I, HS 2013, Analysis II, FS 2014}
+\fancyhead[R]{Sandro Marcon, B.\ Sc.\ ETH Informatik, Legi-Nr.:  13-932-868 S. \thepage}
+
+\begin{twocolumn}
+\tableofcontents
+\end{twocolumn}
+
+\clearpage
+
+\section{Logik}
+
+\subsection{Vollständige Induktion}
+Kann für ein Prädikat $P(n)$ bewiesen werden, dass $P(n_0)$ und $\forall n\in\N: n > n_0 \wedge P(n) \rightarrow P(n+1)$ gilt,
+dann folgt daraus $\forall n\in\N: n \geq n_0 \rightarrow P(n)$.
+\paragraph{Induktionannahme (IA)} bezeichnet das Prädikat $P(n)$.
+\paragraph{Induktionsverankerung (IV)} ist der Beweis von $P(n_0)$.
+\paragraph{Induktionsschritt (IS)} ist der Beweis von $P(n) \rightarrow P(n+1)$.
+
+\subsection{Definitionen}
+\paragraph{Wahrheitstafel als Definition gängiger, bool'scher Operatoren}
+\[
+\begin{array}{ccccccc}
+A&B&\neg A&A \wedge B&A \vee B & A \rightarrow B & A \leftrightarrow B \\\hline
+0&0&1&0&0&1&1\\\hline
+0&1&1&0&0&1&0\\\hline
+1&0&0&0&1&0&0\\\hline
+1&1&0&1&1&1&1\\
+\end{array}
+\]
+$$ A \rightarrow B \equiv \neg A \vee B$$
+\section{Mengen}
+\subsection{Definitionen}
+Seien im Folgenden $A, B$ Mengen.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $A \cup B := \{x\, |\, x \in A \wedge x \in B\}$ -- \emph{Vereinigung}
+ \item $A \cap B := \{x\, |\, x \in A \vee x \in B\}$ -- \emph{Durchschnitt}
+ \item $A \backslash B := A - B := \{x\, |\, x \in A \wedge x \notin B\}$ -- \emph{Differenz}
+ \item $A^C := \overline{A} := {x\, |\, x \notin A} = M \backslash A$ -- \emph{Komplement (bzgl. $M$)}
+ \item $A \subseteq B := \forall x \in A: x \in B.$ -- \emph{Teilmenge}
+\end{enumerate}
+\subsection{Rechenregeln}
+Diese Beweise (und ähnliche) können durch Einsetzen der obigen Definitionen und logisches Umformen geführt werden.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $A \cup B = B \cup A, \\ A \cap B = B \cap A.$
+ \item $A \cup (B \cup C) = (A \cup B) \cup C, \\ A \cap (B \cap C) = (A \cap B) \cap C.$
+ \item $A \cup (B \cap C) = (A \cap B) \cup (A \cap C), \\ A \cap (B \cup C) = (A \cup B) \cap (A \cup C).$
+ \item $(A\backslash B) \cup C = (A \cup B) \cap (B^C \cup C), \\ (A\backslash B) \cap C = A \backslash (B \cup C^C).$
+ \item $(A \cup B)^C = A^C \cap B^C, \\ (A \cap B)^C = A^C \cup B^C.$
+ \item $(A\backslash B) = A \cap B^C.$
+ \item $(A\backslash B) \backslash C = A \backslash (B \cup C).$
+\end{enumerate}
+\subsection{Wichtige Mengen}
+\begin{description}
+ \item[$\N_0$, natürliche Zahlen mit 0] $\N := \{0,1,2,3,\dots\}.$
+ \item[$\N$, natürliche Zahlen] $\N := \{1,2,3,\dots\} = \N\backslash\{0\}.$
+ \item[$\mathbb{Z}$, ganze Zahlen] $\mathbb{Z} := \{\dots,-2,-1,0,1,2,\dots\}.$
+ \item[$\mathbb{Q}$, rationale Zahlen] $\mathbb{Q} := \{\frac{p}{q}\, |\, p \in \mathbb{Z}, q \in \N_0\}.$
+ \item[$\mathbb{R}$, reelle Zahlen] $\mathbb{R} := $ rationale und irrationale Zahlen, $\mathbb{Q} \subseteq \mathbb{R}$.
+ \item[$\mathbb{C}$, reelle Zahlen] $\mathbb{C} := \{a - bi\, |\, a, b \in \mathbb{R}\}, $ mit $i^2 = -1$.
+\end{description}
+\subsection{Intervalle}
+\begin{tabular}{ll}
+$[a,b] := \{x\in\mathbb{R}\, |\, a \leq x \leq b\}$ & abgeschlossen \\
+$]a,b] := \{x\in\mathbb{R}\, |\, a \leq x < b\} := (a,b]$ & halboffen (links) \\
+$[a,b[\ := \{x\in\mathbb{R}\, |\, a < x \leq b\} := [a,b)$ & halboffen (rechts) \\
+$]a,b[\ := \{x\in\mathbb{R}\, |\, a < x < b\} := (a,b)$ & offen \\
+\end{tabular}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item Offene Intervalle sind offene Mengen
+ \item Abgeschlossene Intervalle sind abgeschlossene Mengen
+ \item Abgeschlossene, beschränkte Intervalle ($a,b \neq \infty$) sind kompakt.
+\end{enumerate}
+\subsection{Mächtigkeit}
+Zwei Mengen $A, B$ heißen \emph{gleichmächtig}, wenn es eine bijektive Abbildung $f: A \rightarrow B$ gibt.
+Wir schreiben $|A| = |B|$. \\
+Es gilt $|\N| = |\mathbb{Z}| = |\mathbb{Q}| < |\mathbb{R}| = |[a,b]| = |\mathbb{C}|$.
+
+\clearpage
+\section{Folgen, Reihen, Funktionen}
+\subsection{Reellen Zahlen}
+\subsubsection{Ordnungsvollständigkeitaxiom}
+Seien $A, B \subset \R$ nicht leere Teilmengen, so dass $a\leq b, \forall a \in A, b \in B$ gilt. Dann $\exists c \in \R : a\leq c \leq b$.
+\subsubsection{Youngsche Ungleichung}
+$$\forall a, b \in R, \delta >0 \mbox{ gilt } 2|ab|\leq \delta a^2+\frac{b^2}{\delta}$$
+\subsubsection{Infimum und Supremum}
+Sei $X \subset \R$.
+\begin{itemize}
+\item X nach oben beschränkt falls $\exists c \in \R : x\leq c, \forall x \in X$.
+\item Ein Element $a \in X$ heisst Maximum falls $x\leq a, \forall x \in X$.
+\item Die kleinste obere Schranke heisst Supremum.
+\end{itemize}
+\subsubsection{Archimedisches Eigenschaft}
+\begin{itemize}
+\item Zu jeder Zahl $0 < b \in \R \exists n \in \N : b<n$
+\item Seien $x>0, y \in \R $ gegeben. Dann $\exists n \in Z : y<nx$
+\item $x,y,a \in \R (a\leq x \leq a+\frac{y}{n}, \forall n \in N) \rightarrow x=a$
+\end{itemize}
+\subsection{Zwischenwertsatz}
+Es sei $f: [a,b] \to \R$ eine stetige reelle Funktion, die auf einem Intervall definiert ist. Dann existiert zu jedem $u\in [f(a), f(b)]$ (falls f(a)$\leq$ f(b)) bzw. $u\in [f(b), f(a)]$ (falls f(b) $<$ f(a)) ein $c\in [a,b] \mbox{ mit } f\left(c\right)=u$.
+\subsection{Folgen}
+\subsubsection{Definitionen}
+Falls nicht anders angegeben, ist $(a_n)_{n\in\N}$ eine Folge.
+Der \textbf{Grenzwert} $a$ einer Folge existiert genau dann,
+wenn $\forall \epsilon > 0 \exists n(\epsilon) \in\N : \forall n>n(\epsilon) |a - a_n| < \epsilon$
+Wir schreiben dann $a = \lim_{n\rightarrow\infty} a_n$ oder auch $a_n \rightarrow a$. Es gibt auch eine andere Variante der Definition:
+eine Folge konvergiert gegen a, falls 
+$$ \forall \epsilon >0 |\{n \in \N : a_n \not \in (a-\epsilon, a+ \epsilon)\}|<\infty $$
+\begin{description}
+ \item[konvergent] Der Grenzwert existiert.
+ \item[divergent] Der Grenzwert existiert nicht.
+ \item[Nullfolge] $a = 0$.
+ \item[beschränkt] $\exists C\in\mathbb{R}: |a_n| \leq C$.
+ \item[unbeschränkt] Falls nicht beschränkt. Immer \emph{divergent}!
+ \item[monoton wachsend] $a_n \geq a_{n+1}, \forall{n\in\N}$
+ \item[monoton fallend] $a_n \leq a_{n+1}, \forall{n\in\N}$
+ \item[streng monoton wachsend] $a_n > a_{n+1}, \forall{n\in\N}$
+ \item[streng monoton fallend] $a_n < a_{n+1}, \forall{n\in\N}$
+ \item[alternierend] $a_n < 0 \implies a_{n+1} > 0, \forall{n\in\N}$
+ \item[bestimmt divergent / uneigentlich konvergent] $a = \pm \infty$
+ \item[Teilfolge] Sei a(n) eine Folge und l(n) eine streng monoton wachsende Folge positiven natürliche Zahlen. Dann ist $a_{l_n}$ eine Teilfolge. Durch Weglassen von Gliedern aus $(a_n)_{n\in\N}$ entstandene, unendliche Folge. 
+ \item[Häufungspunkt] a ist ein Häufungspunkt falls es eine gegen a konvergierende Teilfolge gibt. 
+ 
+ $b = \lim_{n\rightarrow\infty} b_n$, $(b_n)_{n\in\N}$ Teilfolge.
+ \item[$\limsup =$] $\max\{b_n\text{ konvergente Teilfolge } | \lim_{n\rightarrow\infty} b_n\}$.
+ \item[$\liminf =$] $\min\{b_n\text{ konvergente Teilfolge } | \lim_{n\rightarrow\infty} b_n\}$.
+\end{description}
+
+\subsubsection{Konvergenzkriterien}
+\begin{enumerate}[label={(}\arabic*{)}]
+\item $a_n \rightarrow a \implies a_n - a \rightarrow 0 \implies |a_n - a| \rightarrow 0$.
+\item Jede Teilfolge einer konvergenten Folge konvergiert gegen ihren Grenzwert.
+      Eine konvergente Folge hat also genau einen Häufungspunkt.
+\item $(a_n)$ monoton wachsend und nach oben beschränkt $\implies$ $(a_n)$ konvergent.
+\item $(a_n)$ monoton fallend und nach unten beschränkt $\implies$ $(a_n)$ konvergent.
+\item $(\sum_{n=0}^{\infty} a_n)$ konvergent $\implies$ $a = 0$, siehe Reihen.
+\item $\exists f, f(n) = a_n \wedge \lim_{x\rightarrow\infty} f(x) = a \implies \lim_{n\rightarrow\infty} a_n = a$.
+\item $\exists (a_n), (b_n), (c_n) \text{ mit } a_n \leq b_n \leq c_n \wedge a = c \implies b = a,$\\
+      sogenanntes \textbf{Einschließungskriterium}.
+\end{enumerate}
+
+\paragraph{Bolzano-Weierstrass}
+Jede beschränkte Folge $(a_n)_{n \in \N }$ besitzt eine konvergente Teilfolge. Durch Weglassen von Gliedern entstandene, unendlich viele Teilfolgen. 
+\paragraph{Cauchy-Kriterium}
+Eine Folge $(a_n)_{n\in\N}$ heißt \emph{Cauchy-Folge}, falls
+ \[ \forall \epsilon > 0: \exists n_0 \in\N: \forall n,l \geq n_0: |a_n - a_l| < \epsilon \]
+Insbesondere gilt, $(a_n)_{n\in\N}$ konvergent $\iff (a_n)$ Cauchy-Folge.\\[.2em]
+Siehe auch \textbf{Tipps an Beispielen} für angewandte Kriterien.
+
+\subsubsection{Rechenregeln für Eigenschaften}
+\paragraph{Addition}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $(a_n), (b_n)$ konvergent $\implies (a_n + b_n)$ konvergent.
+ \item $(a_n), (b_n)$ beschränkt $\implies (a_n + b_n)$ beschränkt.
+ \item $(a_n)$ konvergent, $(b_n)$ divergent $\implies (a_n + b_n)$ divergent.
+ \item $(a_n)$ beschränkt, $(b_n)$ unbeschränkt $\implies (a_n + b_n)$ unbeschränkt.
+ \item $(a_n)$ beschränkt, $(b_n) \rightarrow \pm \infty \implies (a_n + b_n) \rightarrow \pm \infty$.
+ \item $(a_n) \rightarrow \pm\infty$, $(b_n) \rightarrow \pm\infty \implies (a_n + b_n) \rightarrow \pm\infty$.
+\end{enumerate}
+\paragraph{Multiplikation}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $(a_n)$ Nullfolge, $(b_n)$ beschränkt $\implies (a_n \cdot b_n)$ Nullfolge.
+ \item $(a_n), (b_n)$ konvergent $\implies (a_n \cdot b_n)$ konvergent.
+ \item $(a_n), (b_n)$ beschränkt $\implies (a_n \cdot b_n)$ beschränkt.
+ \item $(a_n) \rightarrow a, a \neq 0$, $(b_n)$ divergent $\implies (a_n \cdot b_n)$ divergent.
+\end{enumerate}
+\paragraph{Grenzwerte} Wir setzen $a := \lim_{n\rightarrow\infty} a_n, b := \lim_{n\rightarrow\infty} b_n.$
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\lim_{n\rightarrow\infty}(a_n \pm b_n) = a \pm b.$
+ \item $\lim_{n\rightarrow\infty}(c\cdot a_n) = c\cdot a.$
+ \item $\lim_{n\rightarrow\infty}(a_n \cdot b_n) = a \cdot b.$
+ \item $\lim_{n\rightarrow\infty}((a_n)^c) = a^c, c$ konstant.
+ \item $\lim_{n\rightarrow\infty}(\frac{a_n}{b_n}) = \frac{a}{b}, b \neq 0.$
+\end{enumerate}
+
+\subsubsection{Hilfsmethoden}
+\paragraph{Referenzfolgen}
+Für folgende Folgen gilt: weiter rechts stehende wachsen schneller gegen $+\infty$.
+\[1, \ln(n), n^a (a > 0), q^n (q > 1), n!, n^n\]
+
+\paragraph{Bernoullische Ungleichung}
+$(1+x)^n \geq 1 + nx, x \geq -1, n \in \N.$
+
+\paragraph{Stirlingformel -- Abschätzungen für $n!$}
+\[\sqrt{2\pi n}(\frac{n}{e})^n \leq n! \leq \sqrt{2\pi n}(\frac{n}{e})^n \cdot e^{\frac{1}{12n}}, \] insbesondere gilt 
+$\sqrt{2\pi n}(\frac{n}{e})^n \approx n!$
+\subsubsection{Wichtige Limes}
+\begin{itemize}
+\item $\lim_{n\rightarrow \infty} \left( 1+\frac{1}{n} \right)^n=e$
+\end{itemize}
+\subsubsection{Tipps an Beispielen}
+\paragraph{Gruppieren von Gliedern}
+
+\paragraph{Wurzel}
+
+\paragraph{Bruch}
+
+\paragraph{$n$ im Exponent}
+
+\paragraph{Satz von l'Hospital}
+$$ \lim \frac{f(x)}{g(x)}=\lim \frac{f'(x)}{g'(x)} \mbox{ nur im Fälle } \frac{0}{0} \mbox{ oder } \frac{\infty}{\infty}$$
+
+\subsubsection{Folgen in $\R^n$}
+Alles gilt wie in R (durch die Norm). 
+\paragraph{Definition von Limes}
+Wir definieren:
+$$B_{<\epsilon}(a)=\{ x \in \R^d : ||x-a||<\epsilon \}$$
+Eine Folge konvergiert gegen a falls $\forall \epsilon >0$ die Menge der Indizen für welcher $a_n \not \in B_{<\epsilon}(a)$ endlich ist.
+\paragraph{Satz 3.27}
+Eine Folge $a_n$ konvergiert in $\R^d$ genau dann, wenn jede Folge $a_n^i, i \in \{1,...,d\}$ konvergiert in R.
+\paragraph{Lemma 3.28}
+$$x \in \R^d \rightarrow \max_{1\leq i \leq d} |x^i| \leq ||x|| \leq \sqrt{d} \max_{1\leq i\leq d} |x^i|$$
+\subsection{Reihen}
+\subsubsection{Definitionen}
+Eine \emph{Reihe} $\sum_{k = 1}^\infty a_k$ heißt \emph{konvergent} mit Grenzwert $s$, wenn die Folge der \emph{Partialsummen}
+$(S_n)_{n \in \N}$, $S_n := \sum_{k=1}^n a_k$ gegen $s$ konvergiert. Es gilt also wie folgt.
+\[ \sum_{k=1}^\infty a_k = s \iff \lim_{n\rightarrow\infty} \sum_{k=1}^n a_k = s \]
+
+\subsubsection{Konvergenzkriterien}
+
+\paragraph{Nullfolge als Notwendigkeit}
+Falls $(a_n)$ keine Nullfolge, gilt Folgendes nicht und somit konvergiert auch nicht folgende Reihe.
+\[ \sum_{n=1}^\infty a_n \text{ konvergent} \implies \lim_{n \to \infty} a_n = 0 \]
+
+\paragraph{Cauchy-Kriterium}
+$\forall \epsilon > 0: \exists n_0 \in \N: \forall n \geq m \geq n_0 \geq 1: | \sum_{k=1}^n a_k | < \epsilon$
+
+\paragraph{Absolute Konvergenz}
+Konvergiert $\sum_{n=1}^\infty |a_n|$, so sagen wir die Reihe konvergiert absolut.
+Es gilt $\sum_{n=1}^\infty |a_n|$ konvergent $ \implies \sum_{n=1}^\infty a_n$ konvergent.
+Die Umkehrung gilt i. A. nicht. Bemerkung: die ungeordnete Reihe hat der gleiche Limes nur wenn die Reihe absolut konvergiert.
+
+\paragraph{Majorantenkriterium}
+Ist $|a_n| \leq b_n$ und gibt es eine konvergente \emph{Majorante} $\sum_{n=1}^\infty b_n$, so konvergiert $\sum_{n=1}^\infty a_n$ absolut.
+
+\paragraph{Minorantenkriterium}
+Ist $a_n \geq b_n \geq 0$ und gibt es eine divergente \emph{Minorante} $\sum_{n=1}^\infty b_n$, so divergiert $\sum_{n=1}^\infty a_n$.
+
+\paragraph{Leibnizkriterium}
+Wenn folgende 3 Kriterien erfüllt sind, konvergiert $\sum_{n=1}^\infty a_n$.
+\begin{enumerate}[label={(}\arabic*{)}]
+  \item $(a_n)$ ist alternierend, also $\forall n\in\N: a_n < 0 \implies a_{n+1} > 0$
+  \item $a_n \to 0$ oder $|a_n| \to 0$
+  \item $(|a_n|)$ ist monoton fallend
+\end{enumerate}
+
+\paragraph{Wurzelkriterium}
+\[
+  \sqrt[n]{\left | a_n \right |} \to q \implies
+  \begin{cases}
+    q < 1 & \implies \sum_{n=1}^\infty a_n \text{ konvergiert absolut}\\
+    q = 1 & \implies \text{keine Aussage}\\
+    q > 1 & \implies \sum_{n=1}^\infty a_n \text{ divergiert}
+  \end{cases}
+\]
+\paragraph{Quotientenkriterium}
+\[
+\left| \frac{a_{n+1}}{a_n} \right| \to q \implies
+\begin{cases}
+  q < 1 & \implies \sum_{n=1}^\infty a_n \text{ konvergiert absolut} \\
+  q = 1 & \implies \text{keine Aussage}\\
+  q > 1 & \implies \sum_{n=1}^\infty a_n \text{ divergiert}
+\end{cases}
+\]
+
+\paragraph{Uneigentliche Integralen}
+$$\sum_b^{\infty} a_n \mbox{ konvergiert } \iff \int_b^{\infty} a(x)dx \mbox{ konvergiert}$$
+
+\subsubsection{Potenzreihe}
+Die \emph{Potenzreihe} hat die allgemeine Form \[ \sum_{n=0}^\infty a_n (x - x_0)^n = \sum_{n=0}^\infty a_n z^n, \]
+dabei nennt man $x_0$ den \emph{Entwicklungspunkt}.
+
+\paragraph{Wichtige Potenzreihen}
+
+\begin{itemize}
+ \item $ e^x = \exp(x) = \sum_{n=0}^\infty \frac{x^n}{n!} = \frac{x^0}{0!} + \frac{x^1}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots $
+\item $ \sin (x) = \sum_{n=0}^\infty (-1)^n\frac{x^{2n+1}}{(2n+1)!} = \frac{x}{1!}-\frac{x^3}{3!}+\frac{x^5}{5!}\mp\cdots $
+\item $ \cos (x) = \sum_{n=0}^\infty (-1)^n\frac{x^{2n}}{(2n)!} = \frac{x^0}{0!}-\frac{x^2}{2!}+\frac{x^4}{4!}\mp\cdots $
+\end{itemize}
+
+
+\paragraph{Konvergenzradius} Der \emph{Konvergenzradius} sei wie folgt definiert.
+\[ r:=\sup \{ |z|\ \left|\ \sum_{n=0}^{\infty}a_n z^n\ \text{ist konvergent}\right.\}\]
+Es gilt also insbesondere, dass die Reihe für alle $|z| < r$ konvergiert und für für alle $|z| > r$ divergiert.
+Er kann mit der \emph{Formel von Cauchy-Hadamard} wie folgt berechnet werden.
+\[ r = \frac{1}{\limsup_{n\to\infty} \sqrt[n]{|a_n|}} \]
+Gilt außerdem, dass ab einem $n_0\in\N$ für alle $n \geq n_0$ $a_n \neq 0$ gilt, so können wir auch wie folgt $r$ berechnen.
+\[ r = \lim_{n\to\infty} \left | \frac{a_n}{a_{n+1}} \right | \]
+
+\paragraph{Randpunkte}
+Der Konvergenzradius gibt keine Hinweise auf das Konvergenzverhalten der Reihe an den sogenannten \emph{Randpunkten} $\pm r$.
+Hierzu können z. B. die Randpunkte in die Reihe eingesetzt werden und anschließend die Konvergenz überprüft bzw. widerlegt werden.
+
+\subsubsection{Rechenregeln}
+Für \emph{konvergente} Reihen gilt Folgendes.
+\[
+  \sum_{n=1}^\infty a_n = a, \sum_{n=1}^\infty b_n = b \implies
+  \sum_{n=1}^\infty (\alpha a_n + \beta b_n) = \alpha a + \beta b
+\]
+Für \emph{absolut konvergente} Reihen gilt außerdem, dass folgende Reihe absolut und unabhängig von der Summationsreihenfolge konvergiert.
+\[
+  \sum_{k,l=1}^\infty a_k b_l = \sum_{k=1}^\infty a_k \cdot \sum_{l=1}^\infty b_l
+\]
+
+\subsection{Funktionen}
+Falls nicht angegeben, ist $f$ Abkürzung für $f: \Omega \mapsto \R^n$.
+\subsubsection{Grenzwerte}
+\paragraph*{Definition} $f$ hat an der Stelle $x_{0} \in \R^{d}$ den \emph{Grenzwert} $a$, falls für jede Folge $(x_k)_{k\in \N}$ in $\Omega$ mit $x_{k} \to x_{0}\, (k \to \infty)$ gilt $f(x_{k}) \to a$.
+\subsubsection{Stetigkeit}
+\paragraph{$\epsilon$-$\delta$-Kriterium} $\lim_{x\rightarrow x_0} f(x) = a, $ wenn Folgendes gilt.
+\[\forall\epsilon>0:\exists\delta>0: \forall x \in \Omega: |x-x_0| < \delta \implies |f(x) - f(x_0)| < \epsilon \]
+\paragraph{Definition}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\lim_{x\rightarrow x_0} f(x) = f(x_0) \implies f(x)$ \emph{stetig} im Punkt $x_0$.
+ \item $\lim_{x\rightarrow x_0} f(x) = a \implies f(x)$ \emph{stetig ergänzbar} in $x_0$.
+ \item $\forall x_0\in\Omega: f(x) $ stetig in $x_0 \implies f(x)$ \emph{stetig}.
+\end{enumerate}
+
+\paragraph{Sätze über punktweise Stetigkeit}
+Sei $f$ stetig in $x_0$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\lim_{x\rightarrow x_0} f(x) = f(\lim_{x\rightarrow x_0} x)$.
+ \item $\lim_{x\nearrow x_0} f(x) = f(x_0) = f(\lim_{x\searrow x_0} x)$ wenn existent.
+ \item $\lim_{n\rightarrow \infty} x_n = x_0 \implies \lim_{n\rightarrow \infty} f(x_n) = f(x_0)$, für alle Folgen $(x_n)$. -- \emph{Folgenkriterium}.
+ \item Sei $f:\lbrack a,b\rbrack\to\R$ stetig, streng monoton wachsend (d.h. $x<y=f(x)<f\left( y\right)$). Dann ist
+$$\mbox{Bild(f)}=[c,d]=\left[ f\left( a\right), f\left( b\right)\right]$$
+$f:\lbrack a,b\rbrack\to\lbrack c,d\rbrack$ ist bijektiv und $f^{-1}:\lbrack c,d\rbrack\to\lbrack a,b\rbrack$ ist stetig.
+\end{enumerate}
+
+\paragraph{Gleichmäßige Stetigkeit}
+$f$ heißt \emph{gleichmäßig stetig}, wenn gilt:
+\[\forall\epsilon>0\exists\delta>0: \forall x,y \in \Omega: |x-y| < \delta \implies |f(x) - f(y)| < \epsilon \]
+Unterschied zur punktweisen Stetigkeit ist, dass $\delta$ unabhängig von der Wahl von $y$ bzw. $x_0$ ist.
+
+\paragraph{Lipschitz-Stetigkeit}
+$f: \Omega \subseteq \R^d \rightarrow \R^n$ heißt \emph{Lipschitz-stetig} mit \emph{Lipschitz-Konstante} $L$, wenn gilt:
+\[ \forall x,y\in\Omega: \|f(x)-f(y)\| \leq L\|x-y\|\]
+
+\paragraph{Lokale Lipschitz-Stetigkeit}
+$f: \Omega \subseteq \R^d \rightarrow \R^n$ heißt \emph{lokal Lipschitz-stetig},
+falls zu jedem $x_0\in\Omega$ eine Umgebung $U = B_r(x_0)\cap\Omega$ existiert,
+so dass $f|_U : x \in U \mapsto f(x) \in \R^n$ Lipschitz-stetig ist.
+
+
+\paragraph{Sätze über gleichmäßige und Lipschitz-Stetigkeit}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item Ist $f$ Lipschitz-stetig mit Konstante $L$, so ist $f$ gleichmäßig stetig, z. B. mit $\delta = \epsilon/L$.
+ \item Ist $f$ gleichmäßig stetig, dann ist $f$ in $\Omega^C$ stetig ergänzbar.
+ \item Ist umgekehrt $\Omega$ beschränkt, $f$ stetig und in $\Omega^C$ stetig ergänzbar, so ist $f$ auch gleichmäßig stetig.
+\end{enumerate}
+
+\subsubsection{Folgen von Funktionen}
+Eine \emph{Funktionsfolge} $(f_n)_{n\in\N}$ \emph{konvergiert punktweise} auf $I \subseteq \R$ gegen $f$, wenn $\forall x\in I: f_n(x) \rightarrow f(x)$:
+\[ \forall \epsilon > 0: \forall x \in I: \exists n_0 \in \N: n \geq n_0 \implies |f_n(x)-f(x)| < \epsilon \]
+Sie \emph{konvergiert gleichmäßig} auf $I$ gegen $f$, wenn $sup_{x\in I} |f_n(x) - f(x)| \rightarrow 0$ gilt.
+Insbesondere ist also das $n_0$ nicht mehr abhängig von einem $x$.
+\[ \forall \epsilon > 0: \exists n_0 \in \N: \forall x \in I: n \geq n_0 \implies |f_n(x)-f(x)| < \epsilon \]
+
+\emph{Tipp: } Gleichmäßige Konvergenz kann häufig durch Setzen von $x := n$, oder $x := \frac{1}{n}$ widerlegt werden.
+Denn $|f_n(x) - f(x)|$ muss gegen Null streben, was dann aber nicht der Fall ist.
+
+\subsubsection{Differentialrechnung}
+
+\paragraph{Definition}
+Wir sagen $f: I \rightarrow \R$ ist in $x_0 \in I$ \emph{differenzierbar}, wenn folgender Grenzwert existiert.
+\[
+ \lim_{x\rightarrow x_0} \dfrac{f(x) - f(x_0)}{x - x_0} =: \dfrac{d}{dx} f(x_0) =: f'(x_0)
+\]
+Ist $f$ für alle $x_0 \in I$ differenzierbar, heißt die Funktion selbst \emph{differenzierbar}.
+Dann ist die Funktion $f'(x)$ die \emph{Ableitung} von $f$.
+Gilt außerdem, dass $f'(x)$ stetig ist, so ist $f$ \emph{stetig differenzierbar}.
+
+\paragraph{Mittelwertsatz -- Satz von Lagrange}
+Ist $f$ auf $[a,b]$ stetig und in $]a,b[$ differenzierbar, so gibt es ein $c \in ]a,b[$ mit
+\[ \dfrac{f(b) - f(a)}{b-a} = f'(c) \]
+Anders gesagt gibt es ein $c$, an dem die Steigung gerade die mittlere Steigung beträgt.\\
+\emph{Bemerkung:} Der Mittelwertsatz kommt häufig bei Ungleichungen zur Anwendung.
+
+\paragraph{Monotonie}
+Das Monotonie-Verhaltens lässt sich anhand der 1. Ableitung bestimmen.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $f' > 0 \implies $ f streng monoton steigend.
+ \item $f' < 0 \implies $ f streng monoton fallend.
+ \item $f' \geq 0 \iff $ f monoton steigend.
+ \item $f' \leq 0 \iff $ f monoton fallend.
+\end{enumerate}
+
+\paragraph{Umkehrsatz}
+Sei $f:\left( a,b\right)\to\R$ differenzierbar mit $f'(x)>0$, $\forall x\in\left( a,b\right)$. Seien $c = \mathop {\inf }\limits_x f\left( x \right)$, $d = \mathop {\sup }\limits_x f\left( x \right)$. Dann ist $f:\left( a,b\right)\to\left( c,d\right)$ bijektiv und die Umkehrfunktion $f^{-1}:\left( c,d\right)\to\left( a,b\right)$ ist differenzierbar mit
+\[\left( {{f^{ - 1}}} \right)'\left(y \right) = \frac{1}{{f'\left( {{f^{ - 1}}}\left( y\right) \right)}}\hspace{5mm}\forall y \in \left( {c,d} \right)\]
+
+\paragraph{Konvexität}
+Die Konvexität lässt sich anhand der 2. Ableitung bestimmen.
+Dabei heißt eine Funktion $f$ \emph{konvex}, wenn $\forall a,b: f(\frac{a+b}{2}) \leq \frac{f(a)+f(b)}{2}$
+und \emph{konkav}, wenn $\forall a,b: f(\frac{a+b}{2}) \geq \frac{f(a)+f(b)}{2}$.
+Insbesondere ist der Graph einer konvexen Funktion \emph{linksgekrümmt} und der einer konkaven \emph{rechtsgekrümmt}.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $f'' \geq 0 \iff $ f konvex.
+ \item $f'' \leq 0 \iff $ f konkav.
+\end{enumerate}
+Alternative Definition (aus der Vorlesung): eine Funktion heisst konvex falls $\forall x_0\leq x_1, t\in [0,1]$:
+$$f(tx_0+(1-t)x_1)\leq tf(x_0)+(1-t)f(x_1)$$
+\paragraph{Extremstellen}
+Für Extremstellen -- also Sattelpunkte, Minima und Maxima -- von $f$ gilt $f'(x_0) = 0$.
+Weitere Eigenschaften sind folgend zusammengefasst.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $f''(x_0) > 0 \implies$ \emph{Minimum} bei $x_0$.
+ \item $f''(x_0) < 0 \implies$ \emph{Maximum} bei $x_0$.
+ \item $f''(x_0) = 0 \vee f'''(x_0) \neq 0 \implies$ \emph{Sattelpunkt} bei $x_0$.
+\end{enumerate}
+
+Aus $(3)$ folgt ohne der Voraussetzung von $f'(x_0) = 0$ übrigens, dass bei $x_0$ ein \emph{Wendepunkt} vorliegt,
+also die Funktion von konvex nach konkav bzw. anders herum wechselt.
+
+\subsection{Taylorreihe \& -entwicklung}
+Funktionen lassen sich in der Umgebung eines Punktes durch eine Potenzreihe annähern.
+
+Die \emph{Taylorreihe} von $f$ um den Punkt $x_0$ ist definiert durch:
+\[ T f(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}\cdot a}{n!}(x-x_0)^n \]
+Insbesondere nennen wir die \emph{Linearisierung der Taylorreihe} mit Grad $m$ das \emph{$m$-te Taylorpolynom}.
+Es ist also:
+\[ T_m f(x) = \sum_{i=0}^{m} \dfrac{f^{(n)}\cdot a}{n!}(x-x_0)^n = f(x_0) + \dfrac{f'(x_0)}{1} + \dfrac{f''(x_0)}{2} + \cdots\]
+
+\paragraph{Restglied}
+
+\[ R_{m}(x) = \frac{f^{(m+1)}(x)}{(m+1)!}(x-a)^{m+1} \]
+
+\paragraph{Rechenregeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $T_m(f+g)(x) = T_m f(x) + T_m g(x)$ -- \emph{Addition}
+ \item $T_m(f\cdot g)(x) = T_m f(x) \cdot T_m g(x)$, entferne alle Terme der Ordnung $> m$ -- \emph{Multiplikation}
+ \item Im Allgemeinen gilt $f(x) = T f(x)$ nicht. Außerdem kann der Konvergenzradius $0$ betragen.
+\end{enumerate}
+
+\clearpage
+\section{Ableitungen und Integralen}
+
+\subsection{Integration}
+Im Folgenden seien $F, f$ definiert auf $]a,b[$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $F$ heißt Stammfunktion von $f$ falls $F' = f$.
+ \item Für Stammfunktionen $F_1, F_2$ von f gilt: $F_1 - F_2$ konstant.
+ \item $\int_{x_0}^{x_1}f(x)dx := F(x_1) - F(x_0)$ heißt Integral von $f$ über $[x_0, x_1]$.
+   Dabei ist $a < x_0 <= x_1 < b$ und $F' = f$.
+ \item \textbf{Hauptsatz:} $F(y) = \int_{a}^{y}f(x)dx, y \in\ ]a,b[ \implies F' = f.$
+\end{enumerate}
+
+\subsubsection{Rechenregeln}
+Das Integral ist ein \emph{lineares} und \emph{monotones} Funktional, wie folgende zwei Sätze zeigen!
+\paragraph{Linearität}
+$\int_{x_0}^{x_1}\alpha f(x) + \beta g(x) dx = \alpha\int_{x_0}^{x_1}f(x)dx + \beta\int_{x_0}^{x_1}g(x)dx.$
+\paragraph{Monotonie}
+Sei $f,g : ]a,b[ \mapsto \mathbb{R}$ beschränkt und R-integrabel dann gilt
+$ f \leq g \implies \int_{x_0}^{x_1}f(x)dx \leq \int_{x_0}^{x_1}g(x)dx. $
+\paragraph{Gebietsadditivität}
+$\int_{x_0}^{x_2}f(x)dx = \int_{x_0}^{x_1}f(x)dx + \int_{x_1}^{x_2}f(x)dx$, wobei $x_0 \leq x_1 \leq x_2$.
+
+\paragraph{Substitution}
+Ausgehend von der Ableitungsregel $f'(g(x)) = f'(g(x))g'(x)$ können wir folgende Integrationsregel herleiten.
+\[ \int_{x_0}^{x_1}f'(g(x))g'(x)dx = f(g(x))|_{x_0}^{x_1} = \int_{g(x_0)}^{g(x_1)}f'(u)du \]
+Substituiert man $u := g(x)$, ergibt sich $\frac{du}{dx} = g'(x) \iff du = g'(x)dx$.
+Bleibt noch ein Restterm $i(x)$, löse $u = g(x)$ nach $x = h(u)$ auf und ersetzte $i(x)$ durch $h(i(x))$.
+
+Die neuen Grenzen -- nur bei bestimmten Integralen -- sind nun $g(x_0)$ und $g(x_1)$.
+Bei unbestimmten Integralen müssen keine Grenzen angepasst werden!
+
+Nach Berechnung des Integrals resubstituiere $u$ durch $g(x)$.
+
+\paragraph{Partielle Integration}
+So ähnlich lässt sich auch aus der
+
+Ableitungsregel $\frac{d}{dx}f(x)g(x) = f'(x)g(x) + f(x)g'(x)$ eine Integrationsregel aufstellen.
+\[ \int_{x_0}^{x_1}(f'(x)g(x)+f(x)g'(x))dx = f(x)g(x)|_{x_0}^{x_1} \]
+\[ = \int_{x_0}^{x_1}f'(x)g(x)dx + \int_{x_0}^{x_1}f(x)g'(x)dx \]
+\[ \iff \int_{x_0}^{x_1}f'(x)g(x)dx = f(x)g(x)|_{x_0}^{x_1} - \int_{x_0}^{x_1}f(x)g'(x)dx. \]
+
+\subsection{Differentialgleichungen}
+
+\subsubsection{DGL erster Ordnung}
+\paragraph{Definition}
+Eine Gleichung, in der (ausschließlich) die Unbekannten $y = y(x), y' = y'(x)$ und $x$ vorkommen, heißen \emph{Differentialgleichung erster Ordnung}.
+\paragraph{Seperation der Variablen}
+$y' = g(y)f(x)$ lässt sich mittels \emph{Seperation der Variablen} lösen.
+Dazu bringen wir die ``ys auf die eine, die xs auf die andere Seite'' der Gleichung.
+Anschließend integrieren wir auf beiden Seiten nach $dx$ und erhalten so Folgendes.
+\[ y' = g(y)f(x) \iff \frac{y'}{g(y)} = f(x) \iff \int\frac{y'}{g(y)}dx = \int f(x)dx \]
+\[ \iff \int\frac{1}{g(y)}dy = F(x) + C_0 \iff ln |g(y)| = F(x) + C_1. \]
+Durch Anwenden von $exp$ auf beiden Seiten und anschließendes Umformen der Konstanten, erhalten wir schließlich.
+\[ g(y) = C\cdot e^{F(x)} \iff y = g^{-1}(C\cdot e^{F(x)}) \]
+\emph{Bemerke,} dass es zusätzliche, konstante Lösungen für $y$ geben kann, nämlich für alle $y$ mit $g(y) = 0$.
+
+\paragraph{Variation der Konstanten}
+Für $y' = y + x$ betrachte die Lösung der linearen, homogenen DGL $y' - y = 0$. Diese hat ungefähr die Form $y = C_1 e^{\lambda_1 x} + C_2 e^{\lambda_2 x}$.
+Nun ersetze $C_1 := u_1(x), C_2 := u_2(x)$ und löse anschließend das Gleichungssystem.
+\[
+\begin{pmatrix}
+ b \\ c \\
+\end{pmatrix}
+\]
+
+\paragraph{Lagrange}
+$y'=f(x)y+g(x)$
+\begin{enumerate}
+\item $f(x) \rightarrow \int f(x)dx=F(x)+0$
+\item $\int g(x)e^{-F(x)}dx=u(x)+c$
+\item $y(x)=\left[u(x)+c\right]e^{F(x)}$
+\end{enumerate}
+
+\subsubsection{DGL beliebiger Ordnung}
+\paragraph{Definition} Eine lineare, homogene DGL der Ordnung $n$ über eine Funktion $f \in C^{n}$ ist eine Gleichung der Form
+\[ a_n f^{(n)}(x) + a_{n-1} f^{(n-1)}(x) + \dots + a_1 f'(x) + a_0 f(x) = 0. \]
+\paragraph{Homogene DGL}
+Der Lösungsansatz für homogene DGL basiert auf einer Eigenwertberechnung über das charakteristische Polynom.
+Man berechne die Eigenwerte $\lambda_1, \dots, \lambda_l$ mit Vielfachheiten $c_1, \dots, c_l$ durch Lösen von $a_n\lambda^n + \dots + a_0\lambda^0 = 0$.
+Es gilt jetzt:
+\[ f(x) = \sum_{i=1}^{l}\sum_{j=1}^{c_l}k_{i,j}x^{j-1}e^{\lambda_l x} \]
+\[ = k_{1,0}e^{\lambda_1 x} + k_{1,1}xe^{\lambda_1 x} + \dots + k_{1,c_1-1}x^{c_1-1}e^{\lambda_l x} + \cdots \]
+
+\paragraph{Inhomogene DGL}
+Sei jetzt $a_n y^{(n)}(x)+...+a_0 y(x) = f(x)$. Zuerst lösen wir das homogene System und wir finden $y_h$. Nachher machen wir eine Ansatz und einsetzen wir es in die DGL, um die spezielle Lösung $y_s$ zu finden. Dann ist die allgemeine Lösung: $y(x)=y_h+y_s$.
+ 
+\paragraph{Partikuläre Lösung für Anfangswertproblem}
+Haben wir auch $f(0) = w_0, f'(0) = w_1, \dots, f^{(n)}(0) = w_n$ gegeben,
+können wir die Koeffizienten $k_{i,j}$ wie folgt ausrechnen.
+Durch Lösen des folgenden Gleichungssystems erhalten wir dann die entsprechenden Koeffizienten.
+\[
+ \begin{pmatrix}
+  f(0) \\
+  f'(0) \\
+  \vdots \\
+  f^{(n)}(0) \\
+ \end{pmatrix}
+  =
+ \begin{pmatrix}
+  w_0 \\
+  w_1 \\
+  \vdots \\
+  w_n \\
+ \end{pmatrix}
+\]
+
+\clearpage
+\subsection{Differentialrechnung in $\mathbb{R}^n$}
+\subsubsection{Definitionen}
+Sei im Folgenden $\Omega \subseteq \R^n, F: \Omega \mapsto \R^m$ und $f: \Omega \mapsto \R$. \\
+Betrachte $f$ als $f(x_1,x_2\dots,x_n)$, dann heißt $f$ \emph{partiell differenzierbar} in Richtung $(0,\dots,e_i,\dots,0)$ bzw. nach $x_i$,
+wenn die Funktion $g: x \mapsto f(x_1,\dots,x_{i-1},x,x_{i+1},\dots,x_n)$ differenzierbar ist. Wir betrachten dabei $x_0,\dots,x_{i-1},x_{i+1},\dots,x_n$ als Konstanten. Achtung: partiell differenzierbar implieziert nicht stetig.
+
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $F$ wie oben heißt \emph{Vektorfunktion}.
+ \item Bei $m = 1$ sprechen wir von einem \emph{Skalarfeld}.
+ \item Bei $n = m$ sprechen wir von einem \emph{Vektorfeld}.
+ \item Es gilt $\dfrac{\partial^2 f}{\partial x\partial y} = \dfrac{\partial^2 f}{\partial y\partial x}$. -- \emph{Satz von Schwarz}
+\end{enumerate}
+
+\subsubsection{Stetigkeit und Grenzwerte}
+\paragraph*{Stetigkeit} Eine Funktion f ist in a stetig, wenn $$\lim_{x\rightarrow a} f(x)=f(a)$$
+\paragraph*{Definition 8.8} $f: \Omega \rightarrow \R$ heisst von der Klasse C' falls an jeder Stelle und in jede Richtung partiell differenzierbar ist und die Funktionen $x\rightarrow \frac{\partial f}{\partial x^i}(x), \forall 1\leq i \leq n$ auf $\Omega$ stetig sind.
+\paragraph*{Grenzwert und Kurven} f besitzt keinen Grenzwert in a wenn sich bei Annäherungen an a auf verschiedenen Kurven verschiedene oder keine Grenzwerte haben. Z.B.: $$\lim_{(x,y)\rightarrow (0,0)} \frac{xy}{x^2+y^2}=\lim_{(x,mx)\rightarrow (0,0)} \frac{x^2m}{x^2(1+m^2)}=\frac{m}{1+m^2}$$
+\paragraph*{Sandwich Trick} $|f(x,y)|=|y||\frac{x^2}{x^2+y^2}|\leq |y|$
+$$ 0\leq |f(x,y)|\leq |y| \implies \lim_{(x,y)\rightarrow (0,0)} f(x,y)=0$$
+\paragraph*{Polarkoordinaten} $x=r\cos (\alpha), y=r\sin (\alpha)$
+$$\lim_{(x,y)\rightarrow (0,0)} f(x,y)=\lim_{r\rightarrow 0} f(r,\alpha)$$
+\paragraph*{Substitution} $\lim_{(x,y)\rightarrow (a,b)} f(g(x,y))$. 
+
+Wir setzen $g(x,y)=t \mbox{ und } t_0=\lim_{(x,y)\rightarrow (a,b)} g(x,y)$. Dann ist:
+$$\lim_{(x,y)\rightarrow (a,b)} f(g(x,y))=\lim_{t\rightarrow t_0} f(t)$$
+
+\subsubsection{Total differenzierbar}
+\paragraph*{Definition} f heisst total differenzierbar an der Stelle c, falls es eine lineare Abbildung $A: \R^n \rightarrow \R$ gibt, so dass:
+$$f(x)=f(c)+A(x-c)+R(c,x)$$ wobei $\lim_{x\rightarrow c} \frac{R(c,x)}{|x-c|}=0$
+\paragraph*{Differential} A heisst Differential von f und kann wie folgendes dargestellt werden:
+$$df(x_0)=\left( \frac{\partial f}{\partial x^1}(x_0),..., \frac{\partial f}{\partial x^n}(x_0) \right)$$
+\paragraph*{Kettenregel} Sei $g:\Omega \rightarrow \R^n, f:\R \rightarrow \R$ ... Dann gilt:
+$$d(\mbox{f o g})(x_0)=f'(g(x_o))dg(x_0)$$
+Sei $g: \R \rightarrow \Omega, f: \Omega \rightarrow \R$, ... Dann
+$$\frac{d}{dt}(\mbox{f o g})(x_0)=df(g(x_0))g'(x_0)$$
+\paragraph*{Integrale durch partielle Ableitungen}
+$$u(t)=\int_a^b h(s,t)ds \implies u'(t)=\int_a^b \frac{\partial h}{\partial t}(s,t)ds$$
+
+\subsubsection*{Topologie}
+\paragraph*{Wegzusammenhängend} Je zwei Punkte im Bereich konnen verbunden werden.
+\paragraph*{Einfach zusammenhängend} Every loop can be contracted to a point (in general no holes are permitted).
+
+\subsubsection{Taylorentwicklung}
+\paragraph*{Definition}
+\begin{align*}
+f\left( {{x_1}} \right) = & f\left( {{x_0}} \right) + \sum\limits_{i = 1}^n {\frac{{\partial f}}{{\partial x'}}\left( {{x_0}} \right)\left( {x_1^i - x_0^i} \right) + \ldots } \\
+ + & \frac{1}{{\left( {m - 1} \right)!}}\sum\limits_{{i_1}, \ldots ,{i_{m - 1}} = 1}^n {\frac{{{\partial ^{m - 1}}f}}{{\partial {x^{{i_1}}} \ldots \partial {x^{{i_{m - 1}}}}}}\left( {{x_0}} \right)\prod\limits_{l = 1}^{\left( {m - 1} \right)} {\left( {x_1^{{i_l}} - x_0^{{i_l}}} \right)} } \\
+ + & \frac{1}{{m!}}\sum\limits_{{i_1}, \ldots ,{i_m} = 1}^n {\frac{{{\partial ^m}f}}{{\partial {x^{{i_1}}} \ldots \partial {x^{{i_m}}}}}\left( {{x_\xi }} \right)\prod\limits_{l = 1}^m {\left( {x_1^{{i_l}} - x_0^{{i_l}}} \right)} }
+\end{align*}
+mit einer Zahl $\xi\in\left( 0,1\right)$, $x_\xi = \left( 1-\xi\right)x_0+\xi x_1$.
+\paragraph*{Näherung}
+\begin{align*}
+f(x) = & f\left( x_0\right) + \nabla f\left( x_0\right) \left( x-x_0\right)^t\\
++ & \frac{1}{2}\left( x-x_0\right)\cdot\nabla^2 f\left( x_0\right)\left( x-x_0\right)^t\\
++ & r_3\left( f,x,x_0\right)
+\end{align*}
+Wobei $\nabla^2$ die Hesse-Matrix bezeichnet. 
+
+\subsubsection{$\nabla$-Operator, Gradient, Divergenz, Rotation}
+\begin{description}
+ \item[Nabla-Operator] $\nabla := (\frac{\partial}{\partial x_1},\dots,\frac{\partial}{\partial x_n})$, nur im Kartesischem!
+ \item[Gradient(enfeld)] $\grad(f) := \nabla f = \begin{pmatrix}\frac{\partial f}{\partial x_1} \\\vdots\\ \frac{\partial f}{\partial x_n}\end{pmatrix}$
+ \item[Divergenz] $\Div(F) := \sum_{i=1}^n\frac{\partial F_i}{\partial x_i},\, \Div(F) = \langle \nabla, F \rangle$
+ \item[Rotation] $\rot(F) := \begin{pmatrix}
+\frac{\partial F_3}{\partial x_2} - \frac{\partial F_2}{\partial x_3} \\
+\frac{\partial F_1}{\partial x_3} - \frac{\partial F_3}{\partial x_1} \\
+\frac{\partial F_2}{\partial x_1} - \frac{\partial F_1}{\partial x_2} \\
+\end{pmatrix},\, \rot(F) = \nabla \times F, n = 3$
+\end{description}
+
+\subsubsection{Gradienten- /Potentialfeld und konservative Vektorfelder}
+Ist $v = \grad(f)$, heißt $f$ das \emph{Potential} oder die \emph{Stammfunktion} zu dem \emph{Gradientenfeld} bzw. dem \emph{Potentialfeld} $v$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $v$ heißt \emph{konservatives Vektorfeld}.
+ \item $v$ ist \emph{wirbelfrei}: $\rot(\grad f) = \vec{0}$. -- \emph{hinreichendes Kriterium}
+ \item Kurvenintegrale nur abhängig von Anfangs- und Endpunkt.
+ \item Kurvenintegrale mit Anfangspunkt $=$ Endpunkt sind $0$.
+ \item v ist konservativ $\implies \frac{\partial v^i}{\partial x^j}=\frac{\partial v^j}{\partial x^i}$
+\end{enumerate}
+
+\subsubsection{Jacobi-Matrix}
+Die Ableitungsmatrix einer differenzierbaren Funktion $f: \R^n \rightarrow \R^m$ ist die $m\times n$-Matrix der einfachen partiellen Ableitungen.
+\[
+ J_f(a) := (\dfrac{\partial f_i}{\partial x_j})_{i = 1,\dots,m, j = 1,\dots,n} =
+ \begin{pmatrix}
+  \dfrac{\partial f_1}{\partial x_1} & \dfrac{\partial f_1}{\partial x_2} & \dots & \dfrac{\partial f_1}{\partial x_n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  \dfrac{\partial f_m}{\partial x_1} & \dfrac{\partial f_m}{\partial x_2} & \dots & \dfrac{\partial f_m}{\partial x_n} \\
+ \end{pmatrix}\]
+
+\subsubsection{Hesse-Matrix}
+Die Hesse-Matrix ist das Analogn im $\R^n$ zur zweiten Ableitung einer eindimensionalen Funktion.
+Ist $f(x_1,\dots,x_n), f: D \subseteq \R^n \rightarrow \R$ zweimal stetig diff'bar, definieren wir die quadratische Matrix $H_f$ wie folgt.
+\[ H_f := (\dfrac{\partial^2 f}{\partial x_i\partial x_j})_{i,j=1,\dots,n} = \begin{pmatrix}
+ \dfrac{\partial^2 f}{\partial x_1\partial x_1} & \dots & \dfrac{\partial^2 f}{\partial x_1\partial x_n} \\
+ \vdots & \ddots & \vdots \\
+ \dfrac{\partial^2 f}{\partial x_n\partial x_1} & \dots & \dfrac{\partial^2 f}{\partial x_n\partial x_n} \\
+\end{pmatrix}
+\]
+Wegen des Satzes von Schwarz ist $H_f$ auch symmetrisch.
+Insbesondere ist für eine Funktion $f(x,y)$
+\[ H_f = \begin{pmatrix}
+\dfrac{\partial^2 f}{\partial^2 x} & \dfrac{\partial^2 f}{\partial x\partial y} \\
+\dfrac{\partial^2 f}{\partial x\partial y} & \dfrac{\partial^2 f}{\partial^2 y} \\
+\end{pmatrix}. \]
+
+\subsubsection{Kritische Punkte}
+Im Prinzip wie im eindimensionalem, wir bestimmen Minima und Maxima durch finden der Nullstellen der Ableitung.
+Allerdings müssen wir den Rand natürlich speziell betrachten, insbesondere für das Finden globaler Extrema.
+
+\paragraph{Vorgehen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\grad(f) = \nabla f = \vec{0}$ ergibt die Menge kritischen Punkte $K$.
+ \item Hesse-Matrix $H_f$ berechnen.
+ \item $det(H_f)$ berechnen.
+ \item Für jedes $k\in K$ in $det(H_f)$ einsetzen:
+ \item Gilt $det(H_f) < 0: k$ ist Sattelpunkt von $f$.
+ \item Gilt $det(H_f) > 0 \wedge Spur(H_f) > 0: k$ ist Minimum von $f$.
+ \item Gilt $det(H_f) > 0 \wedge Spur(H_f) < 0: k$ ist Maximum von $f$.
+ \item Gilt $det(H_f) = 0$, keine Aussage, weiteres Vorgehen nötig.
+\end{enumerate}
+Alternativ: man kann Spur(H) durch $\frac{\partial^2 f}{\partial x^2}$ substituiren.
+
+\subsubsection{Globale Extrema}
+Angenommen, wir haben bereits alle lokale Extrema berechnet (wie oben).
+
+\subsubsection{Tangentialebene}
+Zusätzlich zu den kritischen Punkten, kann gefordert sein, die sogenannte \emph{Tangentialebene} durch den Punkt $(x_1, x_2, \dots, x_n)$ zu bestimmen.
+Hier ist das Verfahren im $\R^2$ angegeben.
+Sei $f(x,y) = z$ und der Punkt $(x_0, y_0, f(x_0, y_0)) = (x_0, y_0, z_0)$ gegeben.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item Bestimme $\grad(f) = (\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y})^T := (f_x, f_y)^T$.
+ \item Bilde $z(x_0, y_0), z_x(x_0, y_0)$ und $z_y(x_0, y_0)$.
+ \item Stelle die \emph{Tangentialgleichung} $z = f(x_0, y_0) + f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0)$ auf.
+\end{enumerate}
+Setzt man $F(x,y,z) = f(x,y) - z = 0$, lässt sich die \emph{Tangentialgleichung} auch wie folgt (in Normalform) darstellen.
+\[ \langle (r - (x_0, y_0, z_0)), \grad(F) \rangle = 0, \grad(F) = \begin{pmatrix}f_x \\ f_y \\ -1\end{pmatrix} \]
+
+\subsection{Potentialbestimmung}
+Im Prinzip ist das Bestimmen eines Potential auch eine Art Integration.
+
+\paragraph{Bestimmen eines Potentials im $\R^2$}
+Ist ein dreidimensionales Vektorfeld $F(x,y): M \subseteq \R^2 \rightarrow \R^3$ gegeben und es soll bestimmt werden ob
+es ein -- und wenn ja, welches -- Potential $f$ besitzt so dass $F = grad f$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item Prüfe ob $\dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y} = 0$ ergibt.
+ \item Ist dies nicht der Fall, so gibt es kein Potential.
+ \item Sonst $f_1 = \int F_xdx + c_1$ und $f_2 = \int F_ydy$.
+ \item Gleichsetzen von $f_1 = f_2$ ergibt die Konstanten $c_1, c_2$.
+\end{enumerate}
+
+\paragraph{Bestimmen eines Potentials im $\R^3$}
+Ist ein dreidimensionales Vektorfeld $F(x,y,z): M \subseteq \R^3 \rightarrow \R^3$ gegeben und es soll bestimmt werden ob
+es ein -- und wenn ja, welches -- Potential $f$ besitzt so dass $F = grad f$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item Ist $F$ wirbelfrei? Also zeige, dass $rot F = 0$.
+ \item Falls $rot F \neq 0$ sind wir fertig, denn es gibt kein Potential.
+ \item Sonst $f_1 = \int F_xdx + c_1$, $f_2 = \int F_ydy + c_2$, $f_3 = \int F_zdz + c_3$.
+ \item Setze nun $f_1 = f_2 = f_3$ gleich und berechne die Integrationskonstanten $c_1, c_2, c_3$.
+\end{enumerate}
+\emph{Bemerkung:} $M$ muss einfach zusammenhängend sein, was bei $M = \R^3$ gegeben ist.
+
+\subsection{Kurvenintegrale}
+\subsubsection{1. Art -- Wegintegral über Skalarfeld}
+Das \emph{Wegintegral 1. Art} über ein stetiges Skalarfeld $f: \R^n\rightarrow\R$ entlang des stetig differenzierbaren Weges $\gamma: [a,b]\rightarrow\R^n$
+ist definiert durch
+\[ \int_\gamma f(s)ds := \int_a^b f(\gamma(t))\|\gamma'(t)\|_2dt. \]
+Dabei ist $\|a\|_2 = \sqrt{\sum_{i=1}^n a_i^2}$ die Euklidische Norm.
+
+\subsubsection{2. Art -- Wegintegral über Vektorfeld}
+Das \emph{Wegintegral 2. Art} über ein stetiges Vektorfeld $F: \R^n\rightarrow\R^n$ entlang eines stetig differenzierbaren Weges $\gamma: [a,b]\rightarrow\R^n$
+ist definiert durch
+\[ \int_\gamma F(s)ds := \int_a^b\langle F(\gamma(t)), \gamma'(t) \rangle dt\]
+Dabei ist $\langle a,b \rangle = a^Tb = \sum_{i=0}{n} = a_ib_i$ das (euklidische) Skalarprodukt.
+
+\subsubsection{Rechenregeln}
+Kurvenintegrale sind genauso wie ``normale'' Integrale linear.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\int_\gamma F(s) + G(s)ds = \int_\gamma F(s)ds + \int_\gamma G(s)ds$.
+ \item $\int_\gamma \alpha F(s)ds = \alpha\int_\gamma F(s)ds$
+\end{enumerate}
+
+\subsection{Volumen- und Flächenintegrale im $\R^n$}
+
+\subsubsection{Koordinatentransformation}
+\paragraph{Diffeomorphismus}
+$\Phi: \Omega \mapsto \Phi(\Omega) \subseteq \R^n$ heißt Diffeomorphismus, wenn $\Phi$ bijektiv und $\Phi^{-1}$ differenzierbar ist.
+
+\paragraph{Transformationssatz}
+$f: \Phi(\Omega) \mapsto \R^n$ ist genau dann integrierbar, wenn $g(x) = f(\Phi(x))|\det(J_\Phi(x)|$ integrierbar ist.
+Es gilt:
+\[ \int_{\Phi(\Omega)} f(x)dx = \int_{\Omega} f(\Phi(x))|\det(J_\Phi(x))|dx\]
+Dies nutzen wir aus, um Integrale durch geeignete Wahl von $\Phi$ zu vereinfachen.
+Dabei ist $J_\Phi(x)$ die Jacobi-Matrix von $\Phi$, siehe oben.
+Für Kugel- und Zylinderkoordinaten, siehe Anhang \emph{Formeln und Tafeln}.
+
+\subsubsection{Satz von Gauß}
+Sei $\Omega \subseteq \R^n$ eine kompakte Menge mit ``glattem'' Rand $S := \partial\Omega$.
+Sei weiter $F: \Omega \rightarrow \R^n$ ein stetig differenzierbares Vektorfeld. Es gilt
+\[ \int_\Omega \Div FdV = \int_S F\cdot N dS \]
+Wobei $N$ die Normale (an der jeweiligen Stelle) ist.
+
+\subsubsection{Massenmittelpunkt im $\R^n$}
+Sei der Vektor $r$, der \emph{Massenmittelpunkt} oder auch \emph{Schwerpunkt} eines Körpers $K$ mit \emph{Dichtefunktion} $\rho(v)$.
+Dann gilt für seine Komponenten:
+\[ r_x = 1/M\cdot\int_K x\cdot \rho(v)dV \]
+\[ r_y = 1/M\cdot\int_K y\cdot \rho(v)dV \]
+\[ r_z = 1/M\cdot\int_K z\cdot \rho(v)dV \]
+
+Wobei die Masse $M$ gegeben ist durch:
+\[ M = \int_K \rho(v) dV \]
+
+\emph{Bemerkung} Bei homogen-dichten Körpern, also Körper, bei dem überall die gleiche Dichte gegeben ist,
+lässt sich $\rho$ vor das Integral ziehen.
+
+\clearpage
+\section{Formeln und Tafeln}
+Hier ist alles nur aufgelistet, für Begründungen an der jeweiligen Stelle nachgucken!
+\subsection{Rechentricks}
+\subsubsection{Fakultät, Binomialkoeffizienten}
+\[ n! = n\cdot(n-1)\cdot\dots\cdot1, n\in\N \]
+\[ \binom{n}{k} = \frac{n!}{k!(n-k!)} = \binom{n}{n-k},\ 0 \leq k \leq n \]
+\paragraph*{Binomscher Lehrsatz}
+$$\left(x+y\right)^n=\sum_{k=0}^{n} \binom{n}{k} x^{n-k}y^k$$
+
+\subsubsection{Mitternachtsformel}
+\[ ax^2 + bx + c = 0 \iff x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \]
+
+\subsubsection{Partialbruchzerlegung}
+\paragraph{Sonderfall Nenner Grad zwei}
+\[
+ B = \dfrac{a_zx+b_z}{(a_1x+b_1)(a_2x+b_2)} = \dfrac{u}{(a_1x+b_1)} + \dfrac{v}{(a_2x+b_2)},
+\]
+mit $ua_1 + va_2 = a_z \wedge ub_1 + vb_2 = b_z$.
+\paragraph{Allgemeiner Fall}
+Betrachte den Bruch $\dfrac{z(x)}{n(x)}$, wobei $z,n$ Polynome mit Grad $n,m$ sind.
+\subparagraph{Fall 1: $n \geq m$}
+Dividiere $\dfrac{z(x)}{n(x)} = v(x) + \dfrac{u(x)}{n(x)}$.
+Ist $u(x) \neq 0$, so fahre mit $\dfrac{u(x)}{n(x)}$ wie in \emph{Fall 2} weiter, sonst sind wir fertig.
+\subparagraph{Fall 2: $n < m$}
+Faktorisiere $n(x)$ in seine $i$ Nullstellen: $n(x) = (x-x_1)^{r_1} \cdot (x-x_2)^{r_2} \cdot \dots \cdot (x-x_i)^{r_i}.$
+Jetzt lösen wir das folgende Gleichungssystem durch Ausmultiplikation.
+\[ \frac{a_1}{(x-x_1)^{r_1}} + \frac{a_2}{(x-x_2)^{r_2}} + \dots + \frac{a_i}{(x-x_i)^{r_i}} = \frac{z(x)}{n(x)} \]
+
+\subsubsection{Ungleichungen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $a < b \iff a + c < b + c$, genauso für $\leq,=,>,\geq$
+ \item $a < b \wedge c > 0 \iff \frac{a}{c} < \frac{b}{c}$
+ \item $a < b \wedge c < 0 \iff \frac{a}{c} > \frac{b}{c}$
+ \item $|a+b| \leq |a| + |b|$ -- \emph{Dreiecksungleichung}
+ \item $|x\cdot y| \leq \|x\|\cdot\|y\|, x,y \in \mathbb{R}^n$ -- \emph{Cauchy-Schwarz-Ungleichung}
+ \item $2|x\cdot y| \leq \epsilon x^2 + \frac{1}{\epsilon}y^2, \epsilon > 0$ -- \emph{Young-Ungleichung}
+\end{enumerate}
+
+\subsubsection{Exponentialfunktion und Potenzen}
+\paragraph{Exponentialfunktion} Im Folgenden gilt $x \in\mathbb{R}$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $e^x := Exp(x)$, definiert über Reihe, siehe unten.
+ \item $e^x > 0, \forall x\in\mathbb{R}$
+ \item $e^{-x} = \frac{1}{e^x}$
+ \item $e^0 = 1, e^1 = e \approx 2.718281$
+ \item $e^{-\infty} = 0, e^{\infty} = \infty$
+ \item $e^{ix} = \cos(x) + i\sin(x)$ – \emph{Eulerformel}
+ \item $e^{i\pi} = -1$ – \emph{Euleridentität}
+ \item $e^{-1}(x) = \ln(x)$ also $e^{\ln(x)} = x = \ln(e^x)$.
+\end{enumerate}
+\paragraph{Potenzen} Im Folgenden gilt $a,b,n,m \in\mathbb{R}$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $a^x = e^{ln(a)^{x}} = e^{ln(a)x}$
+ \item $a^{n+m} = a^na^m$
+ \item $a^{nm} = (a^n)^m \neq a^{(n^m)}$
+ \item $(ab)^n = a^nb^n$
+ \item $(\frac{a}{b})^n = \frac{a^n}{b^n}$
+\end{enumerate}
+\paragraph{Wurzeln} Im Folgenden gilt $a,b,n,m \in\mathbb{R}$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sqrt[n]{a} := a^{\frac{1}{n}}$
+ \item $\sqrt[n]{ab} = \sqrt[n]{a}\sqrt[n]{b}$
+ \item $\sqrt[m]{\sqrt[n]{a}} = \sqrt[nm]{a}$
+ \item $\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}$
+\end{enumerate}
+
+\subsubsection{Logarithmen} Im Folgenden gilt $a,r,x,y \in\mathbb{R}$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\ln(x) := Exp^{-1}(x)$, also $x > 0$.
+ \item $\ln(1) = 0, \ln(e) = 1$
+ \item $\log_a(x) := \frac{\ln(x)}{\ln(a)}$
+ \item $\log_a(\infty) = \infty$
+ \item $\log_a(xy) = \log_a(x)+\log_a(y)$
+ \item $\log_a(\frac{1}{x}) = -\log_a(x)$
+ \item $\log_a(x^r) = n\log_a(x)$
+ \item $\log_a(x \pm y) = \log_a(x) + \log_a(1 \pm \frac{y}{x})$
+\end{enumerate}
+
+\subsubsection{Komplexe Zahlen $\mathbb{C}$}
+Sei $a,b \in \mathbb{R}, c \in \mathbb{C}$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $c := a + ib = \Re(a) + i\Im(b)$
+ \item $\overline{c} = a - ib$ -- \emph{konjugiert-komplexe Zahl}
+ \item $z_0 + z_1 := (a_0 + a_1) + i(b_0 + b_1)$
+ \item $z_0 \cdot z_1 := (a_0a_1 - b_0b_1) + i(a_0b_1 + a_1b_0)$
+ \item $|z|^2 = z\cdot\overline{z} = a^2 + b^2$
+ \item $e^{i\phi}=\cos(\phi)+i\sin(\phi)$
+ \item $\left(\cos(x)+i\sin(x)\right)^n=\cos(nx)+i\sin(nx)$
+\end{enumerate}
+\paragraph*{Beispiel}
+Berechne $x^4=-1=e^{i\pi}$:
+\begin{eqnarray}
+x &=& \left(e^{i(\pi +2k\pi)}\right)^\frac{1}{4} 
+= e^{i\pi(\frac{1}{4}+\frac{k}{2})}, k={0,1,2,3} \nonumber
+\end{eqnarray}
+
+\subsection{Trigonometrische Funktionen}
+\paragraph{Wichtige Werte}
+\begin{center}
+\begin{tabular}[m]{r|ccccccccc}
+Winkel & $\frac{1}{6}\pi$ & $\frac{1}{4}\pi$ & $\frac{1}{3}\pi$ & $\frac{1}{2}\pi$ & $\frac{2}{3}\pi$ & $\frac{3}{4}\pi$ & $\pi$ & $\frac{3}{2}\pi$ & $2\pi$ \\[.1em]
+in Grad & $30$ & $45$ & $60$ & $90$ & $120$ & $135$ & $180$ & $270$ & $360$ \\\hline
+$\sin(x)$ & $\frac{\sqrt{1}}{2}$ & $\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{3}}{2}$ & $1$ & $\frac{\sqrt{3}}{2}$ & $\frac{\sqrt{2}}{2}$ & $0$ & $-1$ & $0$ \\[.1em]
+$\cos(x)$ & $\frac{\sqrt{3}}{2}$ & $\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{1}}{2}$ & $0$ & $-\frac{\sqrt{1}}{2}$ & $-\frac{\sqrt{2}}{2}$ & $-1$ & $0$ & $1$ \\[.1em]
+$\tan(x)$ & $\frac{1}{\sqrt{3}}$ & $1$ & $\sqrt{3}$ & $0$ & $-\sqrt{3}$ & $-1$ & $0$ & $\times$ & $0$ \\
+\end{tabular}
+\end{center}
+
+\paragraph{Rechenregeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sin(x) := \sum_0^\infty (-1)^n\frac{x^{2n+1}}{(2n+1)!}$
+ \item $\cos(x) := \sum_0^\infty (-1)^n\frac{x^{2n}}{(2n)!}$
+ \item $\tan(x) := \frac{\sin(x)}{\cos(x)}$
+ \item $\cos(x) + i\sin(x) = e^{ix}$
+ \item $\sin(x)^2 + \cos(x)^2 = 1$
+ \item $\sin(x \pm y) = \sin(x)\cos(y) \pm \cos(x)\sin(y)$
+ \item $\cos(x \pm y) = \cos(x)\cos(y) \mp \sin(x)\sin(y)$
+ \item $\tan(x \pm y) = \frac{\tan(x)\pm\tan(y)}{1\mp\tan(x)\tan(y)}$
+ \item $\sin(2x) = 2\sin(x)\cos(x)$
+ \item $\cos(2x) = 2\sin(x)\cos(x)$
+ \item $\tan(2x) = \cos(x)^2 - \sin(x)^2 = 2\cos(x)^2 - 1 = 1 - 2\sin(x)^2$
+ \item $\sin(x \pm \frac{\tau}{4}) = \sin(x\pm\frac{\pi}{2}) = \pm\cos(x)$
+ \item $\cos(x \pm \frac{\tau}{4}) = \cos(x\pm\frac{\pi}{2}) = \mp\sin(x)$
+ \item $\sin(x \pm \frac{\tau}{2}) = \sin(x\pm\pi) = -\sin(x)$
+ \item $\cos(x \pm \frac{\tau}{2}) = \cos(x\pm\pi) = -\cos(x)$
+ \item $\cos(x)\sin(y)=\frac{1}{2} (\cos(x+y)+\cos(x-y))$
+ \item $\cos(x)\sin(y)=\frac{1}{2} (\sin(x+y)-\sin(x-y))$
+ \item $\sin(x)\sin(y)=\frac{1}{2} (\cos(x-y)-\cos(x+y))$
+\end{enumerate}
+
+\subsection{Hyperbelfunktionen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sinh(x) := \frac{1}{2}(e^x-e^{-x}) = -i\sin(ix)$
+ \item $\cosh(x) := \frac{1}{2}(e^x+e^{-x}) = \cos(ix)$
+ \item $\tan(x) := \frac{\sin(x)}{\cos(x)} = 1 - \frac{2}{e^{2x}+1}$
+ \item $\arcsinh(x) := \sinh^{-1}(x) = \ln(x + \sqrt{x^2+1})$
+ \item $\arccosh(x) := \cosh^{-1}(x) = \ln(x + \sqrt{x^2-1})$
+ \item $\arctanh(x) := \tanh^{-1}(x) = \frac{1}{2}\ln(\frac{1+x}{1-x})$
+\end{enumerate}
+
+\subsection{Folgen mit Grenzwerten}
+Folgende Folgen sind sortiert nach ``Wachstumsschnelligkeit''.
+\[ (1), (\ln(n)), (n^{a}), (q^n), (n!), (n^n) \text{ mit } a > 0, q > 1.\]
+Im Folgenden ist $a_n \rightarrow a$ gleichbedeutend mit $\lim_{n\rightarrow\infty} a_n = a$.
+Außerdem seien $a,k\in\mathbb{R}$ Konstanten.
+\paragraph{Konvergente Folgen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sqrt[n]{a} \rightarrow 1, \sqrt[n]{n} \rightarrow 1, a \geq 0$
+ \item $\frac{n}{\sqrt[n]{n!}} \rightarrow e, \frac{\sqrt[n]{n!}}{n} \rightarrow \frac{1}{e}$
+ \item $(\frac{n+1}{n})^n \rightarrow e$
+ \item $(1 + \frac{a}{n})^n \rightarrow e^a$
+ \item $(a^nn^k)^n \rightarrow 0, |a| < 1$
+ \item $n(\sqrt[n]{a}-1) \rightarrow ln(a), a > 0$
+\end{enumerate}
+\paragraph{Divergente Folgen}
+\[ (\sqrt[n]{n!}), (\frac{n^n}{n!}), (\frac{a^n}{n^k}) \]
+\paragraph{Bernoullische Ungleichung}
+\[ \forall x\geq -1, n\in\N: (1+x)^n \geq 1 + nx \]
+
+\subsection{Reihen mit Grenzwerten}
+Sei mal $\sum_{n_0}$ Abkürzung für $\sum_{n=n_0}^\infty$.
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sum_1 \frac{1}{n}$ divergiert -- \emph{harmonische Reihe}
+ \item $\sum_1 (-1)^n\frac{1}{n} = \ln(\frac{1}{2})$ -- \emph{alternierende harmonische Reihe}
+ \item $\sum_1 \frac{1}{n^a}$ konvergiert für $a > 1$, sonst divergent.
+ \item $\sum_0 q^n = \frac{1}{1-q}, |q| < 1$ -- \emph{geometrische Reihe}
+ \item $\sum_0 q^n = \frac{1}{1+q}, |q| < 1$ -- \emph{alternierende geometrische Reihe}
+ \item $\sum_1 \frac{1}{n^2} = \frac{\pi^2}{6}$
+ \item $ e^x = \exp(x) = \sum_{n=0}^\infty \frac{x^n}{n!} = \frac{x^0}{0!} + \frac{x^1}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots $
+\end{enumerate}
+\paragraph{Partialsummen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sum_{i=0}^n i = \frac{n(n-1)}{2}$ -- \emph{kleiner Gauß}
+ \item $\sum_{i=0}^n i^2 = \frac{1}{6}n(n+1)(2n+1)$
+ \item $\sum_{i=0}^n i^3 = \frac{1}{4}n^2(n+1)^2$
+ \item $\sum_{i=0}^n q^n = \frac{1-q^{n+1}}{1-q}$
+\end{enumerate}
+
+\clearpage
+
+\subsection{Ableitungen}
+Im Folgenden sei $f(x) \rightarrow g(x)$ Abkürzung für $\frac{d}{dx} f(x) = g(x)$.
+\subsubsection{Rechenregeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $(f(x)+g(x))' = f'(x) + g'(x)$
+ \item $(f(x)g(x))' = f'(x)g(x) + f(x)g'(x)$
+ \item $(\frac{z(x)}{n(x)})' = \frac{z(x)n'(x) - z'(x)n(x)}{n(x)^2}$
+ \item $(g \circ f)'(x) = (g(f(x)))' = f'(x)g'(f(x))$
+\end{enumerate}
+\subsubsection{Polynome und Wurzeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $x^a \rightarrow ax^{a-1}$
+ \item $\frac{1}{x^a} = x^{-a} \rightarrow -ax^{-a-1} = \frac{-a}{x^{a+1}}$
+ \item $\sqrt[a]{x^b} = x^{\frac{b}{a}} \rightarrow \frac{b}{a}x^{\frac{b}{a}-1}$
+\end{enumerate}
+\subsubsection{Exponenten und Logarithmen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $e^{ax} \rightarrow ae^{ax}$
+ \item $e^{x^{a}} \rightarrow ax^{a-1}e^{x^{a}}$
+ \item $a^{x} = e^{ln(a)^{x}} = e^{\ln(a)x} \rightarrow \ln(a)\cdot a^x$
+ \item $x^{x} \rightarrow (1+\ln(x))x^{x}$
+ \item $x^{x^a} \rightarrow (1+a\ln(x))x^{x^a+a-1}$
+ \item $\ln(x) \rightarrow \frac{1}{x}$
+ \item $\log_a(x) = \frac{1}{\ln(a)}\ln(x) \rightarrow \frac{1}{\ln(a)x}$
+\end{enumerate}
+\subsubsection{Trigonometrische Funktionen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\sin(x) \rightarrow \cos(x)$
+ \item $\cos(x) \rightarrow -\sin(x)$
+ \item $\sin(ax+b) \rightarrow a\cos(ax+b)$
+ \item $\tan(x) \rightarrow \frac{1}{(\cos(x))^2}$
+ \item $\arcsin(x) \rightarrow \frac{1}{\sqrt{1-x^2}}$
+ \item $\arccos(x) \rightarrow \frac{-1}{\sqrt{1-x^2}}$
+ \item $\arctan(x) \rightarrow \frac{1}{x^2+1}$
+ \item $\sinh(x) \rightarrow \cosh(x)$
+ \item $\cosh(x) \rightarrow \sinh(x) \neq -\sinh(x)$!
+ \item $\tanh(x) \rightarrow \frac{1}{(\cosh(x))^2}$
+ \item $\arcsinh(x) \rightarrow \frac{1}{\sqrt{x^2+1}}$
+ \item $\arccosh(x) \rightarrow \frac{1}{\sqrt{x-1}\sqrt{x+1}}$
+ \item $\arctanh(x) \rightarrow \frac{1}{1-x^2}$
+\end{enumerate}
+\subsection*{Spezielle Ableitungen}
+$$y=x^x \Rightarrow \log (y) = x\log (x)$$
+$$ \frac{y'}{y} = \log (x) + 1 \Rightarrow y'=(\log(x)+1)x^x$$
+
+\subsection{Unbestimmte Integrale}
+\subsubsection{Rechenregeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\int(f(x)+g(x))dx = \int f(x)dx + \int g(x)dx$
+ \item $\int af(x)dx = a\int f(x)dx$
+ \item $\int u'(x)v(x)dx = u(x)v(x) - \int u(x)v'(x)dx$
+ \item $\int f(g(x))g'(x)dx = \int f(x)dx$
+ \item $\int f(ax+b)dx = \frac{1}{a}F(x+b)$
+ \item $\int \frac{f'(x)}{f(x)}dx = \ln(|f(x)|)$
+ \item $\int f'(x)f(x)dx = \frac{1}{2}f(x)^2$
+ \item $\int |f(x)|dx = |\int f(x)dx|$
+\end{enumerate}
+\subsubsection{Polynome und Wurzeln}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\int x^a dx = \frac{x^{a+1}}{a+1}$
+ \item $\int \frac{1}{x^a} dx = \int x^{-a} dx = \frac{x^{-a+1}}{-a+1} = -\frac{a-1}{x^{a-1}}, a \neq 1$
+ \item $\int \sqrt[a]{x^b} dx = \int x^{\frac{b}{a}} dx \rightarrow \frac{x^{\frac{b}{a}+1}}{\frac{b}{a}+1} = \frac{a}{b+a}\sqrt[a]{x^{b+a}}$
+ \item $\int \frac{1}{\sqrt{r^2-x^2}} dx = \arcsin \left(\frac{x}{r}\right)$
+\end{enumerate}
+\subsubsection{Exponenten und Logarithmen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\int e^{ax} dx = \frac{1}{a}e^{ax}$
+ \item $\int xe^{x} dx = (x-1)e^{x}$
+ \item $\int a^{x} dx = \int e^{ln(a)x} dx = \frac{1}{ln(a)}a^x$
+ \item $\int \frac{1}{x} dx = \ln(x)$
+ \item $\int \ln(x) dx = x(\ln(x)-1)$
+\end{enumerate}
+\subsubsection{Trigonometrische Funktionen}
+\begin{enumerate}[label={(}\arabic*{)}]
+ \item $\int \sin(x) dx = -\cos(x)$
+ \item $\int \cos(x) dx = \sin(x)$
+ \item $\int \sin(ax+b) dx = -\frac{1}{a}\cos(ax+b)$
+ \item $\int \tan(x) dx = -\ln(|\cos(x)|)$
+ \item $\int \arcsin(x) dx = x\arcsin(x) + \sqrt{1-x^2}$
+ \item $\int \arccos(x) dx = x\arccos(x) - \sqrt{1-x^2}$
+ \item $\int \arctan(x) dx = x\arctan(x) - \frac{1}{2}\ln{1+x^2}$
+ \item $\int \sinh(x) dx = \cosh(x)$
+ \item $\int \cosh(x) dx = \sinh(x) \neq -\sinh(x)$
+ \item $\int \tanh(x) dx = \ln(\cosh(x))$
+ \item $\int \arcsinh(x) dx = x\arcsinh(x) + \sqrt{x^2+1}$
+ \item $\int \arccosh(x) dx = x\arccosh(x) + \sqrt{x-1}\sqrt{x+1}$
+ \item $\int \arctanh(x) dx = x\arctanh(x) + \frac{1}{2}\ln(1-x^2)$
+ \item $\int \cos(x)^2 dx = \frac{1}{2} (x+\sin(x)\cos(x))$
+ \item $\int \sin(x)^2 dx = \frac{1}{2} (x-\sin(x)\cos(x))$
+\end{enumerate}
+
+\subsection{Partikuläre Substitutionen}
+\begin{itemize}
+\item $\sqrt{a^2-b^2x^2} \rightarrow x=\frac{a}{b} \sin(t)$
+\item $\sqrt{a^2+b^2x^2} \rightarrow x=\frac{a}{b} \tan (t) \mbox{ oder } x=\frac{a}{b} \sinh(t)$
+\item $\sqrt{b^2x^2-a^2} \rightarrow x=\frac{a}{b\cos(t)} \mbox{ oder } x=\frac{a}{b} \cosh(t)$
+\end{itemize}
+
+\subsection{Hilfen für Diff'rechnung in $\mathbb{R}^n$}
+\subsubsection{Koordinatentransformationen}
+\paragraph{Kugelkoordinaten in $\R^3$}
+\[
+\begin{pmatrix}
+ x \\ y \\ z \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+ r\sin(\theta)\cos(\varphi) \\
+ r\sin(\theta)\sin(\varphi) \\
+ r\cos(\theta)
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}
+  r \\ \theta \\ \varphi \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+  \sqrt{x^2 + y^2 + z^2} \\
+  \arccos(\frac{z}{r}) \\
+  \operatorname{atan2} (y, x) \\
+\end{pmatrix}
+\]
+Mit $\operatorname{atan2} (y, x)= 2 \arctan \dfrac{y}{\sqrt{x^2+y^2}+x} = \arctan(\dfrac{y}{x}) \\$\\
+Jacobi-Matrix:
+\[
+J =
+\begin{pmatrix}
+ \sin(\theta)\cos(\varphi) & r\cos(\theta)\cos(\varphi) & -r\sin(\theta)\sin(\varphi) \\
+ \sin(\theta)\sin(\varphi) & r\cos(\theta)\sin(\varphi) & r\sin(\theta)\cos(\varphi) \\
+ \cos(\theta) & r\sin(\theta) & 0 \\
+\end{pmatrix}
+\]
+Jacobi-Determinante: $\det(J) = r^2\sin(\theta)$\\
+Volumenelement: $dV = r^2\sin(\theta)\, d\varphi\, d\theta\, dr$
+
+\paragraph{Zylinderkoordinaten in $\R^3$}
+\[
+\begin{pmatrix}
+ x \\ y \\ z \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+ r\cos(\varphi) \\
+ r\sin(\varphi) \\
+ z
+\end{pmatrix}
+\]
+Jacobi-Matrix:
+\[
+J =
+\begin{pmatrix}
+ \cos(\varphi) & -r\sin(\varphi) & 0 \\
+ \sin(\varphi) &  r\cos(\varphi) & 0 \\
+ 0 & 0 & 1 \\
+\end{pmatrix}
+\]
+Jacobi-Determinante: $\det(J) = r\cos(\varphi)^2+r\sin(\varphi)^2 = r$\\
+Volumenelement: $dV = r\, dr\, d\varphi\, dz$
+
+\subsubsection{Typische geometrische Körper und ihre Volumina}
+\paragraph{Ellipsoid}
+Ein \emph{Ellipsoid} ist -- in kartesischen Koordinaten im $\R^3$ -- gegeben durch
+\[ \frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1. \]
+$a,b,c$ nennt man dabei die \emph{Halbachsen} der Ellipse.
+
+\paragraph{Volumina und Oberflächen}
+
+\begin{tabular}{lll}
+ \textbf{Körper} & $V$ \\\hline
+ Kugel & $\frac{4\pi}{3}r^3$ \\
+ Ellipsoid & $\frac{4\pi}{3}abc$ \\
+ Zylinder & $\pi r^2h$ \\
+ Pyramide & $\frac{1}{3}Gh$ \\
+ Kegel & $\frac{\pi}{3}r^2h$ \\
+\end{tabular}
+
+\end{document}
