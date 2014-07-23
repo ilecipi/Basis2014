@@ -735,7 +735,112 @@ add (Datensatz ds, int m,n,i,l, double schwelle)
 	else
 		//scrivi ds nel blocco h(l+1)(ds.key)	
 \end{lstlisting}
-
+\subsection{Virtuelles Hashing (Pag. 232)}
+Con questo tipo di hashing si evitano totalmente gli Überlaufsblöcke. La dimensione della tabella raddoppia ogni qualvolta si vuole inserire una chiave in un blocco pieno. Vengono salvati inoltre $l$ bit: $bit_i=1$ quando la funzione $h_i$ indirizza troppe chiavi in quel blocco.
+\paragraph*{Esempio}
+Guardiamo l'esempio trattato in precedenza. Le chiavi 12 e 53 vengono indirizzate inizialmente nello stesso blocco. L'inserimento di 5 porta a dover raddoppiare la dimensione della tabella, quindi alla seguente situazione:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+  & 0 & 1 \\ 
+\hline 
+hd & 001100 & 110101 \\ 
+\hline 
+  & 000101 &   \\ 
+\hline 
+bit0 & 1 &   \\ 
+\hline 
+\end{tabular} 
+\end{center}
+Adesso viene inserito 15. Dapprima si testa $h_1(15)=0$, ma siccome $bit_0=1$ si deve testare $h_2(15)=0$. È dunque neccessario un ulteriore ampliamento, che porta alla seguente situazione:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+  & 0 & 1 & 2 & 3 \\ 
+\hline 
+hd & 001100 & 110101 &   &   \\ 
+\hline 
+  & 000101 &   &   &   \\ 
+\hline 
+bit0 & 1 &   &   &   \\ 
+\hline 
+bit1 & 1 & 0 &   &   \\ 
+\hline 
+\end{tabular} 
+\end{center}
+Ancora una volta 15 verrebbe inserito nel primo blocco, quindi è necessario  aumentare nuovamente le dimensioni. 
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline 
+  & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ 
+\hline 
+hd & 000101 & 110101 &   &   & 001100 &   &   &   \\ 
+\hline 
+  &   &   &   &   & 001111 &   &   &   \\ 
+\hline 
+bit0 & 1 &   &   &   &   &   &   &   \\ 
+\hline 
+bit1 & 1 & 0 &   &   &   &   &   &   \\ 
+\hline 
+bit2 & 1 & 0 & 0 & 0 &   &   &   &   \\ 
+\hline 
+\end{tabular} \end{center}
+Ora vogliamo inserire 2. Otteniamo dapprima $bit_0(h_0(2))=bit_1(h_1(2))=bit_2(h_2(2))=1$. Dato che $l=3$ la chiave viene infine inserita nel blocco $h_3(2)=0$. 19 viene inserito rispetto ad $h_2$ nel blocco 2 e 43 al secondo colpo nel blocco 1. Di seguito ecco la situazione finale:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline 
+  & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ 
+\hline 
+hd & 000101 & 110101 & 010011 &   & 001100 &   &   &   \\ 
+\hline 
+  & 000010 & 101011 &   &   & 001111 &   &   &   \\ 
+\hline 
+bit0 & 1 &   &   &   &   &   &   &   \\ 
+\hline 
+bit1 & 1 & 0 &   &   &   &   &   &   \\ 
+\hline 
+bit2 & 1 & 0 & 0 & 0 &   &   &   &   \\ 
+\hline 
+\end{tabular} \end{center}
+È quindi evidente che l'attuale indirizzo di una chiave $k$ è dato da:
+\begin{lstlisting}
+int find_address(Key k)
+	j=0
+	while (j<l && bit_j[h_j(k)]==1)
+		j++
+	h(k)=h_j(k)
+	return h(k)
+	
+	
+add(Datensatz ds)
+	int j
+	int address=find_address(ds.key)
+	while (block[address].isFull)
+		if j=l
+			//raddoppia hd
+			l++
+			//crea bit_j=(0,...,0)
+		bit_j[h_j(ds.key)]=1
+		//dividi valori di h_j(ds.key) secondo h_{j+1}
+		//determina nuovamente h_j(ds.key)
+	//scrivi ds nel blocco h_j(ds.key)			
+\end{lstlisting}
+Per evitare che ogni volta venga raddoppiato il numero dei blocchi si rende questo processo virtuale. Nella tabella vengono salvati soltanto gli indirizzi dei blocchi in cui sono salvati i dati (che aumentano uno alla volta). Risulta possibile dimostrare che l'utilizzo di memoria medio si aggira attorno a $\log(2)=0,69$.
+\begin{center}
+\includegraphics[scale=0.5]{Figures/virtuelleshashing.png}
+\end{center}
+\subsection{Erweiterbares Hashing (Pag. 236)}
+Grazie ad extendible hashing è possibile trovare l'indirizzo di una chiave ricercata con al massimo 2 accessi alla memoria esterna. Il sistema prevede di utilizzare tutti gli indirizzi disponibili. Nell'esempio precedente c'è ad esempio un solo numero che inizia con 1 ma 4 celle nella tabella degli indirizzi. Potrebbo benissimo utilizzarne solo uno. Con * vengono marcati indirizzi fittizzi, vale a dire blocchi in cui non viene salvato niente. 
+\begin{center}
+\includegraphics[scale=0.5]{Figures/erha1.png}
+\end{center}
+Iniziamo dal principio: l'inserimento delle prime 3 chiavi porta all'immagine 4.13. L'inserimento di 15 provoca due divisioni (Split) del blocco 0 (poiché un solo split non basta per dividere i due elementi contenuti, che iniziano entrambi con 00). Si arriva dunque alla seguente situazione (la tabella degli indirizzi è già stata raddoppiata, ma non il blocco):
+\begin{center}
+\includegraphics[scale=0.5]{Figures/erha2.png}
+\end{center}
+Adesso risulta possibile sdoppiare il blocco 0, che porta al risultato già esposto nella figura 4.12.
+Ammettendo che sia la tebella degli indirizzi sia i blocchi siano salvati su una memoria esterna si arriva all'elemento ricercato in massimo due accessi. Per evitare di dover fare ulteriori accessi mentre si inserisce un nuovo elemento bisogna marcarsi, oltre che al livello $l$ (a volte chiamato anche globale Tiefe), la lokale Tiefe di ogni blocco. Essa è definita come la lunghezza minore del prefisso che differisce una chiave dalle altre. Ad esempio nell'ultima immagine è sempre 1, mentre nella 4.12 per il blocco 0 e 2 è 3.
+L'eliminazione di una chiave avviene all'opposto dell'inserimento: prima viene cancellata dal blocco, dopodiché si verifica se il blocco può essere unito con un altro (fratello, con la stessa lokale Tiefe). Quando la lokale Tiefe diventa minore della globale Tiefe è possibile dimezzare l'Adresstabelle. In questo caso l'occupazione media ammonta a $\frac{n}{b}\log(2)$ blocchi, vale a dire che l'occupazione media di un singolo blocco è del 69\%. 
 \chapter{Bäume}
 A volte può essere molto utile simulare le seguenti strutture dati. Questo può essere fatto semplicemente visitando il sito: \url{http://www.cs.usfca.edu/~galles/visualization/Algorithms.html}.
 \section{AVL-Tree (Pag. 284)}
@@ -793,7 +898,7 @@ In questo caso abbiamo i seguenti valori (che non cambiano nel tempo) e vogliamo
 \end{itemize}
 Definiamo dunque il peso dell'albero come:
 $$W=\sum_i a_i + \sum_j b_j$$
-La gewichtete Pfadlänge \todo{trovare traduzione decente} è invece:
+La gewichtete Pfadlänge è invece:
 $$ P= \sum_{i=1}^n (altezza(k_i)+1)a_i+\sum_{j=0}^n (altezza(foglia(k_i,k_{i+1}))b_j$$
 Un albero di ricerca ottimale $T$ è formato da sottoalberi anch'essi ottimali: 
 $$ P(T)= P(T_l)+\mbox{ peso della radice }+P(T_r)+W(T_l)+W(T_r)=P(T_l)+P(T_r)+W(T)$$
@@ -1135,7 +1240,9 @@ while !Q.isEmpty
 		//ritorna questi punti   		
 \end{lstlisting}
 Non ci rimane che trovare la struttura dati ideale per $L$. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare $L$ come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
-\todo{Aggiungere immagine a pagina 485}
+\begin{center}
+\includegraphics[scale=0.5]{Figures/blattsuchbaum.png}
+\end{center}
 Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r)$ passi, dove $r$ è il numero di elementi tra $a$ e $b$. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove $k$ è il numero di segmenti che si incrociano.
 \subsection{Caso generale}
 Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. $A >x B$ se la retta vericale passante da $x$ taglia sia $A$ sia $B$ e la coordinata $y$ di $A$ in quel punto è maggiore di quella di $B$.
@@ -1213,7 +1320,7 @@ Per trovare una sovrapposizione dobbiamo rispondere ad una cosiddetta Aufspiessf
 \subsection{Segmentschnitt (Pag. 493)}
 Affrontiamo lo stesso problema del paragrafo 7.2.3 tramite divide and conquer.
 
-\inline{ReportCuts(S)}\todo{Migliorare il layout??}
+\inline{ReportCuts(S)}%\todo{Migliorare il layout??}
 \begin{itemize}
 \item Divide: dividi $S$ con una linea verticale in $S1$ e $S2$. Se $S$ contiene meno di due elementi non fare niente (non possono esserci intersezioni).
 \item Conquer: \inline{ReportCuts(S1)}, \inline{ReportCuts(S2)}.
@@ -1231,7 +1338,7 @@ Sappiamo che risolvendo la formula si ottiene $O(n \log(n)+k)$. Lo spazio è lin
 \subsection{Inklusion für Rechtecke (Pag. 498)}
 L'obiettivo è di trovare i punti contenuti in rettangoli.
 
-\inline{ReportInc(S)}\todo{migliorare il Layout??}
+\inline{ReportInc(S)}%\todo{migliorare il Layout??}
 \begin{itemize}
 \item Divide: come in precedenza
 \item Conquer: \inline{ReportInc(S1)}, \inline{ReportInc(S2)}
@@ -1273,7 +1380,7 @@ report(Node p, Point x)
 \todo{In add non dovrebbe essere il contrario e sovrapporsi!?}
 Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa $O(n \log(n))$ di spazio.
 \begin{center}
-\includegraphics[scale=0.6]{Figures/segtreew.png}
+\includegraphics[scale=0.3]{Figures/segtreew.png}
 \end{center}
 \subsection{Intervall Bäume (Pag. 512)}
 Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $o-$list ai punti iniziali.
