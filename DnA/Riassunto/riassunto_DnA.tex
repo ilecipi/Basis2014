@@ -32,10 +32,24 @@
   breakatwhitespace=true
   tabsize=3
 }
+
+
 \author{Sandro Marcon}
-\title{Riassunto DnA}
+\title{Riassunto Datenstrukturen und Algorithmen}
+
+
+
+
+
+
+
+
+
 \begin{document}
-\tableofcontents
+
+\frontmatter
+\tableofcontents %put toc in
+\mainmatter
 \chapter{Introduzione}
 \section{Notazione O-$\Omega$-$\Theta$ (Pag. 4)}
 Per semplificare l'analisi asintotica degli algoritmi sono state introdotte le 
@@ -476,10 +490,10 @@ trova (int l,r,i)
 		//l'elemento si trova nella posizione a[l]	 			
 \end{lstlisting}
 Se scegliamo male il pivot l'algoritmo impiega $\Omega (n^2)$ passi. Se invece il pivot divide l'array in $qn$ e $(1-q)n$ elementi, con $0.5<q<1$ impiega:
-\begin{eqnarray}
-T(n) &=& T(qn)+cn \nonumber \\
-& \leq & cn \sum_{i=0}^{+\infty} q^i = cn \cdot\frac{1}{1-q} \in O(n)
-\end{eqnarray}
+\begin{align*}
+T(n) &= T(qn)+cn \nonumber \\
+& \leq  cn \sum_{i=0}^{+\infty} q^i = cn \cdot\frac{1}{1-q} \in O(n)
+\end{align*}
 Per scegliere il pivot adeguato si può usare l'algoritmo proposto da Blum, chiamato ``median of median strategy''.
 \begin{enumerate}
 \item (caso base) Se $n<$ costante calcola l'$i-$tesimo più piccolo elemento direttamente.
@@ -712,11 +726,26 @@ add (Dato ds)
 La ricerca consiste soltanto nel controllare il contenuto del blocco $h(k)$. Per la rimozione di un elemento si procede in modo analogo all'inserimento, riducendo di un blocco la tabella se troppo grande.
 \subsection{Lineares Hashing (Pag. 227)}
 Nell'hashing lineare la funzione $h$ consiste in due funzioni $h_1$ ed $h_2$. Per una grandezza iniziale di $m_0$ blocchi vale sempre che: $m_0 2^ l\leq m \leq m_0 2^{l+1}$, dove $l$ indica il Dateilevel, nonché il numero di volte che si è dovuto raddoppiare la dimensione dei blocchi. Per ogni chiave vale $h_2(k)=h_1(k)$ oppure $h_2(k)=h_1(k)+m_02^l$. Un esempio concreto di funzioni è il seguente: $h_1(k)=k \mbox{ mod } (m_02^l)$, $h_2(k)=k \mbox{ mod } (m_02^l)$. Le collisioni vengono trattate nel seguente modo: finché c'è spazio nel blocco primario vengono aggiunte le chiavi, dopodiché viene inserito un puntatore ad un blocco esterno (blocco secondario). Da notare che questo blocco secondario è da contare come memoria extra utilizzata. Il fattore per aumentare la dimensione della tabella di un blocco è il fattore di occupazione $\frac{n}{bm}$. Quando questo fattore supera una certa soglia viene aggiunto un nuovo blocco.
-\paragraph*{Esemmpio} In questo esempio utilizziamo la seguente funzione: rappresentando i numeri in forma binaria essi vanno a finire nel blocco il cui indirizzo corrisponde ai most significant bit della chiave (letti al contrario). 
+\paragraph*{Esempio} In questo esempio utilizziamo la seguente funzione: rappresentando i numeri in forma binaria essi vanno a finire nel blocco il cui indirizzo corrisponde ai most significant bit della chiave (letti al contrario). 
 \begin{center}
 \includegraphics[scale=0.5]{Figures/bsp1.png}
+\end{center}
+\emph{\textbf{Beispiel}: Betrachten wir die mit linearem Hashing und der beschriebenen ordnungserhaltenden Hashfunktion organisierte Hashdatei, die sich durch Einfügen der Schlüssel 12, 53, 5, 15, 2, 19, 43 in dieser Reihenfolge in die Hashdatei ergibt, die anfangs aus einem leeren Datenblock besteht 
+$(m_0 = 1)$. In jedem Datenblock können bis zu zwei Datensätze gespeichert werden; wir zeigen im Folgenden nur deren Schlüssel. Wählen wir 0.9 als Schwellenwert des Belegungsfaktors zum Erweitern der Datei und die feste Darstellungslänge von 6 Bits für jeden Schlüssel, so ergibt sich bei der in
+ Abbildung 4.3 gezeigten Ausgangssituation vor dem Einfügen des zweiten Schlüssels ein Split des Blocks 0 in Blöcke 0 und 1 und nach dem Eintragen dieses Schlüssels die in Abbildung 4.4 gezeigte Situation.}
+\begin{center}
 \includegraphics[scale=0.5]{Figures/bsp2.png}
-\includegraphics[scale=0.6]{Figures/bsp3.png}
+\end{center}
+\emph{Schlüssel 5 kann auf dem freien Platz in Block 0 gespeichert werden; der Schwellenwert für den Belegungsfaktor wird nicht überschritten. Dies geschieht erst bei der Einfügung von Schlüssel 15. Hierbei wird ein neuer Block, nämlich mit Adresse 2, an die Hashdatei angehängt. Die in Block 0 
+gespeicherten Schlüssel werden gemäss ihrem zweiten Bit auf Blöcke 0 und 2 verteilt: Schlüssel mit führenden Bits $00$ bleiben im Block 0, Schlüssel mit führenden Bits 01 (solche treten bisher nicht auf) werden in Block 2 gespeichert (01 rückwärts gelesen ergibt 10, also die duale Darstellung der 
+Hashadresse 2). Dann wird der einzufügende Schlüssel 15 gemäss seiner beiden führenden Bits in Block 0 eingetragen. Hierbei muss für Block 0 ein Überlaufblock angelegt werden. Die Adresse des Überlaufblocks entstammt einem anderen Adressbereich und sei hier nicht von Bedeutung. Damit 
+ergibt sich die in Abbildung 4.5 dargestellte Situation.}
+\begin{center}
+\includegraphics[scale=0.3]{Figures/bsp4.jpg}
+\end{center}
+\emph{Schlüssel 2 kann ohne weitere Reorganisation der Datei in Block 0 (genauer: Dessen Überlaufblock) eingefügt werden. Erst Schlüssel 19 führt wieder zu einem Überschreiten des Schwellenwerts des Belegungsfaktors und damit zum Anhängen eines neuen Datenblocks an die Hashdatei. Damit ist eine weitere Dateiverdoppelung beendet und wir erhalten die in Abbildung 4.6 gezeigte Situation.Schliesslich kann Schlüssel 43 in Datenblock 1 eingetragen werden und die Folge der Einfügungen ist beendet.}
+\begin{center}
+\includegraphics[scale=0.45]{Figures/bsp3.png}
 \end{center}
 \begin{lstlisting}
 add (Datensatz ds, int m,n,i,l, double schwelle)
@@ -1555,7 +1584,7 @@ DFS(Graph G, Node v,w)
 			//cross edge
 			SP=SP+{(w,v)}			
 \end{lstlisting}
-In un grafo non diretto non ci sono cross edges. Interessante notare che invertendo l'ordine del DFEI si ottiene un topological sort (dimostrato in un esercizio, penso accada lo stesso senza invertire il DFBI in un grafo connesso e senza cicli). Un'altra possibile applicazione potrebbe essere quella di ricavare uno spanning tree.\todo{Supposizioni logiche, non sicure e non dimostrate} 
+In un grafo non diretto non ci sono cross edges. Interessante notare che invertendo l'ordine del DFEI si ottiene un topological sort (dimostrato in un esercizio, penso accada lo stesso senza invertire il DFBI in un grafo connesso e senza cicli). Un'altra possibile applicazione potrebbe essere quella di ricavare uno spanning tree.\todo[inline]{Supposizioni logiche, non sicure e non dimostrate} 
 \section{Kürzeste Weg (Pag. 619)}
 Per ogni lato definiamo una funzione $c((v,u))$ che ne associa il costo.
 \subsection{Dijkstra}
