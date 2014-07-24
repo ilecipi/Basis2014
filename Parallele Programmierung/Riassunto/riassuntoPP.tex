@@ -1378,8 +1378,8 @@ class AtomicCnt{
 		\item Necessary conditions for a deadlock to occur
 			\begin{itemize}
 				\item Mutual exclusion \\at least one resource must be non-sharable
-				\item Hold an wait \\a thread holds at least a lock that it hsa already acquired, while waiting for another lock
-				\item No forced lock release \\ locks can only be released voluntariliy by the threads
+				\item Hold an wait \\a thread holds at least a lock that it has already acquired, while waiting for another lock
+				\item No forced lock release \\ locks can only be released voluntairily by the threads
 				\item Circular wait:
 				\\$p_1$ waits for $p_2$
 				\\$p_2$ waits for $p_3$
@@ -1493,10 +1493,6 @@ public class NumberRange {
 	\end{itemize}
 
 
-
-
-%=============== START OF MIDTERM 2, NEEDS REVISION ================
-\setcounter{section}{10}%required to start at chapter 11
 \section{Synchronization: Beyond Locks}
 \begin{itemize}
 \item Locks provide means to enforce atomicity via mutual exclusion 
@@ -2446,8 +2442,57 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \end{itemize}
 
 
-
-
-
+\section{Intro to Massively Parallel Programming (GPGPU)}
+\begin{itemize}
+\item Why Massively Parallel processors?
+\begin{itemize}
+\item CPU vs. GPU:
+\begin{itemize}
+\item Calculations: 4500 GFLOPS vs. 500 GFLOPS
+\item Memory Bandwidth: 170 GB/s vs. 40 GB/s
+\end{itemize}
+\item Energy Crisis
+\begin{itemize}
+\item Increasing clock speed no longer a valid option (Energy cons., Length of data lanes)
+\item GPUs:
+\begin{itemize}
+\item The massively parallel chip (GPU) might drain more power than a CPU
+\item The power per flop is significantly reduced. 
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Vocabulary:
+\begin{itemize}
+\item Rendering: The process of generating an image from a 3D model
+\item Vertex: The corner of a polygon (usually a triangle)
+\item Pixel: Smallest addressable screen element
+\end{itemize}
+\item GPU Fundamentals: The Fixed Graphics Pipeline\\\includegraphics[scale=0.205]{Figures/fixedGraphicsPipeline.jpg}
+\item GPU Pipeline: 
+\begin{itemize}
+\item Transform: Vertex Processor (multiple operate in parallel)
+\begin{itemize}
+\item Transform from ``World space'' to ``Image space''
+\item Compute per-vertex lighting
+\end{itemize}
+\item Rasterizer
+\begin{itemize}
+\item Convert geometric rep. (vertex) to image rep. (fragment)
+\begin{itemize}
+\item Fragment = image fragment (Pixel + associated data: Color, depth, etc.)
+\end{itemize}
+\item Interpolate per-vertex quantities across pixels
+\end{itemize}
+\item Shade
+\begin{itemize}
+\item Fragment Processors (multiple in parallel)
+\begin{itemize}
+\item Compute a color for each pixel
+\item Optionally read colors from textures
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+%INTRO GPGPU, PAGE 17
 
 \end{document}
