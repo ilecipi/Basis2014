@@ -1267,7 +1267,7 @@ classDatum {
  				\end{itemize}
  			\item Synchronization is not easy
  				\begin{itemize}
- 					\item Concurrent acces breaks many assumptions from sequential programming. Terefore NO assumptions can be made about the relative exection speed of threads
+ 					\item Concurrent acces breaks many assumptions from sequential programming. Therefore NO assumptions can be made about the relative exection speed of threads
  					\item Synchornizing with \inline{Sleep()} is wrong 
  				\end{itemize}
  			\item Locks
@@ -1394,6 +1394,102 @@ class AtomicCnt{
 				\item Impossible to create a condition of circular wait
 				\item impossible to deadlock!
 			\end{itemize}
+		\item Building thread-safe classes
+			\begin{itemize}
+				\item Mutable and shared data need to be protected
+				\item Immutable it thread safe aways after initialization
+				\item stateless is always thread safe
+				\\
+				\\Try to avoid synchronization when possible; it is difficult to reason about and there are some performance issues
+
+			\end{itemize}
+		\item The Java \inline{final} keyword
+			\begin{itemize}
+				\item A final \textbf{class} cannot be subclassed
+				\item A final \textbf{method} cannot be overridden or hidden by subclasses
+				\item A final \textbf{variable} can only be initialized once
+			\end{itemize}
+		\item Java Immutable Objects
+		\\An object is \inline{immutable} if:
+			\begin{itemize}
+				\item Its state cannot be modified after construction
+				\item All its fields are final
+				\item It is properly constructedC(while the constructor runs, the object is mutable, there fore it should not be accessed during that time)
+			\end{itemize}
+		\item AtomicReference<V>
+			\begin{itemize}
+				\item Atomic access to a reference of V
+				\item Operations:
+					\begin{itemize}
+						\item get
+						\item set, lazySet
+					\end{itemize}
+				\item \inline{.get()} and \inline{.set()} $\leftrightarrow$ same semantics with \inline{volatile}
+					\begin{itemize}
+						\item We use \inline{AtomicReference} because it is more explicit
+						\item Avoid confusion with \inline{volatile} from other language
+					\end{itemize}
+			\end{itemize}
+		\item Immutable vs. non-Immutable objects
+			\begin{itemize}
+				\item Immutable objects are \textbf{special}
+					\begin{itemize}
+						\item This is specified by the Java memory model
+						\item They do not require safe publication
+					\end{itemize}
+				\item Non-Immutable objects need to b \textbf{safely published}
+					\begin{itemize}
+						\item no ordering guarantees provided by the memory model
+						\item A thread might observe a non-safely published object in an inconsistent state
+					\end{itemize}
+			\end{itemize}
+		\item Encapsulation
+			\begin{itemize}
+				\item hide informaton for users of a class
+				\item general OO technique
+				\item applies to synchronization in parallel programming
+				\item class hides internal state (fields,...)
+				\item provides methods for accessing objects
+				\item users of the class cannot directly access state
+			\end{itemize}
+		\item Delegation
+			\begin{itemize}
+				\item Use existing thread-safe classes to build our class
+					\begin{itemize}
+						\item The resulting class is not always thread-safe!
+					\end{itemize}
+				\item Delegation is not always possible
+					\begin{itemize}
+						\item multiple state variables
+						\item can be delegated safely if:
+							\begin{itemize}
+								\item state variables are thread-safe
+								\item state variables are independent
+								\item not valid state tranitions
+							\end{itemize}
+						\item Additional synchronization is usually needed
+						\\Counter-example
+						\begin{lstlisting}
+public class NumberRange {
+	// INVARIANT: lower <= upper
+	private final AtomicInteger lower = new AtomicInteger(0);
+	private final AtomicInteger upper = new AtomicInteger(0);
+	public void setLower(int i) {
+		// Warning -- unsafe check-then-act
+		if (i > upper.get())
+			throw new IllegalArgumentException(...)
+		lower.set(i);
+	}
+	
+	public void setUpper(int i) {
+	// Warning -- unsafe check-then-act
+	if (i < lower.get())
+		throw new IllegalArgumentException(...);
+	upper.set(i);
+}
+						\end{lstlisting}
+					\end{itemize}
+			\end{itemize} 
 	\end{itemize}
 
 
