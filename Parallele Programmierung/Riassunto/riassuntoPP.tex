@@ -1894,20 +1894,27 @@ return r2 + t1.join()
 \item Composable
 \item Optimistic by design
 \end{itemize}
-%HERE!! PAGE 14
+\item TM Semantics: Atomicity
 \begin{itemize}
 \item changes made by a transaction are made visible atomically
 \item  transactions run in isolation - while a transaction is running, effects from other transactions are not observed (as if transaction takes a snapshot of the global state when it begins and operates on that snapshot)
-\item Note: while locks enforce atomicity via mutual exclusion, transaction does not require that
+\item Note: while locks enforce atomicity via mutual exclusion, transactions do not require it.
 \end{itemize}
 \item TM is inspired by transactions in databases where transactions are vital 
 \begin{itemize}
-\item ACID: \textbf{A}tomicity, \textbf{C}onsistency, \textbf{I}solation, \textbf{D}urability
+\item ACID properties: \textbf{A}tomicity, \textbf{C}onsistency, \textbf{I}solation, \textbf{D}urability
 \end{itemize}
+
+
+
 \item Implementation of TM:
 \begin{itemize}
 \item Keep track of operations performed by each transaction
-\item Concurrency control, system ensures atomicity and isolation properties
+\item Big lock around all atomic sections:
+\begin{itemize}
+\item Gives desired properties, but not scalable
+\item Not done in practice for obvious reasons
+\end{itemize}
 \end{itemize}
 \item Transactions can be aborted if a conflict has been detected by the concurrency control (CC) mechanism 
 \begin{itemize}
@@ -1916,13 +1923,13 @@ return r2 + t1.join()
 \end{itemize}
 \item Where TM is/can be implemented: 
 \begin{itemize}
-\item Hardware TM : can be fast but cannot handle big transactions
-\item Software TM (STM) : in the language, greater flexibility, performance might be challenging
-\item Hybrid TM; TM is still work in progress with many different approaches and is still under active development
+\item Hardware TM: can be fast but cannot handle big transactions
+\item Software TM (STM): in the language, greater flexibility, performance might be challenging
+\item Hybrid TM (Hardware + Software): still work in progress with many different approaches and is still under active development
 \end{itemize}
 \item Design choice: 
 \begin{itemize}
-\item strong vs weak isolation:
+\item Strong vs. Weak isolation:
 \begin{enumerate}
 \item[Q.] What happens when shared state accessed by a transaction, is also accessed outside of a transaction? Are the transactional guarantees still maintained? 
 \item[A.]
@@ -1940,10 +1947,18 @@ return r2 + t1.join()
 \item[Q.] What are the semantics of nested transactions? (Note: nested transactions are important for composability)
 \item[A.]
 \begin{itemize}
-\item flat nesting (inner aborts $\rightarrow$ outer aborts)
-\item inner commits $\rightarrow$ changes visibly only if outer commits, closed nesting (inner abort does not result in an abort for the outer transaction
-\item inner transaction commits $\rightarrow$ changes visible to outer transaction but not to other transaction
-\item only when outer transaction commits, changes of inner transactions become visible), other approaches (e.g. open nesting)
+\item Flat Nesting
+\begin{itemize}
+\item inner aborts $\rightarrow$ outer aborts
+\item inner commits $\rightarrow$ changes visibly only if outer commits
+\end{itemize}
+\item Closed nesting: Similar to flattened, but
+\begin{itemize}
+\item Inner abort does not result in an abort for the outer transaction
+\item Inner transaction commits $\to$ changes visible to outer transaction, but not to other transaction
+\item outer transaction commits $\to$ changes of inner transactions become visible
+\end{itemize}
+\item Other approaches (e.g. open nesting)
 \end{itemize}
 \end{enumerate}
 \end{itemize}
@@ -1955,17 +1970,18 @@ return r2 + t1.join()
 \item Mechanism of retry: 
 \begin{itemize}
 \item implementations need to track what reads/writes a transaction performed to detect conflicts, typically called read-/write-set of a transaction
-\item when retry is called, transaction aborts and will be retried when any of the variables that were read, change
+\item When retry is called, transaction aborts and will be retried when any of the variables that were read, change
 \end{itemize}
 \item Issues with transactions:
 \begin{itemize}
-\item it is not clear what the best semantics for transactions are
-\item getting good performance can be challenging
+\item It is not clear what the best semantics for transactions are
+\item Getting good performance can be challenging
 \item I/O operations: can we perform I/O operations in a transaction?
 \end{itemize}
-\item I/O  in transactions: in general, I/O operations cannot be rolled-back and thus generally cannot be aborted
+\item I/O  in transactions: 
 \begin{itemize}
-\item that is why I/O operations are not allowed in transactions
+\item in general, I/O operations cannot be rolled-back 
+\item in general, I/O operations cannot be aborted that is why I/O operations are not allowed in transactions
 \item one of the big issues with using TM
 \item (some) STMs allow registering I/O operations to be performed when the transaction is committed
 \end{itemize}
@@ -2000,7 +2016,7 @@ return r2 + t1.join()
 \item D\&C is a very important technique and particularly helpful in PP since the recursive step can instead be parallelized
 \item Number of threads to be used: 
 \begin{itemize}
-\item ``Runtime.getRuntime().availableProcessors()'' might be the right amount but your program may not get access to all cores
+\item \inline{Runtime.getRuntime().availableProcessors()} might be the right amount but your program may not get access to all cores
 \item too few threads are bad because core(s) is/are idle
 \item too many threads can be bad because of the overhead\footnote{This depends on the actual overhead the language introduces (in Java rather big)}
 \end{itemize}
@@ -2045,9 +2061,12 @@ return r2 + t1.join()
 \begin{itemize}
 \item (important) concepts: 
 \begin{itemize}
- \item MVC (model (application domain, state and behavior)
+ \item MVC: (explained better later)
+\begin{itemize}
+\item model (application domain, state and behavior)
 \item view (display layout and interaction views)
-\item controller (user input, device interaction))
+\item controller (user input, device interaction)
+\end{itemize}
 \item layout managers
 \item event-driven design  (listener, worker\footnote{In Swing, this implements Runnable} , callback, fire/handle)
 \item GUI (painting)
@@ -2063,6 +2082,11 @@ return r2 + t1.join()
 \item Model: complete, self-contained representation of object managed by the application, provides a number of services to manipulate the data, computation and persistence issues
 \item View: tracks what is needed for a particular perspective of the data, presentation issues
 \item Controller: gets input from the user, and uses appropriate information from the view to modify the model, interaction issues
+\item Separation: 
+\begin{itemize}
+\item You can modify or create views without affecting the underlying model
+\item The model should not need to know about all the kinds of views and interaction styles available for it
+\end{itemize}
 \end{itemize}
 \end{itemize}
 
@@ -2080,22 +2104,23 @@ return r2 + t1.join()
 \includegraphics[width=85mm]{Figures/image1.jpg}
 \end{figure}
 
-\item shared memory architecture (left side in image)
+\item Shared Memory Architecture (left side in image)
 \begin{itemize}
 \item message passing and sharing state is used
 \item message passing can be slower than sharing data yet is easier to implement and to reason about 
 \end{itemize}
 \item Distributed Memory Architecture (right side in image)
 \begin{itemize}
-\item sharing state is challenging and often inefficient, using almost exclusively message passing
+\item sharing state is challenging and often inefficient
+\item using almost exclusively message passing
 \item additional concerns such as failures
 \end{itemize}
 \item Message passing works in both shared and distributed memory architectures making it more universal
 \begin{itemize}
-\item Example: shared state counting (i.e. atomic counter) with increase() and get(): 
+\item Example: shared state counting (i.e. atomic counter) with \inline{increase()} and \inline{get()}: 
 \begin{enumerate}
 \item[\#1:] one counter thread, the other threads ask for its value
-\item[\#2:] every thread has its own (local) counter (Java: ThreadLocal), when sum is requested all threads return the value of their local counter
+\item[\#2:] every thread has its own (local) counter (Java: \inline{ThreadLocal}), when sum is requested all threads return the value of their local counter
 \end{enumerate}
 \item Example: bank account: 
 \begin{itemize}
@@ -2107,23 +2132,33 @@ return r2 + t1.join()
 \item distributed bank account (cont.): each task can operate independently, only communicate when needed
 \item Synchronous vs. Asynchronous messages: 
 \begin{itemize}
-\item sync: send blocks until message is received (Java: SynchronousQueue)
-\item async: send does not block ("fire-and-forget"), placed into a buffer for receiver to get (Java: BlockingQueue, async as long as there is enough space (to prevent memory overflow))
+\item Synchronous: send blocks until message is received (Java: \inline{SynchronousQueue})
+\item Asynchronous: 
+\begin{itemize}
+\item Send does not block (``fire-and-forget'')
+\item placed into a buffer for receiver to get
+\item Java: \inline{BlockingQueue}; async as long as there is enough space (to prevent memory overflow)
 \end{itemize}
-\item concurrent message passing programming models: 
-\begin{itemize}
-\item actors: state-full tasks communicating via messages (e.g. erlang)
-\item channels\footnote{not an official term}: can be seen as a level of indirection over actors, Communicating Sequential Process (CSP) (e.g. go)
 \end{itemize}
-\item go (by Google): language support for: lightweight tasks (aka goroutines), typed channels for task communications which are synchronous (unbuffered) by default 
-\item actor programming model: 
+\item Concurrent Message Passing Programming Models: 
 \begin{itemize}
-\item a program is a set of actors that exchange (async) messages
-\item actor embodies:
+\item Actors: state-full tasks communicating via messages (e.g. erlang)
+\item Channels\footnote{not an official term}: 
 \begin{itemize}
-\item state
-\item communication
-\item processing
+\item Can be seen as a level of indirection over actors
+\item Communicating Sequential Process (CSP)
+\item (e.g. go)
+\end{itemize}
+\end{itemize}
+\item Go (by Google): language support for: lightweight tasks (aka goroutines), typed channels for task communications which are synchronous (unbuffered) by default 
+\item Actor Programming Model: 
+\begin{itemize}
+\item A program is a set of actors that exchange (async) messages
+\item Actor embodies:
+\begin{itemize}
+\item State
+\item Communication
+\item Processing
 \end{itemize}
 \item An Actor may:
 \begin{itemize}
@@ -2132,42 +2167,67 @@ return r2 + t1.join()
 \item change local state
 \item create new actors
 \end{itemize}
+\item Typically actors react to messages (Event-Driven Model)
 \end{itemize}
-\item event-driven programming model: a program is written as a set of handlers (typical application: GUI)
+\item Event-Driven programming Model 
+\begin{itemize}
+\item A program is written as a set of handlers (typical application: GUI)
+\end{itemize}
 \item Erlang: 
 \begin{itemize}
-\item functional language
-\item developed for fault-tolerant applications, if no state is shared, recovering form errors becomes much easier
-\item concurrent, following the actor model
-\item open-source 
+\item Functional language
+\item Developed for fault-tolerant applications (if no state is shared, recovering form errors becomes much easier)
+\item Concurrent, following the actor model
+\item Open-source 
 \end{itemize}
 \item Actor examples: 
 \begin{itemize}
 \item Distributor: forward received messages to a set of names in a round-robin fashion
 \begin{itemize}
 \item State: an array of actors with the array index of the next actor to forward a message
-\item Receive: messages $\rightarrow$ forward message and increase index (mod), control commands (e.g. add/remove actors)
-\end{itemize}
-\item Serializer: unordered input (e.g. due to different computation speed) $\rightarrow$ ordered output; 
+\item Receive: 
 \begin{itemize}
+\item Messages $\rightarrow$ forward message and increase index (mod)
+\item Control commands (e.g. add/remove actors)
+\end{itemize}
+\end{itemize}
+\item Serializer: 
+\begin{itemize}
+\item Unordered input (e.g. due to different computation speed) $\rightarrow$ ordered output; 
 \item State: sorted list of received items, last item sent
-\item Receive: if we receive an item that is larger than the last item plus one, add it to the sorted list; if we receive an item that is equal to the past item plus one: send the received item plus all consecutive items form the last and reset the last item
-\end{itemize}
-\end{itemize}
-\item concurrent message passing in Java: 
+\item Receive: 
 \begin{itemize}
-\item For simple applications, queues can be used which might be difficult especially for large tasks
-\item Instead use Akka framework (written in Scala, interface for Java): follows the actor model (async messages), rich set of features\footnote{important methods to be overridden: preStart(), onReceive()} 
+\item If we receive an item that is larger than the last item plus one, add it to the sorted list
+\item If we receive an item that is equal to the past item plus one: send the received item plus all consecutive items form the last, and reset the last item
+
+
 \end{itemize}
+\end{itemize}
+\end{itemize}
+\item Concurrent Message Passing in Java: 
+\begin{itemize}
+\item For simple applications, queues can be used
+\begin{itemize}
+\item \inline{SynchronousQueue}
+\begin{itemize}
+\item \inline{public class SyncronousQueue<E>}
+\item synchronous/unbuffered
+\item Can be thought of as a queue with zero capacity
+\end{itemize}
+\end{itemize}
+\item Using Java queues can be difficult, especially of we want a large number of tasks
+\end{itemize}
+\item Instead use Akka framework (written in Scala, interface for Java): follows the actor model (async messages), rich set of features (Hierarchical organizations of actors, etc.)\footnote{important methods to be overridden: \inline{preStart()}, \inline{onReceive()}} 
+
 
 \item Akka actors example: 
 \begin{itemize}
-\item ping-pong: client sends $n$ PINGs to server which responds with Pong upon receiving back to sender, master stops execution when receiving DONE
-\item Version 2 with restart on DONE: add a message type SETUP to the client passing the server actor reference and the count, if the client receives SETUP before DONE it can either wait for DONE and the restart or discard the message
+\item ping-pong: client sends $n$ \inline{PING}s to server which responds with \inline{PONG} upon receiving back to sender, master stops execution when receiving \inline{DONE}
+\item Version 2 with restart on \inline{DONE}: add a message type \inline{SETUP} to the client passing the server actor reference and the count, if the client receives \inline{SETUP} before \inline{DONE} it can either wait for \inline{DONE} and the restart, or discard the message.
 \end{itemize}
 \item Collective operations: 
 \begin{itemize}
-\item Broadcast: send a message to all actors (related: multicast, sending a message to some actors), parallel broadcast using a tree where every parent forwards the message to its children until it reaches the leafs (top-down)
+\item Broadcast: send a message to all actors (related: multicast, sending a message to some actors); parallel broadcast using a tree where every parent forwards the message to its children until it reaches the leafs (top-down)
 \item reduction: perform a computation from values of multiple nodes (e.g. balance of all bank accounts), using a tree where a parent receives the message from its children, performs operation and sends it to parent (bottom-up)
 \end{itemize}
 \end{itemize}
@@ -2176,31 +2236,48 @@ return r2 + t1.join()
 \begin{itemize}
 \item Task vs Data parallelism: 
 \begin{itemize}
-\item Task: work is split into parts, by parallelizing the algorithm, very generic but cumbersome
-\item Data: simultaneously applied operation on an aggregate of individual items (e.g. array), declarative (= what not how), splitting up the data for parallelism, less generic
+\item Task: 
+\begin{itemize}
+\item Work is split into parts, by parallelizing the algorithm
+\item Very generic but cumbersome
+\item Programmer describes parallel tasks
+\end{itemize}
+\item Data: 
+\begin{itemize}
+\item simultaneously applied operation on an aggregate of individual items (e.g. array)
+\item declarative (= what not how), splitting up the data for parallelism
+\item less generic
+\item How is the responsibility of the run-time system
+\end{itemize}
 \end{itemize}
 \item Main Operations:
 \begin{itemize}
-\item map: 
+\item \inline{map}: 
 \begin{itemize}
-\item input: array $(x)$, operation $(f(\cdot))$
-\item output: aggregate with applied operation $(f(x))$
+\item Input: array $(x)$, operation $(f(x))$
+\item Output: aggregate with applied operation\\ $(f(x))$, e.g. $f(x_1),f(x_2),\dots,f(x_n)$
 \item parallel execution: split array into chunks and assign chunks to processors (scheduling)
 \item generally more chunks leads to better load balancing (parallel slackness)
 \item order of execution must not influence the result (since order depends on scheduling), given by pure functions (no side effects, same result for same argument)
 \end{itemize}
-\item reduce (reduction) : 
+\item \inline{reduce} (reduction): 
 \begin{itemize}
-\item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$, output: $x_1\bigoplus x_2\bigoplus\dots\bigoplus x_n$
-\item result stays the same for sequential vs binary tree if operator is associative $((a+b)+c=a+(b+c))$
-\item $f$ operation is commutative $(a+b=b+a)$, different scheduling is possible; e.g. sum, max
+\item Input: aggregate $(x)$ of data (e.g. an array), binary associative operator $(\bigoplus)$ with an identity $I$
+\item Output: $x_1\bigoplus x_2\bigoplus\dots\bigoplus x_n$
+\item Result stays the same for sequential vs. binary tree if operator is associative $((a+b)+c=a+(b+c))$
+\item $f$ operation is commutative $(a+b=b+a)$
+\item Implementation:
+\begin{itemize}
+\item Sequential: Accumulate result by iterating all elements
+\item Parallel (D\&C): Split into two parts, reduce each part recursively in parallel, stop recursion (cutoff value)
+\end{itemize}
 \end{itemize}
 \item prefix scan: if it is an addition, it is a prefix sum
 \begin{itemize}
 \item input: aggregate $(x)$, binary associative operator $(\bigoplus)$ with an identity $I$
 \item output: ordered aggregate $(x_1,x_1 \bigoplus x_2,\dots ,x_1 \bigoplus x_2\bigoplus\dots\bigoplus x_n)$
 \end{itemize}
-\item prefix  scan algorithm parallel version: 
+\item \inline{prefix  scan} algorithm parallel version: 
 \begin{itemize}
 \item addition example: 
 \begin{itemize}
@@ -2220,10 +2297,10 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \item for loop to compute visibility can be written as parfors (parallel for loops)
 \end{itemize}
 \end{itemize}
-\item parfor: 
+\item \inline{parfor}: 
 \begin{itemize}
-\item iterations can be performed in parallel, work partitioning $\rightarrow$ partition iteration space
-\item potential source of bugs if thought of as a sequential loop (data races; think factorial)
+\item iterations can be performed in parallel: work partitioning $\rightarrow$ partition iteration space
+\item Potential source of bugs if thought of as a sequential loop (data races; think factorial)
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -2231,12 +2308,32 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \begin{itemize}
 \item Functional programming crash course: 
 \begin{itemize}
-\item functions are first-class values (composition), pure functions (immutability)
-\item such function are called lambdas or anonymous functions
+\item functions are first-class values (composition)
+\item  pure functions (immutability)
 \end{itemize}
-\item Functions as values: functions can be passed to other functions as arguments (such functions accepting such arguments are called high-order functions), e.g. $map(f,list):f$, $filter(fn,list):f$
-\item Lambdas make programming more convenient
-\item Data parallel programming in Java 8 is done using streams, providing means to manipulate data in a declarative way, allowing for transparent parallel processing
+\item such function are called lambdas or anonymous functions
+\item Functions as values: 
+\begin{itemize}
+\item Functions can be passed to other functions as arguments 
+\item Functions that accept other functions as arguments are called high-order functions, examples:
+\begin{itemize}
+\item \inline{map(f,list):f, (x0,x1,...)->(f(x0),f(x1),...)}
+\item \inline{filter(fn,list):f,  (x0,x1,...)->(xi,xj,...)}
+\end{itemize}
+\end{itemize}
+
+\item Lambdas:
+\begin{itemize}
+\item A lambda expression represents an anonymous function. It comprises of a set of parameters, a lambda operator (\inline{->}) and a function body
+\item Their type are functional interfaces (interfaces that specify a single method)
+\item Make programming more convenient
+\end{itemize}
+\item Data parallel programming in Java 8:
+\begin{itemize}
+\item Done using streams, 
+\item Providing means to manipulate data in a declarative way
+\item Allowing for transparent parallel processing
+\end{itemize}
 \item Menu example: 
 \begin{itemize}
 \item input: stream
@@ -2244,7 +2341,12 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \item collect in the end, doesn't create a stream
 \item overall translates a stream into a collection
 \end{itemize}
-\item Parallel streams: created by applying .parallel() on a stream, splits it up into chunks for different threads; implemented using ForkJoin
+\item Parallel streams: 
+\begin{itemize}
+\item A stream can be turned into a parallel stream, just by invoking \inline{.parallel()} on it
+\item Split their elements up into chunks for different threads
+\item implemented using Fork/Join Framework
+\end{itemize}
 \end{itemize}
 
 
