@@ -1146,15 +1146,257 @@ classDatum {
 						\item start() method invokes run()
 						\item Calling run() does not create a new thread
 					\end{itemize}
-				\item Implement \inline{java.an.Runnable} thread
+				\item Implement \inline{java.lang.Runnable} thread
 					\begin{itemize}
 						\item If already intheriting another class (i.e., JApplet)
 						\item Single method: public void run()
 						\item Thread classh implements Runnable
 					\end{itemize}
 			\end{itemize}
+		\item Thread state model in Java
+			\begin{center}
+				\includegraphics[scale=1]{Figures/ThreadStateModelInJava.jpg}
+			\end{center}
+		\item Important to know
+			\begin{itemize}
+				\item Every Java program has at least one execution thread
+					\begin{itemize}
+						\item First execution thread calls \inline{main()}
+					\end{itemize}
+				\item Each call to \inline{start()} method of a \inline{Thread} object creates new thread
+				\item Program ends when all threads (non-daemon threads) finish
+				\item Threads can continue to run even if \inline{main()} returns
+				\item Creating a \inline{Thread} object doesn't start a thread
+				\item Calling \inline{run()} doesn't start  thread either
+ 			\end{itemize}
+ 		\item Getting and setting Thread info
+ 			\item \inline{Thread} class provides attributes that can help us identify a thread
+ 				\begin{itemize}
+ 					\item \textbf{ID}: This attribute stores a unique identifier for each Thread.
+ 					\item \textbf{Name}: This attribute store the name of Thread.
+ 					\item \textbf{Priority}: This attribute stores the priority of the Thread objects. Threads can have priority between 1 and 10
+ 					\item \textbf{Status}: one of these six states:
+ 						\begin{itemize}
+ 							\item new, runnable, blocked, waiting, time waiting or terminated
+ 						\end{itemize} 					
+ 				\end{itemize}
+ 		\item Controlling Thread interrupts
+ 			\begin{itemize}
+ 				\item \inline{Thread.interrupt()} requests a thread interruption
+ 				\item Can be ignored if the thread chooses so
+ 				\item Can be handled with fine grain control
+ 					\begin{itemize}
+ 						\item \inline{isInterrupted()}
+ 						\item \inline{interrupted()}
+ 					\end{itemize}
+ 			\end{itemize}
+ 		\item Threads and Exceptions
+ 			\begin{itemize}
+ 				\item \textbf{Checked} Exceptions:
+ 					\begin{itemize}
+ 						\item represent invalid conditions in areas outside the immediate control of the program (network outages, absent files)
+ 						\item are subclasses of Exception
+ 						\item a method is obliged to establish a policy for all checked exceptions thrown by its implementation (either pass the checled exception further up the stack, or handle)
+ 					\end{itemize}
+ 				\item \textbf{Unchecked} Exceptions:
+ 					\begin{itemize}
+ 						\item represent conditions that reflect errors in your pogram's logic and cannot be recovered from at run time (bugs)
+ 						\item subclasses of RuntimeException, and are usually implemented using \inline{IllegalArgumentException}, \inline{NullPointerException}, or \inline{IllegalStateException}
+ 						\item a method is not obliged to establish a policy for the unchecked exceptions thrown by its implementation
+ 					\end{itemize}
+ 			\end{itemize}
+ 		\item Setting UncaughtExceptionHandlers\\
+ 			Implementing \inline{UncaughtExceptionHandler} interface allows us to handel unchecked exceptions\\ Three options:
+ 			\begin{itemize}
+ 				\item Register exception handler with Thread object
+ 				\item Register exception handler with ThreadGroup object
+ 				\item Use \inline{setDefaultUncaughtExceptionHandler()} to register handler for all threads
 
+ 			\end{itemize}
 	\end{itemize}
+\section{Synchronization}
+	\subsection*{Introduction to Locks}
+	\begin{itemize}
+		\item Synchronization is needed in order to avoid race conditions
+		\item Shared state must be protected because they are accessed by threads- Access incudes both reads and writes!
+			\begin{itemize}
+				\item Concurrent access might lead to inconsistencies
+					\begin{itemize}
+						\item Concurrent access bugs often depend on execution conditions
+					\end{itemize}
+				\item Using sequential algorithms on shared data is unsafe; they typically assume that they act alone
+				\item hardware/software optimizations for sequential computations; assume sequential execution
+			\end{itemize}
+		\item Race conditions and data races
+			\begin{itemize}
+				\item race condition: THe correctness of a computation depends on relative timing
+				\item data race: unsynchronized access to shared mutable data
+				\item Closely related concepts: most race conditions are due to data races
+				\item but not al race conditions are data races and not all data races are race conditions!
+			\end{itemize}
+		\item To avoid race conditions use synchronized threads via atomic mutual exclusion
+		\item Atomic opreation
+			\begin{itemize}
+				\item Opreations \textbf{A} and \textbf{B} are atmoic with respect to each other if:
+					\begin{itemize}
+						\item Thread 0 executes A
+						\item Thread 1 executes B
+						\item Thread 0 always perceives either all of B or none of it (nothing in between)
+					\end{itemize}
+				\item An opreation is atomic if is atomic with respect to all opreations on the same state
+ 			\end{itemize}	
+ 		\item Thread safety
+ 			\\In order to achieve multi-threaded correctnes of the whole program, one should:	
+ 			\begin{itemize}
+ 				\item Apply OO techniquest (encapsulation)
+ 					\begin{itemize}
+ 						\item Design ``thread safe classes''
+ 							\begin{itemize}
+ 								\item they encapsulate any needed synchronization so thath the clients do not need to provide their own
+ 							\end{itemize}
+ 						\item Build your program by composing thread-safe classes
+ 					\end{itemize}
+ 			\end{itemize}
+ 			A Thread safe class:
+ 				\begin{itemize}
+ 					\item Behaves correctly when accessed by multiple threads
+ 						\begin{itemize}
+ 							\item Data-race free
+ 						\end{itemize}
+ 					\item Does not require synchronizatin from users
+ 				\end{itemize}
+ 			\item Synchronization is not easy
+ 				\begin{itemize}
+ 					\item Concurrent acces breaks many assumptions from sequential programming. Terefore NO assumptions can be made about the relative exection speed of threads
+ 					\item Synchornizing with \inline{Sleep()} is wrong 
+ 				\end{itemize}
+ 			\item Locks
+ 				\begin{itemize}
+ 					\item A lock object instance defines a critical section
+ 					\item lock $\to$ enter critical section
+ 					\item unlock $\to$ leave critical section
+\begin{lstlisting}
+mylock.lock();
+// critical section
+...
+//critical section ends
+mylock.unlock();
+\end{lstlisting}
+ 				\end{itemize}
+ 			\item Java instrinsic locks
+ 				\begin{itemize}
+ 					\item Each java bject contains a lock (java built-in mechanism)
+ 					\item These locks can be used via the \inline{synchronized} keyword
+ 					\begin{lstlisting}
+ synchronized (obj){
+ 	//critical Section
+ }
+ 					\end{lstlisting}
+ 				\end{itemize}
+ 			\item Reentrant locks
+ \begin{lstlisting}
+class Reentrant {
+	public synchronized void
+	fn1() {...}
+
+	public synchronized void
+	fn2() {
+		... fn1(); ...
+	}
+}
+ \end{lstlisting}
+ 				\begin{itemize}
+ 					\item Entering \inline{fn2} acquires the lock 
+ 					\item \inline{fn2} calls \inline{f1} $\to$ entering \inline{f1} also acquire lock
+ 					\item With normal locks this causes a deadlock:
+ 						\begin{itemize}
+ 							\item A situation where the program is unable to proceed
+ 						\end{itemize}
+ 					\item Reentrant locks: if a thread tries to acquire a lock it already holds it succeeds
+ 				\end{itemize}
+ 			\item Reentrant vs non-reentrant locks
+ 				\begin{itemize}
+ 					\item reentrant locks $\to$ per thread acquisition
+ 						\begin{itemize}
+ 							\item requiers a counter
+ 						\end{itemize}
+ 					\item non-reentrant locks $\to$ per-invocation acquisition
+ 						\begin{itemize}
+ 							\item not a good match for intrinsic locks
+ 						\end{itemize}
+ 					\item trade-off: flexibility $\leftrightarrow$ productivity 
+ 				\end{itemize}
+ 			\item Atomic counter
+ 			\begin{lstlisting}
+class AtomicCnt{
+	private long value;
+
+	synchronized long get(){
+		return value;
+	}
+
+	synchronized void inc(){
+		value++;
+	}
+}
+ 			\end{lstlisting}
+ 			\item Caching results
+ 				\begin{itemize}
+ 					\item cache: unput $\to$ result
+ 						\begin{itemize}
+ 							\item A mapping of a set of input elements to the corresponding results of a computation
+ 						\end{itemize}
+ 					\item Is result in cache?
+ 						\begin{itemize}
+ 							\item Yes: return result
+ 							\item No: do computation, store result in cache and then return result
+ 						\end{itemize}
+ 				\end{itemize}
+	\end{itemize}
+\subsection*{Using locks and building thread-safe classes}
+	\begin{itemize}
+		\item Coarse-grained locking
+		\begin{center}
+				\includegraphics[scale=1]{Figures/CoarseGrainedLocking.jpg}
+		\end{center}
+		Performances:
+			\begin{itemize}
+				\item Locks are serialization points
+				\item big locks $\to$ large sequential regions
+				\item can significantly hurt parallel performance (Amdahl's law)
+				\item good parallel performance requires avoiding big critical regions
+			\end{itemize}
+		\item Deadlocks
+			\begin{itemize}
+				\item Fine-grained locking introduces the possibility of a deadlock
+				\item A deadlock happens when a number of threads reach a point where they are unable to continue
+					\begin{itemize}
+						\item caused by circulare dependencies
+						\item it is a run-time condition
+					\end{itemize}
+			\end{itemize}
+		\item Necessary conditions for a deadlock to occur
+			\begin{itemize}
+				\item Mutual exclusion \\at least one resource must be non-sharable
+				\item Hold an wait \\a thread holds at least a lock that it hsa already acquired, while waiting for another lock
+				\item No forced lock release \\ locks can only be released voluntariliy by the threads
+				\item Circular wait:
+				\\$p_1$ waits for $p_2$
+				\\$p_2$ waits for $p_3$
+				\\...
+				\\$p_x$ waits for $p_1$
+			\end{itemize}
+		\item Circular wait condition
+		\\To break the circular wait condition and avoid a deadlock to occur:
+			\begin{itemize}
+				\item Set a global order of locks
+				\item Acquire locks respecting that order
+				\item Impossible to create a condition of circular wait
+				\item impossible to deadlock!
+			\end{itemize}
+	\end{itemize}
+
+
 
 
 %=============== START OF MIDTERM 2, NEEDS REVISION ================
@@ -1653,7 +1895,7 @@ return r2 + t1.join()
 \item Optimistic by design
 \end{itemize}
 %HERE!! PAGE 14
-
+\begin{itemize}
 \item changes made by a transaction are made visible atomically
 \item  transactions run in isolation - while a transaction is running, effects from other transactions are not observed (as if transaction takes a snapshot of the global state when it begins and operates on that snapshot)
 \item Note: while locks enforce atomicity via mutual exclusion, transaction does not require that
