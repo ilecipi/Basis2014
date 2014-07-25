@@ -45,12 +45,12 @@
 \item Attributes are values directly stored in memory
 \end{itemize}
 For queries, there is the uniform access principle, which states that it doesn't matter to the client whether a query is implemented as a function or attribute. Features should be accessible to clients the same way whether implemented by storage or by computation.
-\item Creation Procedure: Commands to initiate objects, can be several. There is also a \textsl{default\_create}, which is inherited by all classes, and does nothing by default. 
+\item Creation Procedure: Commands to initiate objects, can be several. There is also a \inline{default_create}, which is inherited by all classes, and does nothing by default. 
 \end{itemize}
 \item Feature Calls
 \begin{itemize}
-\item Unqualified calls: Feature calls which apply to the current object
-\item Qualified calls: Feature calls which apply to a certain object, causing this object to become the current object. 
+\item Unqualified calls: Feature calls which apply to the current object, e.g. \inline{f(args)}
+\item Qualified calls: Feature calls which apply to a certain object, causing this object to become the current object, e.g. \inline{x.f(args)} 
 \end{itemize}
 \item Class clauses
 \begin{itemize}
@@ -60,7 +60,7 @@ For queries, there is the uniform access principle, which states that it doesn't
 \item Feature
 \item Invariant
 \end{itemize}
-\item Specimen: A syntactic element, such as a class name or an instruction, but no delimiters. The type of a specimen is its construct. See Describing syntax\todo{Add reference}
+\item Specimen: A syntactic element, such as a class name or an instruction, but no delimiters. The type of a specimen is its construct. See Describing syntax in the book.
 \item Abstract syntax tree: Shows the syntax structure with all its specimens, but obviously without any delimiters, A tree has nodes, each one of the following kind:
 \begin{itemize}
 \item Root: Node with no incoming branch.
@@ -99,7 +99,7 @@ For queries, there is the uniform access principle, which states that it doesn't
 \item A generic derivation, i.e. the name of a class followed by a list of types, the actual generic parameters, in brackets
 \end{itemize}
 \end{itemize}
-\item Setters: It is possible to make assignments such as $x.att:=val$, which is shorthand for $x.set\_att(val)$
+\item Setters: It is possible to make assignments such as \inline{x.att:=val}, which is shorthand for \inline{x.set_att(val)}
 \item Effect of an assignment
 \begin{itemize}
 \item Reference types: Reference assignment
@@ -107,9 +107,9 @@ For queries, there is the uniform access principle, which states that it doesn't
 \end{itemize}
 \item Variable copy
 \begin{itemize}
-\item Shallow object duplication (creates a new object): $b:=a.twin$
-\item Deep object duplication (creates a new object): $b:=a.deep\_twin$
-\item Shallow field-by-field copy (does not create an object): $b.copy(a)$
+\item Shallow object duplication (creates a new object): \inline{b:=a.twin}
+\item Deep object duplication (creates a new object): \inline{b:=a.deep_twin}
+\item Shallow field-by-field copy (does not create an object): \inline{b.copy(a)}
 \end{itemize}
 \end{itemize}
 \todo[inline]{Maybe add the objet creation diagram??}
@@ -128,18 +128,30 @@ For queries, there is the uniform access principle, which states that it doesn't
 \item Secret
 \item Read-only
 \item Read, but partially write restricted (only certain things are allowed to be written)
-\item Writing one or more classes in curly brackets after the keyword \textsl{feature} exports these 
+\item Writing one or more classes in curly brackets after the keyword \inline{feature} exports these 
 features only to these classes and its descendants. If no class is listed, the features 
-are exported to \textsl{ANY}. 
+are exported to \inline{ANY}. 
 \end{itemize}
 Information hiding only applies to use by clients using dot or infix notation. Unqualified calls are not subject to information hiding. 
 \end{itemize}
 
 \subsection{Control structures}
-\todo[inline]{Requires a lot of work}
 \begin{itemize}
-\item Sequence or compound
-\item Loop
+\item Sequence or compound: consists of instructions listed in a certain order. Its execution consists of executing these instructions in the same order
+\item Loop: consists of a sequence of instructions to be executed repeatedly.
+\begin{lstlisting}
+from
+	--initialization Instructions
+invariant
+	--Loop invariant: Must hold true, satisfied after initialization, after the from clause
+until
+	--Exit condition; the condition under which the loop stops
+loop
+	--Instructions to be executed in each of the successive iterations
+variant
+	--Non-negative, decreases after every iteration
+end
+\end{lstlisting}
 \begin{itemize}
 \item Loop invariant
 \begin{itemize}
@@ -152,21 +164,30 @@ Information hiding only applies to use by clients using dot or infix notation. U
 \item Decreases while remaining non-negative for every iteration of the body with exit condition not satisfied. 
 \end{itemize}
 \end{itemize}
-\item Conditional
+\item Conditional: consists of a condition and two sequences of instructions. Its execution consists of executing one or the other of these sequences depending on whether the condition evaluates to \inline{true} or \inline{false}.
+\begin{lstlisting}
+if condition then
+	-- Do something
+elseif condition_2 then
+	-- Do something different
+else
+	-- Do something else
+end
+\end{lstlisting}
 \end{itemize}
 
 \subsection{Contracts}
 \begin{itemize}
-\item Contracts are made of assertions, each containing an assertion tag and a condition (a Boolean expression)
+\item Contracts are made of assertions, each containing an assertion tag and a condition (a Boolean expression), i.e. \inline{not_too_small: i>=1}
 \item Precondition
 \begin{itemize}
 \item Property that a feature imposes on every client
-\item If there is no \textsl{require} clause, is treated as one, with one only being true.
+\item If there is no \inline{require} clause, is treated as one, with one only being true.\todo{WHAT?}
 \end{itemize}
 \item Postcondition
 \begin{itemize}
 \item Property that a feature guarantees every client 
-\item Can make use of keyword \textsl{old}\todo{Check for an explanation of this keyword}
+\item Can make use of keyword \inline{old}
 \end{itemize}
 \item Class invariant
 \begin{itemize}
@@ -178,10 +199,12 @@ Information hiding only applies to use by clients using dot or infix notation. U
 \begin{itemize}
 \item Semistrict operators
 \begin{itemize}
-\item Let us define the order of expression evaluation
+\item Lets us define the order of expression evaluation:
+\begin{itemize}
 \item \textbf{and then} is the semistrict version of \textbf{and}. Use it if a condition only makes sense when another is true.
 \item \textbf{or else} is the semistrict version of \textbf{or}. Use it if a condition only makes sense when another is false
 \item\textbf{implies} is always semstrict!
+\end{itemize}
 \end{itemize}
 \end{itemize}
 
@@ -225,7 +248,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \section{Inheritance and Genericity}
 \subsection{Inheritance}
 \begin{itemize}
-\item Terminology\todo[inline]{Check for a better explanation?}
+\item Terminology\todo[inline]{Find an image that explains inheritance}
 \begin{itemize}
 \item A class is a \textbf{parent} to another, if the other inherits directly from it, i.e. class $A$ is a parent to class $B$, if class $B$ inherits from class $A$
 \item The \textbf{descendants} of a class are the class itself and (recursively) the descendants of its heirs (parents). \textbf{Proper descendant} excludes the class itself.
@@ -250,7 +273,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \begin{itemize}
 \item Under repeated inheritance (the feature of \inline{f} in \inline{A} and \inline{B} comes from a common ancestor, for instance \inline{ANY})
 \item If at most one of the features \inline{f} is effective, and all others are deferred. In that case (only one feature is effective), the features are said to be \textbf{merged}. Merging also works when one or more features are renamed. The merging happens after renaming!
-\item If more than one feature are effective, merging can still help. We can \textbf{undefine} effective features, so that they are deferred again. Syntax: \inline{undefine a,b,c end}. It is even possible to fist rename a feature, undefine it and then merge it. 
+\item If more than one feature are effective, merging can still help. We can \textbf{undefine} effective features, so that they are deferred again. Syntax: \inline{undefine a,b,c end}. It is even possible to first rename a feature, undefine it and then merge it. 
 \end{itemize}
 \item Repeated Inheritance
 \begin{itemize}
@@ -264,7 +287,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \begin{itemize}
 \item Terminology:
 \begin{itemize}
-\item A \textbf{formal generic paameter} is the parameter in the class, e.g. \inline{LIST[G]} with \inline{G} as formal generic parameter.
+\item A \textbf{formal generic parameter} is the parameter in the class, e.g. \inline{LIST[G]} with \inline{G} as formal generic parameter.
 \item An \textbf{actual generic parameter} is the actual type passed as parameter in a type, e.g. \inline{LIST[INTEGER]} with \inline{INTEGER} being the actual generic parameter. 
 \item One can obtain a \textbf{generic derivation} of a generic class by passing a type
 \end{itemize}
@@ -310,7 +333,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 
 \subsection{Dynamic Binding}
 \begin{itemize}
-\item \textbf{Dynamic bonding} as a semantic rule is the property that any execution of a feature call will use the vesion of the feature best adapted to the type of the target object.
+\item \textbf{Dynamic binding} as a semantic rule is the property that any execution of a feature call will use the version of the feature best adapted to the type of the target object.
 \end{itemize}
 
 \section{Recursion}
@@ -432,12 +455,12 @@ These are remarkably good results, since search with a good hash function become
 
 \subsubsection{Dispensers}
 \begin{itemize}
-\item These structures use no key or other identifying information for items, you insert an item just by itself. You also cannot choose what element you get by the query \inline{item}, Note: \inline{item} follows the command/query separation and therefore does not remove the item returned (you would need to make your own function, day \inline{get}). The policy used to determine which item to return, may be one of the following:
+\item These structures use no key or other identifying information for items, you insert an item just by itself. You also cannot choose what element you get by the query \inline{item}, Note: \inline{item} follows the command/query separation and therefore does not remove the item returned (you would need to make your own function, say \inline{get}). The policy used to determine which item to return, may be one of the following:
 \begin{itemize}
-\item \textbf{LIFO} (\textbf{L}ast \textbf{In}, \textbf{F}irst \textbf{O}ut): Choose the element inserted most recently. Such dispenser is called \textbf{stack}, and the stack operations are known as:
+\item \textbf{LIFO} (\textbf{L}ast \textbf{I}n, \textbf{F}irst \textbf{O}ut): Choose the element inserted most recently. Such dispenser is called a \textbf{stack}, and the stack operations are known as:
 \begin{itemize}
 \item \textbf{push}: Pushes an item to the top of the stack (command \inline{put})
-\item \textbf{pop}: Pops the top item (command \inline{remove}). The body of a stack os what remains after popping
+\item \textbf{pop}: Pops the top item (command \inline{remove}). The body of a stack is what remains after popping
 \end{itemize}
 \item \textbf{FIFO} (\textbf{F}irst \textbf{In}, \textbf{F}irst \textbf{O}ut): Choose the oldest element not yet removed. Such dispenser is called \textbf{queue}.
 \begin{itemize}
@@ -450,6 +473,7 @@ These are remarkably good results, since search with a good hash function become
 
 \section{Agents}
 \begin{itemize}
+\item An object whose sole role is to describe an operation, for example if you want to treat an operation as an object
 \item Applications include:
 \begin{itemize}
 \item Iteration
@@ -464,7 +488,7 @@ These are remarkably good results, since search with a good hash function become
 \end{itemize}
 \textbf{Note}: All these types inherit from the deferred class \inline{ROUTINE}, and \inline{PREDICATE} is furthermore a descendant of \inline{FUNCTION}
 \item The important features of agents include \inline{call([open_args])}, and \inline{last_result}
-\item \textbf{Open/closed arguments}: In an agent expression you may use an argument list, may replace any f the arguments by a question mark. These are known as open arguments to the agent, and the others, the ones given by normal values, as closed. The agent then represents a function of the open arguments only. If you omit the argument list, all arguments of the underlying function are considered open.
+\item \textbf{Open/closed arguments}: In an agent expression you may use an argument list, may replace any f the arguments by a question mark\todo{Find a better explanation of this sentence}. These are known as open arguments to the agent, and the others, the ones given by normal values, as closed. The agent then represents a function of the open arguments only. If you omit the argument list, all arguments of the underlying function are considered open.
 \item \textbf{Open target}: It is also possible to keep the target of an agent open, but then you need to specify its type. The target is then passed as first item in the argument tuple to the agent.
 \item Here are some examples of agents:\\
 \begin{tabular}{r l|l}
@@ -515,7 +539,7 @@ In devising a software architecture supporting the publish-subscribe paradigm, w
 \begin{itemize}
 \item Note that this pattern is limited, and therefore should not be used. Regardless the existence of superior methods, the observer pattern is still used very frequently.
 \todo[inline]{Add observer pattern architecture picture}
-\item \textbf{Publisher}: Describes the properties of a typical publisher in charge of an event type. It can trigger events through \inline{publish}\todo{Not sure if it a command}, and subscribers can subscribe and unsubscribe
+\item \textbf{Publisher}: Describes the properties of a typical publisher in charge of an event type. It can trigger events through \inline{publish}, and subscribers can subscribe and unsubscribe
 \item \textbf{Subscriber}:  on the other hand do also have subscribe and unsubscribe to (un-) subscribe to a 
 particular publisher. The feature calls (un-)subscribe of the desired publisher, passing itself as 
 argument. Furthermore there is the deferred feature handle which expects a \inline{LIST} as 
