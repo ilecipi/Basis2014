@@ -36,11 +36,27 @@
 \section{Introduction}
 \subsection{Basic definitions}
 \begin{itemize}
-\item Feature
+\item Class: A class is a description of a possible set of run-time objects. It only exists in the software text.
+\item Object: 
 \begin{itemize}
-\item Command: No return value, but does modify objects. On the synctactical level, it is an instruction
-\item Query: Returns a value, but does not modify any objects. The syntax equivalent is the expression.
+\item An object is a software machine that allows program elements to access and modify a collection of data.
+\item  It's an actual representation (instance) of a class (generating class). 
+\item Objects only exist at runt-time and are visible in the program text through names.
+\end{itemize}\item Feature: An operation that may be applied to all the objects of a class.
 \begin{itemize}
+\item Command: 
+\begin{itemize}
+\item No return value
+\item Does modify the state of the objects
+\item On the syntactical level, it is an instruction. 
+\item May or may not have arguments
+\end{itemize}
+\item Query: 
+\begin{itemize}
+\item Returns a value
+\item Does not modify the state of any object
+\item The syntax equivalent is the expression.
+\item May or may not have arguments
 \item Functions get their results through computation
 \item Attributes are values directly stored in memory
 \end{itemize}
@@ -49,8 +65,8 @@ For queries, there is the uniform access principle, which states that it doesn't
 \end{itemize}
 \item Feature Calls
 \begin{itemize}
-\item Unqualified calls: Feature calls which apply to the current object, e.g. \inline{f(args)}
-\item Qualified calls: Feature calls which apply to a certain object, causing this object to become the current object, e.g. \inline{x.f(args)} 
+\item Unqualified calls: Feature calls which apply to the current object, e.g. \inline{f(args)}. Has \inline{Current} as an implicit target.
+\item Qualified calls: Feature calls which apply to a certain object (has an explicit target), causing this object to become the current object, e.g. \inline{x.f(args)}
 \end{itemize}
 \item Class clauses
 \begin{itemize}
@@ -85,14 +101,43 @@ For queries, there is the uniform access principle, which states that it doesn't
 \item Syntax: The way you write a program; characters grouped into words, grouped into bigger structures. 
 \item Semantics: The effect you expect from this program at runtime
 \item Identifier: Name chosen by the programmer to represent certain program elements, such as classes, features or runtime values. If it denotes a runtime value, it is called an identity or variable if it can change its value. During execution, an entity may become attached to an object. 
-\item Executing a system consists of creating a root object, which in an instance of a designated class from the system, the root class, using a designated creation procedure, called its root procedure.
+\item Creating an object consists in:
+\begin{itemize}
+\item If a class has no \inline{create} clause, use basic form: \inline{create x}
+\item If the class has a \inline{create} clause listing one or more procedures, use \inline{create x.make()}, where \inline{make()} is one of the creation procedures, and \inline{(...)} stands for the arguments
+\end{itemize}
 \end{itemize}
 \subsection{Variables}
 \begin{itemize}
 \item Types
 \begin{itemize}
-\item Reference types: Entities with a reference value
-\item Expanded types: Entities with an object as a value
+\item Reference types: 
+\begin{itemize}
+\item Entities with a reference value (contains the address, which can be the reference or location of the object).
+\item They don't exist when we declare them (they are initially \inline{void}), like so: \inline{s: STATION}
+\item We need to explicitly create them with a cerate instruction (\inline{create s})
+\end{itemize}
+\item Expanded types:
+\begin{itemize}
+\item Entities with an object as a value (points directly to the object)
+\item They exist by just declaring them (they are never \inline{void})
+\item Entities of expanded types are compared by value!
+\item To declare an expanded type:
+\begin{lstlisting}
+expanded class COUPLE
+feature --Access
+	man, woman: HUMAN
+	years_together: INTEGER
+end
+\end{lstlisting}
+All entities of type \inline{COUPLE} will automatically become expanded, i.e. \inline{pitt_and_jolie: COUPLE}
+\item Default values:
+\begin{itemize}
+\item \inline{false} for \inline{BOOLEAN}
+\item 0 for numeric types (\inline{INTEGER}, \inline{NATURAL}, \inline{REAL})
+\item ``null'' for \inline{CHARACTER}
+\end{itemize}
+\end{itemize}
 \item A type is one of:
 \begin{itemize}
 \item A non-generic class
@@ -117,6 +162,7 @@ For queries, there is the uniform access principle, which states that it doesn't
 \subsection{Interface}
 \begin{itemize}
 \item A client of a software mechanism is a system of any kind - such as a software element or a human - that uses it. For its client, the mechanism is a supplier
+\item The client is interested in a set of services that a software module provides, not its internal representation (what not how)
 \item Interface: The description of techniques enabling clients to use these mechanisms. For example: GUIs (Graphical User Interface), command line interfaces (shell, bash,\dots), or APIs
 \item An object can be an instance of a class, if the class is the generating class of the object
 \end{itemize}
@@ -162,6 +208,7 @@ end
 \begin{itemize}
 \item Non-negative (i.e. $\geq$ 0) integer expression, right after initialization
 \item Decreases while remaining non-negative for every iteration of the body with exit condition not satisfied. 
+\item A loop with a correct variant cannot be infinite
 \end{itemize}
 \end{itemize}
 \item Conditional: consists of a condition and two sequences of instructions. Its execution consists of executing one or the other of these sequences depending on whether the condition evaluates to \inline{true} or \inline{false}.
@@ -182,12 +229,21 @@ end
 \item Precondition
 \begin{itemize}
 \item Property that a feature imposes on every client
-\item If there is no \inline{require} clause, is treated as one, with one only being true.\todo{WHAT?}
+\item If there is no \inline{require} clause, the precondition always evaluates to \inline{true}, as if it was written like this:
+\begin{lstlisting}
+require
+	always_OK: true
+\end{lstlisting}
 \end{itemize}
 \item Postcondition
 \begin{itemize}
-\item Property that a feature guarantees every client 
-\item Can make use of keyword \inline{old}
+\item Property that a feature guarantees on termination to every client
+\item A feature with no \inline{ensure} clause always satisfies its postcondition, as if it was written like this:
+\begin{lstlisting}
+ensure
+	always_OK: true
+\end{lstlisting}
+\item Can make use of keyword \inline{old} (checks the result against the previous value of it)
 \end{itemize}
 \item Class invariant
 \begin{itemize}
@@ -248,9 +304,27 @@ The regular grammar is generally used to describe the terminal construct, which 
 \section{Inheritance and Genericity}
 \subsection{Inheritance}
 \begin{itemize}
+\item Principle: Describe a new class as extension or specialization of an existing class (or several with multiple inheritance)
+\item If \inline{B} inherits from \inline{A}:
+\begin{itemize}
+\item As modules: All the services of \inline{A} are available in \inline{B} (possibly with a different implementation)
+\item As types: Whenever an instance of \inline{A} is required, an instance of \inline{B} will be acceptable
+\end{itemize}
+\item Deferred classes:
+\begin{itemize}
+\item Deferred classes can have deferred features
+\item A class with at least one deferred feature must be declared as deferred
+\item A deferred feature does not have an implementation yet
+\item Deferred clauses cannot be instantiated and hence cannot contain a create clause
+\end{itemize}
+\item Effective classes:
+\begin{itemize}
+\item Effective classes do not have deferred features
+\item Effective routines ave an implementation of their feature body
+\end{itemize}
 \item Terminology\todo[inline]{Find an image that explains inheritance}
 \begin{itemize}
-\item A class is a \textbf{parent} to another, if the other inherits directly from it, i.e. class $A$ is a parent to class $B$, if class $B$ inherits from class $A$
+\item A class is a \textbf{parent} to another, if the other inherits directly from it, i.e. class \inline{A} is a parent to class \inline{B}, if class \inline{B} inherits from class \inline{A}
 \item The \textbf{descendants} of a class are the class itself and (recursively) the descendants of its heirs (parents). \textbf{Proper descendant} excludes the class itself.
 \end{itemize}
 \item \textbf{Features of classes}
@@ -274,6 +348,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \item Under repeated inheritance (the feature of \inline{f} in \inline{A} and \inline{B} comes from a common ancestor, for instance \inline{ANY})
 \item If at most one of the features \inline{f} is effective, and all others are deferred. In that case (only one feature is effective), the features are said to be \textbf{merged}. Merging also works when one or more features are renamed. The merging happens after renaming!
 \item If more than one feature are effective, merging can still help. We can \textbf{undefine} effective features, so that they are deferred again. Syntax: \inline{undefine a,b,c end}. It is even possible to first rename a feature, undefine it and then merge it. 
+\item They all have the same signature
 \end{itemize}
 \item Repeated Inheritance
 \begin{itemize}
@@ -290,6 +365,11 @@ The regular grammar is generally used to describe the terminal construct, which 
 \item A \textbf{formal generic parameter} is the parameter in the class, e.g. \inline{LIST[G]} with \inline{G} as formal generic parameter.
 \item An \textbf{actual generic parameter} is the actual type passed as parameter in a type, e.g. \inline{LIST[INTEGER]} with \inline{INTEGER} being the actual generic parameter. 
 \item One can obtain a \textbf{generic derivation} of a generic class by passing a type
+\end{itemize}
+\item Static vs. Dynamic types:
+\begin{itemize}
+\item Static types are the types that we use while writing, to declare types for entities (arguments, locals, return values)
+\item Dynamic types are created at run-time. Whenever an object is created, it gets assigned to be of some type. 
 \end{itemize}
 \item Types
 \begin{itemize}
@@ -427,6 +507,13 @@ Iteration (or trasversal) & Apply a given operation to every item\\\hline
 \end{itemize}
 \subsubsection{Arrays}
 \begin{itemize}
+\item An array is characterized by:
+\begin{itemize}
+\item Constant time for random reads/writes
+\item Costly to resize (including inserting elements in the middle of the array)
+\item Must be indexed by an integer
+\item Generally very space efficient
+\end{itemize}
 \item Even though arrays are of fixed size with a capacity of \inline{upper-lower+1}, they can be resized. Instead of \inline{put} you may use \inline{force}, which has no precondition and resizes the array when needed.
 \end{itemize}
 \subsubsection{Hash Tables}
@@ -445,8 +532,13 @@ These are remarkably good results, since search with a good hash function become
 
 \subsubsection{Tuples}
 \begin{itemize}
-\item \inline{tup: TUPLE[number: INTEGER, street: STRING, resident: PERSON]}
-\item \inline{tup := [99, "Weg", god_himself]}
+\item In mathematics, computer science, linguistics, and philosophy a tuple is an ordered list of elements. In set theory, an (ordered) $n-$tuple is a sequence (or ordered list) of elements, where $n$ is a non-negative integer
+\item Tuples can be declared with
+\begin{itemize}
+\item Labeled arguments: \inline{TUPLE[INTEGER, STRING, PERSON]}
+ \item Unlabeled arguments: \inline{tup: TUPLE[number: INTEGER, street: STRING, resident: PERSON]}
+\end{itemize}
+\item Is used like so:  \inline{tup := [99, "Weg", god_himself]}
 \item One may think of tuples as of classes with only attributes. They therefore are also more interesting as a language mechanism to describe simple structures in a clear and simple way, rather than they are in the sense of a data structure.
 \item Tags (like \inline{number} in the above example) are optional, they do not affect the type of a Tuple. 
 \item A Tuple with no arguments can hold any tuple, one with only one argument may hold any tuples with at least one element with the first of same type, etc.
@@ -474,6 +566,8 @@ These are remarkably good results, since search with a good hash function become
 \section{Agents}
 \begin{itemize}
 \item An object whose sole role is to describe an operation, for example if you want to treat an operation as an object
+\item Every agent has an associated routine, which the agent wraps and is able to invoke.
+\item To get an agent, use the \inline{agent} keyword, e.g. \inline{a_agent := agent my_routine}
 \item Applications include:
 \begin{itemize}
 \item Iteration
@@ -488,7 +582,17 @@ These are remarkably good results, since search with a good hash function become
 \end{itemize}
 \textbf{Note}: All these types inherit from the deferred class \inline{ROUTINE}, and \inline{PREDICATE} is furthermore a descendant of \inline{FUNCTION}
 \item The important features of agents include \inline{call([open_args])}, and \inline{last_result}
-\item \textbf{Open/closed arguments}: In an agent expression you may use an argument list, may replace any f the arguments by a question mark\todo{Find a better explanation of this sentence}. These are known as open arguments to the agent, and the others, the ones given by normal values, as closed. The agent then represents a function of the open arguments only. If you omit the argument list, all arguments of the underlying function are considered open.
+\item \textbf{Open/closed arguments}: 
+\begin{itemize}
+\item An agent can have both ``closed'' and ``open'' arguments:
+\begin{itemize}
+\item \textbf{Closed arguments} are set at agent definition time
+\item \textbf{Open arguments} are set at agent call time
+\end{itemize}
+\item To keep an argument open, replace it by a question mark, i.e. \inline{v := agent a0.f(a1,?,a3)}
+\item All closed argument agent: \inline{u := agent a0.f(a1,a2,a3)}
+\item If you omit the argument list, all arguments of the underlying function are considered open.
+\end{itemize}
 \item \textbf{Open target}: It is also possible to keep the target of an agent open, but then you need to specify its type. The target is then passed as first item in the argument tuple to the agent.
 \item Here are some examples of agents:\\
 \begin{tabular}{r l|l}
