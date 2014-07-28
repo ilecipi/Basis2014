@@ -42,7 +42,23 @@
 \item An object is a software machine that allows program elements to access and modify a collection of data.
 \item  It's an actual representation (instance) of a class (generating class). 
 \item Objects only exist at runt-time and are visible in the program text through names.
-\end{itemize}\item Feature: An operation that may be applied to all the objects of a class.
+\item The type of any object you use in your program must be declared either
+\begin{itemize}
+\item In feature declarations
+\item In the \inline{local} clauses of routines (when only the routine needs to know about it)
+\end{itemize}
+\end{itemize}
+\item Feature: An operation that may be applied to all the objects of a class.
+
+\begin{lstlisting}
+set_name(a_name: STRING)
+--Set name to a_name
+do
+	name := a_name
+end
+name: STRING
+\end{lstlisting}
+
 \begin{itemize}
 \item Command: 
 \begin{itemize}
@@ -655,7 +671,11 @@ In devising a software architecture supporting the publish-subscribe paradigm, w
 \subsubsection{Observer Pattern}
 \begin{itemize}
 \item Note that this pattern is limited, and therefore should not be used. Regardless the existence of superior methods, the observer pattern is still used very frequently.
-\todo[inline]{Add observer pattern architecture picture}
+
+\begin{center}
+\includegraphics[scale=0.26]{Figures/observerPatternArchitecture.jpg}
+\end{center}
+
 \item \textbf{Publisher}: Describes the properties of a typical publisher in charge of an event type. It can trigger events through \inline{publish}, and subscribers can subscribe and unsubscribe
 \item \textbf{Subscriber}:  on the other hand do also have subscribe and unsubscribe to (un-) subscribe to a 
 particular publisher. The feature calls (un-)subscribe of the desired publisher, passing itself as 
