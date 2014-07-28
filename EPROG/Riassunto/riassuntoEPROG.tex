@@ -115,7 +115,7 @@ For queries, there is the uniform access principle, which states that it doesn't
 \begin{itemize}
 \item Entities with a reference value (contains the address, which can be the reference or location of the object).
 \item They don't exist when we declare them (they are initially \inline{void}), like so: \inline{s: STATION}
-\item We need to explicitly create them with a cerate instruction (\inline{create s})
+\item We need to explicitly create them with a create instruction (\inline{create s})
 \end{itemize}
 \item Expanded types:
 \begin{itemize}
@@ -259,7 +259,7 @@ ensure
 \begin{itemize}
 \item \textbf{and then} is the semistrict version of \textbf{and}. Use it if a condition only makes sense when another is true.
 \item \textbf{or else} is the semistrict version of \textbf{or}. Use it if a condition only makes sense when another is false
-\item\textbf{implies} is always semstrict!
+\item\textbf{implies} is always semistrict!
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -269,7 +269,7 @@ ensure
 Backus-Naur-Form (BNF): A metasyntax used to express context-free grammars. A formal way to describe formal languages. It consists of the following parts
 \begin{itemize}
 \item \textbf{Delimiters}: Fixed tokens of the languages vocabulary, such as keywords and special symbols
-\item \textbf{Constructs}: They represent structures of the language, for instance \emph{Conditional}. A particular instance of a construct os known as a specimen of the construct. There are two kinds of constructs:
+\item \textbf{Constructs}: They represent structures of the language, for instance \emph{Conditional}. A particular instance of a construct or known as a specimen of the construct. There are two kinds of constructs:
 \begin{itemize}
 \item \textbf{Nonterminal construct}: They are defined by a production
 \item \textbf{Terminal construct}: Terminal constructs such as \emph{Identifier} or \emph{Integer} are not defined by this grammar, they are described at the lexical level
@@ -320,7 +320,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \item Effective classes:
 \begin{itemize}
 \item Effective classes do not have deferred features
-\item Effective routines ave an implementation of their feature body
+\item Effective routines have an implementation of their feature body
 \end{itemize}
 \item Terminology\todo[inline]{Find an image that explains inheritance}
 \begin{itemize}
@@ -471,7 +471,7 @@ The regular grammar is generally used to describe the terminal construct, which 
 \hline
 Insertion & Add an item\\\hline
 Removal & Remove an occurence (if any) of an item\\\hline
-Wipeout & Remove remove all occurences of an item\\\hline
+Wipeout & Remove all occurences of an item\\\hline
 Search & Find out if a given item is present \\\hline
 Iteration (or trasversal) & Apply a given operation to every item\\\hline
 \end{tabular}
@@ -663,7 +663,7 @@ work, but who does have them other than Eiffel? And Eiffel can do better..)
 
 \subsubsection{Event Type Library (A Much Better Approach)}
 \begin{itemize}
-\item There us only a single class \inline{EVENT_TYPE[ARGS -> TUPLE]} with a generic parameter, ensuring type safety. 
+\item There is only a single class \inline{EVENT_TYPE[ARGS -> TUPLE]} with a generic parameter, ensuring type safety. 
 \item One can create event types, for instance:
 \begin{lstlisting}
 left_click: EVENT_TYPE[TUPLE[x:REAL,y:REAL]]
