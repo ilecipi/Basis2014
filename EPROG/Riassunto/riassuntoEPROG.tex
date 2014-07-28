@@ -63,6 +63,9 @@
 For queries, there is the uniform access principle, which states that it doesn't matter to the client whether a query is implemented as a function or attribute. Features should be accessible to clients the same way whether implemented by storage or by computation.
 \item Creation Procedure: Commands to initiate objects, can be several. There is also a \inline{default_create}, which is inherited by all classes, and does nothing by default. 
 \end{itemize}
+\begin{center}
+\includegraphics[scale=0.25]{Figures/featureQuery.jpg}
+\end{center}
 \item Feature Calls
 \begin{itemize}
 \item Unqualified calls: Feature calls which apply to the current object, e.g. \inline{f(args)}. Has \inline{Current} as an implicit target.
@@ -107,6 +110,9 @@ For queries, there is the uniform access principle, which states that it doesn't
 \item If the class has a \inline{create} clause listing one or more procedures, use \inline{create x.make()}, where \inline{make()} is one of the creation procedures, and \inline{(...)} stands for the arguments
 \end{itemize}
 \end{itemize}
+
+
+
 \subsection{Variables}
 \begin{itemize}
 \item Types
@@ -157,8 +163,9 @@ All entities of type \inline{COUPLE} will automatically become expanded, i.e. \i
 \item Shallow field-by-field copy (does not create an object): \inline{b.copy(a)}
 \end{itemize}
 \end{itemize}
-\todo[inline]{Maybe add the objet creation diagram??}
-
+\begin{center}
+\includegraphics[scale=0.27]{Figures/variableCopy.jpg}
+\end{center}
 \subsection{Interface}
 \begin{itemize}
 \item A client of a software mechanism is a system of any kind - such as a software element or a human - that uses it. For its client, the mechanism is a supplier
@@ -322,11 +329,14 @@ The regular grammar is generally used to describe the terminal construct, which 
 \item Effective classes do not have deferred features
 \item Effective routines have an implementation of their feature body
 \end{itemize}
-\item Terminology\todo[inline]{Find an image that explains inheritance}
+\item Terminology
 \begin{itemize}
 \item A class is a \textbf{parent} to another, if the other inherits directly from it, i.e. class \inline{A} is a parent to class \inline{B}, if class \inline{B} inherits from class \inline{A}
 \item The \textbf{descendants} of a class are the class itself and (recursively) the descendants of its heirs (parents). \textbf{Proper descendant} excludes the class itself.
 \end{itemize}
+\begin{center}
+\includegraphics[scale=1]{Figures/inheritance_example.png}
+\end{center}
 \item \textbf{Features of classes}
 \begin{itemize}
 \item They can be \textbf{inherited} if it is a feature of one of the parents of the class. They can also be \textbf{immediate} if it is declared in the class. In this case, the class is said to introduce the feature
@@ -461,7 +471,10 @@ The regular grammar is generally used to describe the terminal construct, which 
 \end{itemize}
 \item In a binary search tree, average behavior for insertion, deletion and search is $O\left( \log(n)\right)$, only worst case is $O(n)$
 \end{itemize}
-\todo[inline]{Add binary search tree image}
+
+\begin{center}
+\includegraphics[scale=0.3]{Figures/rooted_binary_tree.png}
+\end{center}
 
 \subsection{Container data structures}
 \begin{itemize}
