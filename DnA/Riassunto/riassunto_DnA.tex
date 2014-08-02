@@ -46,6 +46,7 @@
 
 
 \begin{document}
+\maketitle
 
 \frontmatter
 \tableofcontents %put toc in
@@ -67,7 +68,7 @@ Un esempio di algoritmo più efficiente per multiplicare due numeri è il seguen
 $$65 * 28 = (2 * 6) * 100 + (2 * 6) * 10 + (5 * 8) * 10 + 5 * 8 + (6-5)*(8-2) * 10 = 1820 $$
 oppure, scritto in un altro modo:
 \[ab*cd=100*a*c+10*a*c+10*b*d+b*d+10(a-b)(d-c)\]
-In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multimplicazioni otteniamo che impieda circa $O(n^{1,58})$.
+In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multiplicazioni otteniamo che impiega circa $O(n^{1,58})$.
 \section{Maximum subarray (Pag. 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
 \begin{lstlisting}[tabsize=\lstIndent][tabsize=\lstIndent]
@@ -239,12 +240,12 @@ versickere(int[] a, int i, int m)
 		if j<m //a[i] ha anche un figlio a destra
 			if a[j]<a[j+1]
 				j=j+1
-			//ora a[j] e' il figlio con un valore maggiore
-			if a[i]<a[j]
-				swap(a[i],a[j])
-				i=j //va avanti a restaurare
-			else
-				i=m //fine		
+		//ora a[j] e' il figlio con un valore maggiore
+		if a[i]<a[j]
+			swap(a[i],a[j])
+			i=j //va avanti a restaurare
+		else
+			i=m //fine		
 \end{lstlisting}                                                                                                 
 \subsection*{Analisi}
 La costruzione dell'heap avviene in tempo lineare. Il resto dell'algoritmo prevede $n$ volte il metodo versickere, quindi in totale l'algoritmo richiede $O(n \log (n))$ comparazioni e spostamenti nel peggior caso. Da notare che non occupa spazio extra, quindi è completamente ``in situ''. L'unico problema è che non è stabile, vale a dire che la posizione relativa di chiavi con lo stesso valore inizialmente adiacenti può cambiare. 
@@ -400,9 +401,9 @@ radixsort_list(int[] a)
 	int i,j,t
 	for j=0:m-1
 		l[j]=new List<Integer>() //inizializza la lista
-	for t=1:l-1
+	for t=0:bit_length
 		//fase di divisione
-		for i=1:n
+		for i=0:n-1
 			j=z(t,a[i])
 			l[j].pushtail(a[i]) //aggiunge all'ultima posizione
 		//fase di raccolta
@@ -467,24 +468,24 @@ Si incappa dunque in una contraddizione.
 \section{Auswahlproblem (Pag. 168)}
 Il primo approcio nel cercare di trovare l'$i-$tesimo elemento più piccolo è quello di ordinare dapprima la sequenza per poi eliminare i primi $i-1$ elementi. In questo caso si ottiene un tempo di $O(n \log (n))$. Seguendo lo stesso principio di quicksort è però possibile arrivare alla soluzione in tempo lineare. Per l'implementazione faremo uso del metodo, simile a quello usato in quicksort:
 \begin{lstlisting}[tabsize=\lstIndent]
-int dividi(int l,r, pivot)
+int divide(int l,r, pivot)
 	/* divide a[l], ... , a[r] in due gruppi
 	   a[l], ..., a[m-1] sono < pivot
-	   a[m], ..., a[m] sono >= pivot
+	   a[m], ..., a[r] sono >= pivot
 	   restituisce il valore di m */
 \end{lstlisting}
 Una volta trovato $m$ abbiamo tre possibilità: la chiave si trova nel primo gruppo, o nel secondo, o l'abbiamo trovata.
 
 \begin{lstlisting}[tabsize=\lstIndent]
-trova (int l,r,i)
+find (int l,r,i)
 	int m,v
 	if r>l
 		//scegliere pivot v
-		m=teile(l,r,v)
+		m=divide(l,r,v)
 		if i<=m-l
-			trova (l, m-1, i)
+			find (l, m-1, i)
 		else
-			trova (m,r,i-m+l)
+			find (m,r,i-m+l)
 	else
 		//r=l, qundi i=1
 		//l'elemento si trova nella posizione a[l]	 			
@@ -743,7 +744,8 @@ ergibt sich die in Abbildung 4.5 dargestellte Situation.}
 \begin{center}
 \includegraphics[scale=0.3]{Figures/bsp4.jpg}
 \end{center}
-\emph{Schlüssel 2 kann ohne weitere Reorganisation der Datei in Block 0 (genauer: Dessen Überlaufblock) eingefügt werden. Erst Schlüssel 19 führt wieder zu einem Überschreiten des Schwellenwerts des Belegungsfaktors und damit zum Anhängen eines neuen Datenblocks an die Hashdatei. Damit ist eine weitere Dateiverdoppelung beendet und wir erhalten die in Abbildung 4.6 gezeigte Situation.Schliesslich kann Schlüssel 43 in Datenblock 1 eingetragen werden und die Folge der Einfügungen ist beendet.}
+\emph{Schlüssel 2 kann ohne weitere Reorganisation der Datei in Block 0 (genauer: Dessen Überlaufblock) eingefügt werden. Erst Schlüssel 19 führt wieder zu einem Überschreiten des Schwellenwerts des Belegungsfaktors und damit zum Anhängen eines neuen Datenblocks an die Hashdatei. Damit ist eine weitere Dateiverdoppelung beendet und wir erhalten die in Abbildung 4.6 gezeigte Situation.
+Schliesslich kann Schlüssel 43 in Datenblock 1 eingetragen werden und die Folge der Einfügungen ist beendet.}
 \begin{center}
 \includegraphics[scale=0.45]{Figures/bsp3.png}
 \end{center}
@@ -859,7 +861,7 @@ Per evitare che ogni volta venga raddoppiato il numero dei blocchi si rende ques
 \includegraphics[scale=0.5]{Figures/virtuelleshashing.png}
 \end{center}
 \subsection{Erweiterbares Hashing (Pag. 236)}
-Grazie ad extendible hashing è possibile trovare l'indirizzo di una chiave ricercata con al massimo 2 accessi alla memoria esterna. Il sistema prevede di utilizzare tutti gli indirizzi disponibili. Nell'esempio precedente c'è ad esempio un solo numero che inizia con 1 ma 4 celle nella tabella degli indirizzi. Potrebbo benissimo utilizzarne solo uno. Con * vengono marcati indirizzi fittizzi, vale a dire blocchi in cui non viene salvato niente. 
+Grazie ad extendible hashing è possibile trovare l'indirizzo di una chiave ricercata con al massimo 2 accessi alla memoria esterna. Il sistema prevede di utilizzare tutti gli indirizzi disponibili. Nell'esempio precedente c'è un solo numero che inizia con 1 ma 4 celle nella tabella degli indirizzi. Si potrebbe benissimo utilizzarne solo uno. Con * vengono marcati indirizzi fittizzi, vale a dire blocchi in cui non viene salvato niente. 
 \begin{center}
 \includegraphics[scale=0.5]{Figures/erha1.png}
 \end{center}
@@ -937,7 +939,7 @@ Se $T$ è una foglia $P(T)=0$. Dividiamo dunque $I$ in sempre più grossi interv
 \item $W(i,j)$ il peso di $T(i,j)$, dunque $W(i,j)=b_i+a_{i+1}+...+a_j+b_j$.
 \item $P(i,j)$ la gewichtete Pfadlänge di $T(i,j)$.
 \end{itemize}
-Grazie alla formula precedente si può calcolare $P(i,j)$ utilizzando l'indice l della radice di $T(i,j)$ e i due sottoalberi $T(i,l-1)$ e $T(l,j)$. Definendo:
+Grazie alla formula precedente si può calcolare $P(i,j)$ utilizzando l'indice $l$ della radice di $T(i,j)$ e i due sottoalberi $T(i,l-1)$ e $T(l,j)$. Definendo:
 \begin{align*}
 W(i,i)&=b_j\\
 W(i,j)&=W(i,j-1)+a_j+b_j\\
@@ -974,18 +976,18 @@ Questo procedimento richiede un tempo di:
 $$\sum_{h=2}^n \sum_{i=0}^{n-h} O(h+1)=\sum_{h=2}^n O((n-h+1)(h+1))= O(n^3)$$
 Un possibile miglioramento deriva dal principio di monotonia, cioè:
 $$r(i,j-1)\leq r(i,j) \leq r(i+1,j)$$
-In questo modo la ricerca di $l$ avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. In questo modo si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
+In questo modo la ricerca di $l$ avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. Così si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
 In ogni caso non è sempre conveniente cercare un albero ottimale con questo algoritmo, a volte basta un albero quasi ottimale. Ad esempio nella Serie 12 è stato calcolato un albero ottimale basandosi semplicemente sul fatto che la somma dei pesi di due sottoalberi sia minore della probabilità del nodo.
 \begin{center}
 \includegraphics[scale=0.3]{Figures/optimaltree.jpg}
 \end{center} 
 \section{Binary Heap}
-Abbiamo già in parte visto questa struttura per Heapsort. La sua principale caratteristica è che una chiave $k_i \leq k_{\lfloor\frac{1}{2} \rfloor}, 2\leq i\leq n$. In questo caso si tratta di un max Heap, se la relazione è al contrario si tratta di un min Heap. 
+Abbiamo già in parte visto questa struttura per Heapsort. La sua principale caratteristica è che una chiave $k_i \leq k_{\lfloor\frac{i}{2} \rfloor}, 2\leq i\leq n$. In questo caso si tratta di un max Heap, se la relazione è al contrario si tratta di un min Heap. 
 \paragraph*{Vocabolario}
 A seguire l'implementazione di un min heap. Poniamo che le chiavi siano salvate in un array di dimensioni sufficienti. Salviamo inoltre la variabile n, che indica il numero di elementi presenti nell'array.
 \begin{itemize}
 \item \inline{Min}: ritorna $A[1]$
-\item \inline{Inserisci(x)}: incrementiamo $n$ di 1 e piazziamo $x$ alla posizione $A[n]$. Per restaurare le proprietà dell'heap ($x$ può essere minore del suo predecessore) chiamiamo \inline{bottom-up(i)}.
+\item \inline{Add(x)}: incrementiamo $n$ di 1 e piazziamo $x$ alla posizione $A[n]$. Per restaurare le proprietà dell'heap ($x$ può essere minore del suo predecessore) chiamiamo \inline{bottom-up(i)}.
 \item \inline{Delete(i)}: chiamiamo replace$(i,A[n])$. Dopodiché la chiave $A[n]$ compare due volte, quindi riduciamo la dimensione dell'heap di 1. 
 \item \inline{Replace(i,k)}: poniamo $k'=A[i]$. Innanzitutto $A[i]=k$, poi dobbiamo distinguere due casi: se $k<k'$ chiamiamo \inline{bottom-up(i)}, altrimenti \inline{shift-down(i)}. Da ricordarsi che \inline{shift-down(i)} altro non è che \\\inline{versickere(i,n)} trattato nel capitolo ``Sort''. In ogni caso è analogo a \inline{bottom-up(i)}.
 \end{itemize}
@@ -1028,7 +1030,7 @@ La ricerca di una chiave può essere vista come una generalizzazione della ricer
 Per aggiungere una nuova chiave si cerca innanzitutto nell'albero. La ricerca finisce senza successo in una foglia rappresentante la posizione in cui avrebbe dovuto trovarsi la chiave (chiamiamola x). Sia p il padre di questa foglia con l chiavi. 
 \begin{itemize}
 \item Se p ha ancora meno di m-1 chiavi inserisci x nelle chiavi di p e crea una nuova foglia (bisogna aggiungere anche un puntatore).
-\item Se p ha già m-1 chiavi aggiungiamo  dividiamo in due il nodo (da una parte tutte le chiavi >x e dall'altra tutte quelle <). Dopodiché aggiungiamo x al padre di p assieme ad un puntatore che punta su una delle due parti (vedi immagine). 
+\item Se p ha già m-1 chiavi aggiungiamo  dividiamo in due il nodo (da una parte tutte le chiavi $>x$ e dall'altra tutte quelle $<$). Dopodiché aggiungiamo x al padre di p assieme ad un puntatore che punta su una delle due parti (vedi immagine). 
 \end{itemize}
 \begin{center}
 \includegraphics[scale=0.5]{Figures/bbaumadd.png}
@@ -1061,7 +1063,7 @@ class HeapNode<Comparable>
 \item \inline{Insert(x)}: costruisci un F-Heap $h'$ formato dalla sola chiave $x$ ed uniscilo con $h$ tramite \inline{meld(h}$'$\inline{)}.
 \item\inline{Min}: il minimo è indicato dal puntatore dell'heap.
 \item\inline{Meld(h}${}'$\inline{)}: inserisci la radice di $h'$ nella lista di radici di $h$. L'elemento più piccolo tra il minimo di $h$ e quello di $h'$ diventa l'elemento minimo del nuovo F-Heap. Chiaramente le precedenti operazioni possono essere eseguite in tempo costante. 
-\item \inline{DeleteMin}: I figli del minimo vengono inseriti nella lista delle radici, dopodiché il minimo viene rimosso. In seguito coppie di heap dallo stesso rango $r$ vengono uniti in un heap dal rango $r+1$ (rendendo la radice più grande figlia di quella più piccola) finché nella Wurzelliste non rimangono più heap dallo stesso rango. Richiede $O(\log(n))$.
+\item \inline{DeleteMin}: I figli del minimo vengono inseriti nella lista delle radici, dopodiché il minimo viene rimosso. In seguito coppie di heap dallo stesso rango $r$ vengono uniti in un heap dal rango $r+1$ (rendendo la radice più grande figlia di quella più piccola) finché nella Wurzelliste non rimangono più heap dallo stesso rango. Richiede $O(\log(n))$ ammortizzato.
 \item\inline{Decrease-key(x,k)}: Diminuiamo il valore della chiave $x$ con $k$.
 \end{itemize}
 \begin{lstlisting}[tabsize=\lstIndent]
@@ -1156,7 +1158,7 @@ Come diretta conseguenza \inline{find(x)} impiega al massimo $\log(n)$ passi. Le
 \chapter{Tecniche per lo sviluppo di algoritmi}
 \section{Dynamische Programmierung}
 \subsection{Principio}
-Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo $nm$), mentre la complessità è $O(mnc)$, dove c'è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella $(n,m)$ per poi procedere con il backtracking.
+Il principio di base della programmazione dinamica è quello di descrivere il problema in una tabella. Da un certo punto di vista è simile all'induzione, ma al posto di procedere in modo ricorsivo si sfruttano i dati già calcolati nelle righe e colonne precedenti. Lo spazio richiesto rispecchia le dimensioni della tabella (diciamo $nm$), mentre la complessità è $O(mnc)$, dove $c$ è la complessità necessaria per riempire una cella. Per leggere la soluzione bisogna solitamente leggere il risultato nella cella $(n,m)$ per poi procedere con il backtracking.
 \subsection{Rucksackproblem (Pag. 452)}
 Sia $G$ la capienza massima dello zaino, $w[i]$ il valore dell'$i-$tesimo oggetto e $g[i]$ il peso di esso. La formula ricorisva per la soluzione del problema è la seguente:
 $$maxvalue(i,g)=\max \{maxvalue(i-1,g),w[i]+maxvalue(i-1,g-g[i])\}$$
@@ -1389,9 +1391,9 @@ void add(Intervall I, Node p)
 	if (I(p) is in I)
 		//inserisci I nella lista di intervalli di p
 	else
-		if (p ha un figlio sinistro s) && (I(s) non si sovrappone con I)
+		if (p ha un figlio sinistro s) && (I(s) intesect I)
 			add(I,s)
-		if (p ha un figlio destro d) && (I(d) non si sovrappone con I)
+		if (p ha un figlio destro d) && (I(d) intersect I nicht)
 			add(I,d)
 			
 /*cerchiamo intervallo elementare che contiene x e ritorniamo tutti gli 
@@ -1406,13 +1408,13 @@ report(Node p, Point x)
 		if (p ha un figlio destro d) && (x is in I(d))
 			report(d,x)				
 \end{lstlisting}
-\todo{In add non dovrebbe essere il contrario e sovrapporsi!?}
+\todo{Secondo wikipedia in add I(s) ed I devono intersecarsi, secondo il libro no}
 Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa $O(n \log(n))$ di spazio.
 \begin{center}
 \includegraphics[scale=0.3]{Figures/segtreew.png}
 \end{center}
 \subsection{Intervall Bäume (Pag. 512)}
-Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $o-$list ai punti iniziali.
+Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $u-$list ai punti iniziali.
 \begin{lstlisting}[tabsize=\lstIndent]
 //add an interval I=[a,b] to the node p
 add (Interval i, Node p)
@@ -1467,7 +1469,7 @@ topSort(Graph G)
 	Stack<Node> degzero
 	indeg //array [Node] of integers
 	
-	//set eingrad[v]
+	//set indeg[v]
 	for v=1:n //assume that G has n nodes
 		indeg[v]=0 
 		for v=1:n
@@ -1488,7 +1490,7 @@ topSort(Graph G)
 		ord[v]=lfdNr
 		p=adjacencyList[v]
 		while p!=null
-			w=p.endnode		
+			w=p.next.endnode		
 			indeg[w]--
 			if indeg[w]=0
 				degzero.push(w)
@@ -1629,13 +1631,13 @@ Inizialmente tutti i nodi che non sono stati scelti appartengono a $R$. Dopodich
 Le operazioni 1. e 2. richiedono tempo costante, mentre 3. e 4. tempo logaritmico. In totale $O(|E|\log (|V|))$.
 \paragraph*{Fibonacci Heap}
 1, 2, 4 possono essere eseguite in tempo ammortizzato costante, mentre 3. in tempo logaritmico. In totale $O(|E|+|V|\log (|V|))$.
-\subsection*{Bellman-Ford}
+\subsection{Bellman-Ford}
 Nel caso di un grafo con valori negativi il percorso più breve si lascia trovare nel seguente modo:
 \begin{lstlisting}[tabsize=\lstIndent]
 int infinity //a big number
 Set<Node> R=nullSet
 	
-Dijkstra(Graph G, Node s)
+Bellman-Ford(Graph G, Node s)
 	for (Node v: V-{s})
 		v.predecessor=null
 		v.distance=infinity
@@ -1701,10 +1703,10 @@ for (Edge e:E)
 	f(e)=0
 //iterations, the flow f grows up
 while (there is a path p from q to s)
-	r=min\{rest(e)|e is in p\}
+	r=min{rest(e)|e is in p}
 	grow f across p of r units
 \end{lstlisting}
-Si tratta di una semplice versione che richiede $O(|V||E|^2)$. Tramite l'inserimento di una soglia $c$ approssimativa (Schwelle) che viene dimezzata ad ogni iterazione possiamo migliorarne il tempo. In questo caso consideriamo solo i lati con una capacità maggiore della soglia, aumentiamo la capacità per poi diminuire la soglia. Il tempo richiesto è di $O(\log (c)m^2)$. 
+Si tratta di una semplice versione che richiede $O(|V||E|^2)$ (algoritmo di Edmonton e Karp). Tramite l'inserimento di una soglia $c$ approssimativa (Schwelle) che viene dimezzata ad ogni iterazione possiamo migliorarne il tempo. In questo caso consideriamo solo i lati con una capacità maggiore della soglia, aumentiamo la capacità per poi diminuire la soglia. Il tempo richiesto è di $O(\log (c)m^2)$. Esiste anche l'algoritmo di Dinic, che impiega $O(|V|^2|E|)$. Esso calcola il blocking flow ad ogni iterazione, praticamente viene aggiunta più di una via per volta.
 
 Ecco una versione completa dell'algoritmo di base, estratta dall'API condivisa sul seguente link: \url{https://db.tt/ftsSt6j9}.
 \begin{lstlisting}[tabsize=\lstIndent]
@@ -1782,7 +1784,7 @@ Consideriamo il problema del matching ottimale tra due set. Le coppie possibili 
 \end{center}
 In questo caso, dato che il costo è sempre 1, la crescita del Restgraph consiste semplicemente nel cambiamento di direzione delle frecce. In un livello di astrazione più concreto questo corrisponde nel liberare una coppia per poterne formare altre due. L'esecuzione dell'algoritmo in questo speciale tipo di grafo richiede solamente $O(\sqrt{|V|}|E|)$.
 \subsection{Teoria sul matching}
-Sia $G=(V,E)$ un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessu vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
+Sia $G=(V,E)$ un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessun vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
 \begin{mytheorem}{Satz von Hall}
 Non esiste un matching perfetto in un grafo bipartito se esiste un insieme $M$ di vertici per cui:
 $$|\Gamma (M)|<|M|$$
