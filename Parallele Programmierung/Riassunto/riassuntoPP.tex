@@ -2492,7 +2492,55 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \end{itemize}
 \end{itemize}
 \end{itemize}
+\item The potential of GPUs for general purpose computation:
+\begin{itemize}
+\item Power and flexibility of GPUs makes them an attractive platform
+\item The problem: Difficult to use
+\begin{itemize}
+\item GPU designed and designed for and driven by video games
+\begin{itemize}
+\item Programming model is unusual \& tied to computer graphics
+\item Programming environment is tightly constrained
 \end{itemize}
-%INTRO GPGPU, PAGE 17
+\item Underlying architectures are:\begin{itemize}
+\item Inherently parallel
+\item Rapidly evolving 
+\item Largely secret
+\end{itemize}
+\item Can't simply ``port'' code written for the CPU
+\item Dealing with graphics API: Working with the corner cases of the graphics API
+\item Addressing modes: Limited texture size/dimension
+\item Shader capabilities: Limited outputs
+\item Instruction sets: Lack of integer \& bit ops.
+\item Communication limited
+\begin{itemize}
+\item Between pixels
+\item Scatter \inline{a[i]=p}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\item Low Latency or High Throughput
+\begin{itemize}
+\item CPU
+\begin{itemize}
+\item Optimized for low-latency access to cached data sets
+\item Control logic for out-of-order and speculative execution
+\end{itemize}
+\item GPU
+\begin{itemize}
+\item Optimized for data-parallel, throughput computation
+\item Architecture tolerant of memory latency
+\item More transistors dedicated to computation
+\end{itemize}
+\end{itemize}
+\item GPGPU:
+\begin{itemize}
+\item Modern GPU Architecture (GPGPU mode)
+\begin{itemize}
+\item Processors execute computing threads
+\item New operating mode/HW interface for computing 
+\end{itemize}
+\end{itemize}
+\end{itemize}
 
 \end{document}
