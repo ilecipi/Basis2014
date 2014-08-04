@@ -911,9 +911,9 @@ Non ci resta che elencare le operazioni:
 \end{center}
 \subsection*{Vocabolario}
 \begin{itemize}
-\item \inline{Inserisci(x)}: eseguire innanzitutto \inline{splay(x)}. Se la radice è $x$ non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave $y$ che è il precedente/successivo simmetrico di $x$. Piazza dunque $x$ come radice ed $y$ come figlio sinistro rispettivamente destro.
-\item \inline{Allontana(x)}: \inline{splay(x)}. Se la radice non è uguale ad $x$ l'elemento non appartiene all'albero, altrimenti $x$ si trova alla radice. Elimina dunque $x$ e cerca la chiave più grande nel sottoalbero di sinistra (può essere fatto con \inline{splay(}$\infty$\inline{)}). 
-\item \inline{Cerca(x)}: \inline{splay(x)}. Se la radice è $x$, l'elemento è stato trovato, altrimenti no.
+\item \inline{Insert(x)}: eseguire innanzitutto \inline{splay(x)}. Se la radice è $x$ non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave $y$ che è il precedente/successivo simmetrico di $x$. Piazza dunque $x$ come radice ed $y$ come figlio sinistro rispettivamente destro.
+\item \inline{Remove(x)}: \inline{splay(x)}. Se la radice non è uguale ad $x$ l'elemento non appartiene all'albero, altrimenti $x$ si trova alla radice. Elimina dunque $x$ e cerca la chiave più grande nel sottoalbero di sinistra (può essere fatto con \inline{splay(t_l,}$\infty$\inline{)}. 
+\item \inline{Search(x)}: \inline{splay(x)}. Se la radice è $x$, l'elemento è stato trovato, altrimenti no.
 \end{itemize}
 Un'analisi ammortizzata, descritta completamente nel capitolo 5.4.2, porta al seguente teorema.
 \begin{mytheorem}{5.1}
