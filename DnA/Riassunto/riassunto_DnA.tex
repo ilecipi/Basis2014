@@ -12,6 +12,7 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{float}
 
 \newenvironment{mytheorem}[1]{\subsubsection*{Theorem #1}}{\begin{flushright}$\blacksquare$\end{flushright}}
 \newcommand{\inline}[1]{\lstinline!#1!}%Inline code
@@ -71,7 +72,7 @@ oppure, scritto in un altro modo:
 In questo modo abbiamo solo 3 multiplicazioni elementari anziché 4. L'algoritmo può essere generalizzato grazie a divide and conquer dividendo ogni numero in due ed applicando l'algoritmo di base. Analizzando il tempo in base al numero delle multiplicazioni otteniamo che impiega circa $O(n^{1,58})$.
 \section{Maximum subarray (Pag. 20)}
 Dato un array di numeri il problema consiste nella ricerca del subarray con la somma degli elementi maggiore. Se essa è negativa il risultato è 0. Il metodo più efficiente per ricavare il risultato è il seguente:
-\begin{lstlisting}[tabsize=\lstIndent][tabsize=\lstIndent]
+\begin{lstlisting}[tabsize=4]
 //A=array da 1, ... n	
 max=0	
 scan=0
@@ -84,6 +85,7 @@ for (i=1; i<=n; i++){
 }			
 \end{lstlisting}
 In questo modo il problema viene risolto in tempo lineare.	
+
 \chapter{Sort}
 Per semplicità ammettiamo che si debba sempre ordinare un array (chiamato $a$) contenente $n$ numeri (interi). In ogni caso con questi algoritmi è possibile ordinare qualsiasi oggetto appartenente ad un universo in cui vige un ordine totale.
 \section{Sortieren durch Auswahl (Pag. 82)}
@@ -728,27 +730,31 @@ La ricerca consiste soltanto nel controllare il contenuto del blocco $h(k)$. Per
 \subsection{Lineares Hashing (Pag. 227)}
 Nell'hashing lineare la funzione $h$ consiste in due funzioni $h_1$ ed $h_2$. Per una grandezza iniziale di $m_0$ blocchi vale sempre che: $m_0 2^ l\leq m \leq m_0 2^{l+1}$, dove $l$ indica il Dateilevel, nonché il numero di volte che si è dovuto raddoppiare la dimensione dei blocchi. Per ogni chiave vale $h_2(k)=h_1(k)$ oppure $h_2(k)=h_1(k)+m_02^l$. Un esempio concreto di funzioni è il seguente: $h_1(k)=k \mbox{ mod } (m_02^l)$, $h_2(k)=k \mbox{ mod } (m_02^l)$. Le collisioni vengono trattate nel seguente modo: finché c'è spazio nel blocco primario vengono aggiunte le chiavi, dopodiché viene inserito un puntatore ad un blocco esterno (blocco secondario). Da notare che questo blocco secondario è da contare come memoria extra utilizzata. Il fattore per aumentare la dimensione della tabella di un blocco è il fattore di occupazione $\frac{n}{bm}$. Quando questo fattore supera una certa soglia viene aggiunto un nuovo blocco.
 \paragraph*{Esempio} In questo esempio utilizziamo la seguente funzione: rappresentando i numeri in forma binaria essi vanno a finire nel blocco il cui indirizzo corrisponde ai most significant bit della chiave (letti al contrario). 
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/bsp1.png}
-\end{center}
+\end{figure}
 \emph{\textbf{Beispiel}: Betrachten wir die mit linearem Hashing und der beschriebenen ordnungserhaltenden Hashfunktion organisierte Hashdatei, die sich durch Einfügen der Schlüssel 12, 53, 5, 15, 2, 19, 43 in dieser Reihenfolge in die Hashdatei ergibt, die anfangs aus einem leeren Datenblock besteht 
 $(m_0 = 1)$. In jedem Datenblock können bis zu zwei Datensätze gespeichert werden; wir zeigen im Folgenden nur deren Schlüssel. Wählen wir 0.9 als Schwellenwert des Belegungsfaktors zum Erweitern der Datei und die feste Darstellungslänge von 6 Bits für jeden Schlüssel, so ergibt sich bei der in
  Abbildung 4.3 gezeigten Ausgangssituation vor dem Einfügen des zweiten Schlüssels ein Split des Blocks 0 in Blöcke 0 und 1 und nach dem Eintragen dieses Schlüssels die in Abbildung 4.4 gezeigte Situation.}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/bsp2.png}
-\end{center}
+\end{figure}
 \emph{Schlüssel 5 kann auf dem freien Platz in Block 0 gespeichert werden; der Schwellenwert für den Belegungsfaktor wird nicht überschritten. Dies geschieht erst bei der Einfügung von Schlüssel 15. Hierbei wird ein neuer Block, nämlich mit Adresse 2, an die Hashdatei angehängt. Die in Block 0 
 gespeicherten Schlüssel werden gemäss ihrem zweiten Bit auf Blöcke 0 und 2 verteilt: Schlüssel mit führenden Bits $00$ bleiben im Block 0, Schlüssel mit führenden Bits 01 (solche treten bisher nicht auf) werden in Block 2 gespeichert (01 rückwärts gelesen ergibt 10, also die duale Darstellung der 
 Hashadresse 2). Dann wird der einzufügende Schlüssel 15 gemäss seiner beiden führenden Bits in Block 0 eingetragen. Hierbei muss für Block 0 ein Überlaufblock angelegt werden. Die Adresse des Überlaufblocks entstammt einem anderen Adressbereich und sei hier nicht von Bedeutung. Damit 
 ergibt sich die in Abbildung 4.5 dargestellte Situation.}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.3]{Figures/bsp4.jpg}
-\end{center}
+\end{figure}
 \emph{Schlüssel 2 kann ohne weitere Reorganisation der Datei in Block 0 (genauer: Dessen Überlaufblock) eingefügt werden. Erst Schlüssel 19 führt wieder zu einem Überschreiten des Schwellenwerts des Belegungsfaktors und damit zum Anhängen eines neuen Datenblocks an die Hashdatei. Damit ist eine weitere Dateiverdoppelung beendet und wir erhalten die in Abbildung 4.6 gezeigte Situation.
 Schliesslich kann Schlüssel 43 in Datenblock 1 eingetragen werden und die Folge der Einfügungen ist beendet.}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.45]{Figures/bsp3.png}
-\end{center}
+\end{figure}
 \begin{lstlisting}
 add (Datensatz ds, int m,n,i,l, double schwelle)
 	if (n+1)/(b*m)>schwelle
@@ -857,18 +863,21 @@ add(Datensatz ds)
 	//scrivi ds nel blocco h_j(ds.key)			
 \end{lstlisting}
 Per evitare che ogni volta venga raddoppiato il numero dei blocchi si rende questo processo virtuale. Nella tabella vengono salvati soltanto gli indirizzi dei blocchi in cui sono salvati i dati (che aumentano uno alla volta). Risulta possibile dimostrare che l'utilizzo di memoria medio si aggira attorno a $\log(2)=0,69$.
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/virtuelleshashing.png}
-\end{center}
+\end{figure}
 \subsection{Erweiterbares Hashing (Pag. 236)}
 Grazie ad extendible hashing è possibile trovare l'indirizzo di una chiave ricercata con al massimo 2 accessi alla memoria esterna. Il sistema prevede di utilizzare tutti gli indirizzi disponibili. Nell'esempio precedente c'è un solo numero che inizia con 1 ma 4 celle nella tabella degli indirizzi. Si potrebbe benissimo utilizzarne solo uno. Con * vengono marcati indirizzi fittizzi, vale a dire blocchi in cui non viene salvato niente. 
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/erha1.png}
-\end{center}
+\end{figure}
 Iniziamo dal principio: l'inserimento delle prime 3 chiavi porta all'immagine 4.13. L'inserimento di 15 provoca due divisioni (Split) del blocco 0 (poiché un solo split non basta per dividere i due elementi contenuti, che iniziano entrambi con 00). Si arriva dunque alla seguente situazione (la tabella degli indirizzi è già stata raddoppiata, ma non il blocco):
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/erha2.png}
-\end{center}
+\end{figure}
 Adesso risulta possibile sdoppiare il blocco 0, che porta al risultato già esposto nella figura 4.12.
 Ammettendo che sia la tebella degli indirizzi sia i blocchi siano salvati su una memoria esterna si arriva all'elemento ricercato in massimo due accessi. Per evitare di dover fare ulteriori accessi mentre si inserisce un nuovo elemento bisogna marcarsi, oltre che al livello $l$ (a volte chiamato anche globale Tiefe), la lokale Tiefe di ogni blocco. Essa è definita come la lunghezza minore del prefisso che differisce una chiave dalle altre. Ad esempio nell'ultima immagine è sempre 1, mentre nella 4.12 per il blocco 0 e 2 è 3.
 L'eliminazione di una chiave avviene all'opposto dell'inserimento: prima viene cancellata dal blocco, dopodiché si verifica se il blocco può essere unito con un altro (fratello, con la stessa lokale Tiefe). Quando la lokale Tiefe diventa minore della globale Tiefe è possibile dimezzare l'Adresstabelle. In questo caso l'occupazione media ammonta a $\frac{n}{b}\log(2)$ blocchi, vale a dire che l'occupazione media di un singolo blocco è del 69\%. 
@@ -885,10 +894,11 @@ $$ h\leq 1,44 \cdot\log_2 (n)+1 \in O(\log(n))$$
 Non è sempre detto che aggiungendo un elemento all'albero esso mantenga le sue proprietà AVL. Definiamo dunque:
 $$ bal(p)=\mbox{ Altezza del sottoalbero di destra $-$ altezza sottoalbero di sinistra}$$
 Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo innanzitutto una ricerca per quel valore. Se la chiave viene trovata non dobbiamo far nulla poiché è già presente nell'albero, altrimenti la ricerca finisce in una foglia vuota, rappresentante l'ipotetica posizione della chiave. Noi inseriamo la nuova chiave in quella posizione, dopodiché aggiustiamo le condizioni AVL chiamando la procedura \inline{upin(p)}, dove $p$ è il padre della nuova chiave. La condizione di uscita dal metodo \inline{upin} è che \inline{bal(p)} diventi 0. In tutti gli altri casi il metodo viene applicato ricorsivamente fino alla radice, qunidi non più di $O(\log(n))$ volte. Definiamo con $pp$ il padre della chiave $p$. Ci sono due casi: $p$ è il figlio sinistro di $pp$, o il destro. Entrambi i casi sono analoghi, analizzeremo però il primo caso. Se le condizioni AVL continuano ad essere mantenute durante gli ``aggiornamenti'' della variabile $bal$, il tutto prosegue normalmente. Può però accadere che $|bal(pp)|>1$, quindi bisogna intervenire con una rotazione o una doppia rotazione:
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.6]{Figures/singlerot.jpg}
 \includegraphics[scale=0.55]{Figures/doublerot.jpg}
-\end{center}
+\end{figure}
 \subsection*{Entfernen}
 \begin{enumerate}
 \item Se la chiave che si vuole allontanare non ha figli la si elimina direttamente e si chiama il metodo \inline{upout(p)} al padre (analogo a \inline{upin})
@@ -896,9 +906,10 @@ Chiaramente $bal(p) \in \{-1,0,1\}$. Per inserire una nuova chiave facciamo inna
 \item Se $p$ ha invece due figli si inverte la posizione di $p$ con il suo successore/predecessore simmetrico finché la situazione non si riduce ad una precedente \todo{non ho capito bene, Fall 3 Pag. 293}. Anche in questo caso viene chiamato \inline{upout}.
 \end{enumerate}
 Il metodo \inline{upout} è analogo ad \inline{upin}, cambia soltanto l'invariante (condizione d'uscita quando $bal(pp)=1$) e l'ordine delle rotazioni:
-\begin{center}
-\includegraphics[scale=0.5]{Figures/avldeletion.png}
-\end{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.48]{Figures/avldeletion.png}
+\end{figure}
 \section{Splay tree (Pag. 328)}
 Uno splay tree è un albero binario che può essere visto come una variante di move to front, poiché l'ultima chiave inserita, cercata o eliminata (se non c'è nell'albero viene sostituita dal padre) viene sempre resa radice (move to root strategy) grazie all'operazione \inline{splay(x)}. Quest'ultima è definita nella seguente maniera:
 \begin{enumerate}
@@ -906,9 +917,10 @@ Uno splay tree è un albero binario che può essere visto come una variante di m
 \item Ripeti le seguenti operazioni di ordinamento (zig, zig-zig, zig-zag) finché $p$ non diventa la radice.
 \end{enumerate}
 Non ci resta che elencare le operazioni:
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/splay.jpg}
-\end{center}
+\end{figure}
 \subsection*{Vocabolario}
 \begin{itemize}
 \item \inline{Insert(x)}: eseguire innanzitutto \inline{splay(x)}. Se la radice è $x$ non fare niente, poiché la chiave è già presente nell'albero. Altrimenti nella radice si trova una chiave $y$ che è il precedente/successivo simmetrico di $x$. Piazza dunque $x$ come radice ed $y$ come figlio sinistro rispettivamente destro.
@@ -978,9 +990,10 @@ Un possibile miglioramento deriva dal principio di monotonia, cioè:
 $$r(i,j-1)\leq r(i,j) \leq r(i+1,j)$$
 In questo modo la ricerca di $l$ avviene semplicemente nell'intervallo $r(i,j-1)\leq l \leq r(i+1,j)$. Così si può ridurre il tempo a $O(n^2)$. Per la dimostrazione e un esempio guardare a pagina 380-381.
 In ogni caso non è sempre conveniente cercare un albero ottimale con questo algoritmo, a volte basta un albero quasi ottimale. Ad esempio nella Serie 12 è stato calcolato un albero ottimale basandosi semplicemente sul fatto che la somma dei pesi di due sottoalberi sia minore della probabilità del nodo.
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.3]{Figures/optimaltree.jpg}
-\end{center} 
+\end{figure} 
 \section{Binary Heap}
 Abbiamo già in parte visto questa struttura per Heapsort. La sua principale caratteristica è che una chiave $k_i \leq k_{\lfloor\frac{i}{2} \rfloor}, 2\leq i\leq n$. In questo caso si tratta di un max Heap, se la relazione è al contrario si tratta di un min Heap. 
 \paragraph*{Vocabolario}
@@ -1021,9 +1034,10 @@ $N_{min}=2\lceil\frac{m}{2}\rceil ^{h-1}\leq N+1\leq m^h=N_{max}$, quindi che:
 $$\log_m(N+1)\leq 1+\log_{\lceil \frac{m}{2}\rceil} \left(\frac{n+1}{2}\right)$$
 L'altezza dell'albero appartiene dunque alla classe O(log(n)). Dimostrazione a pagina 343 (deriva direttamente dai sei punti di definizione).
 \end{mytheorem}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.7]{Figures/bbaumex.jpg}
-\end{center}
+\end{figure}
 \paragraph{Search}
 La ricerca di una chiave può essere vista come una generalizzazione della ricerca bianria. Da notare che la ricerca all'interno di un nodo avviene nella memoria principale (poiché il blocco viene interamente caricato), quindi può essere trascurata.
 \paragraph{Extend}
@@ -1032,9 +1046,10 @@ Per aggiungere una nuova chiave si cerca innanzitutto nell'albero. La ricerca fi
 \item Se p ha ancora meno di m-1 chiavi inserisci x nelle chiavi di p e crea una nuova foglia (bisogna aggiungere anche un puntatore).
 \item Se p ha già m-1 chiavi aggiungiamo  dividiamo in due il nodo (da una parte tutte le chiavi $>x$ e dall'altra tutte quelle $<$). Dopodiché aggiungiamo x al padre di p assieme ad un puntatore che punta su una delle due parti (vedi immagine). 
 \end{itemize}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/bbaumadd.png}
-\end{center}
+\end{figure}
 Dato che l'altezza dell'albero è logaritmica è chiaro che la ricorsione va avanti per massimo O(log(n)) volte.
 \paragraph{Remove}
 Funziona in modo analogo ad extend ma con una ricorsione al contrario: se dopo l'eliminazione ci sono meno chiavi del numero consentito si unisce il nodo con un fratello.
@@ -1055,9 +1070,10 @@ class HeapNode<Comparable>
 	Comparable chiave
 	int rango, marcato
 \end{lstlisting}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/fheap.jpg}
-\end{center}
+\end{figure}
 \subsection*{Vocabolario}
 \begin{itemize}
 \item \inline{Insert(x)}: costruisci un F-Heap $h'$ formato dalla sola chiave $x$ ed uniscilo con $h$ tramite \inline{meld(h}$'$\inline{)}.
@@ -1115,9 +1131,10 @@ Una possibile rappresentazione di un set è quella di un albero non ordinato. Og
 {p[x]}&{:}&{a}&{a}&{a}&{b}&b&f\\
 \end{array}\]
 Questi array rappresentano la seguente collezione:
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.4]{Figures/ufs.png}
-\end{center}
+\end{figure}
 Per evitare che un set degeneri ad una lista ci sono due soluzioni: l'unione in base alla grandezza o all'altezza. In entrambi i casi l'idea è di rendere l'albero più piccolo un sottoalbero di quello più grande. Necessitiamo dunque di un altro array in cui viene salvata la grandezza. Per semplicità adottiamo una nomenclatura diretta, vale a dire che un insieme porta il nome del suo primo elemento (radice).
 \begin{lstlisting}[tabsize=\lstIndent]
 int[] size, p //di grandezza n
@@ -1220,9 +1237,10 @@ BranchAndBound(Problem P )
 Di seguito presenterò soltanto la soluzione migliore che si può trovare senza utilizzare il principio Scan line, vale a dire Graham's scan. La Konvexe Hülle altro non è che una figura che contiene tutti i punti (noi siamo interessati nella minima, quindi quella formata da meno segmenti).
 \subsection{Graham's scan}
 Si sceglie inizialmente un qualsiasi punto (al centro) e si calcolano le equazioni delle rette che connettono il punto scelto con gli altri punti. Dopodiché si ordinano i punti in base all'angolo (dato dalla pendenza), partendo da ore sei e procedendo in senso antiorario (vedi immagine). Dopodiché non rimane che collegare i punti seguendo questo ordine. Dato che siamo interessati alla minima Konvexe Hülle, se un segmento va verso sinistra (in relazione al senso di marcia antiorario) per poi tornare verso destra significa che questi due segmenti possano essere sostituiti da un segmento più lungo. Bisogna in seguito anche ricontrollare i segmenti precedenti. 
-\begin{center}
-\includegraphics[scale=0.7]{Figures/graham.png}
-\end{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{Figures/graham.png}
+\end{figure}
 Secondo l'analisi ammortizzata ogni segmento candidato può essere allontanato al massimo una volta, quindi $O(n)$. Il costo dell'algoritmo è quindi dato dal sort, quindi si tratta di $O(n\log (n))$.
 
 \section{Scan line principle}
@@ -1271,9 +1289,10 @@ while !Q.isEmpty
 		//ritorna questi punti   		
 \end{lstlisting}
 Non ci rimane che trovare la struttura dati ideale per $L$. Essa deve riuscire ad effettuare delle cosiddette Bereichsanfrage (range query) nel tempo minore possibile. Un'implementazione possibile è quella di organizzare $L$ come un albero AVL in cui le chiavi vengono totalmente salvate nelle foglie (Blattsuchbaum). Inoltre le foglie devono essere collegate da una doppia lista lineare, in modo da poter semplicemente determinare gli elementi tra una chiave ed un'altra.
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.5]{Figures/blattsuchbaum.png}
-\end{center}
+\end{figure}
 Una Bereichsanfrage può dunque essere effettuata in $O(\log (n)+r)$ passi, dove $r$ è il numero di elementi tra $a$ e $b$. La soluzione del problema avviene dunque il $O(n\log (n)+k)$ passi, dove $k$ è il numero di segmenti che si incrociano.
 \subsection{Caso generale}
 Nel caso generale non abbiamo più segmenti perpendicolari tra loro, bensì segmenti con qualsiasi pendenza. Definiamo dunque una relazione d'ordine totale tra i segmenti in un determinato punto, chiamata $>x$. $A >x B$ se la retta vericale passante da $x$ taglia sia $A$ sia $B$ e la coordinata $y$ di $A$ in quel punto è maggiore di quella di $B$.
@@ -1382,9 +1401,10 @@ Unendo i due precedenti algoritmi si può risolvere il problema nello stesso tem
 \section{Strutture dati geometriche}
 \subsection{Segment Bäume (Pag. 505)}
 Praticamente si tratta di un albero binario semi dinamico (vale a dire non espandibile, viene creato una sola volta e riempito in seguito). Le foglie sono gli intervalli elementari, mentre i nodi interni l'unione dei due figli. La radice rappresenta dunque l'intervallo completo $S$.
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.7]{Figures/segmenttree.png}
-\end{center}
+\end{figure}
 Ad ogni nodo/foglia è ``appesa'' una lista indicante i nomi degli intervalli.
 \begin{lstlisting}[tabsize=\lstIndent]
 void add(Intervall I, Node p)
@@ -1410,9 +1430,10 @@ report(Node p, Point x)
 \end{lstlisting}
 \todo{Secondo wikipedia in add I(s) ed I devono intersecarsi, secondo il libro no}
 Per implementare in modo efficiente il metodo remove abbiamo bisogno di un trick: dobbiamo creare una sorta di dizionario, implementato come albero AVL, che contenga i nomi degli intervalli. Ogni nome punta all'inizio di una lista lineare di puntatori, che a loro volta puntano nelle posizioni degli intervalli della struttura base. In questo modo ogni operazione può essere completata in tempo logaritmico. Purtroppo la struttura occupa $O(n \log(n))$ di spazio.
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.3]{Figures/segtreew.png}
-\end{center}
+\end{figure}
 \subsection{Intervall Bäume (Pag. 512)}
 Vogliamo una struttura dati che riesca a contenere $n$ intervalli in spazio lineare e che esegua tutte le operazioni di vocabolario in tempo logaritmico (tranne l'inizializzazione). Come si può vedere dall'immagine esso è composto da uno scheletro di intervalli ordinati a cui vengono appese due liste liste anch'esse ordinate: la $o-$list è ordinata in base ai punti finali, mentre la $u-$list ai punti iniziali.
 \begin{lstlisting}[tabsize=\lstIndent]
@@ -1440,9 +1461,10 @@ report(Node p, Point x)
 			  b>=x */ 
 			report(p.right_child,x)  
 \end{lstlisting}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.4]{Figures/rangetree.png}
-\end{center}
+\end{figure}
 
 \chapter{Graphenalgorithmen}
 \section{Topologisches Sortieren (Pag. 597)}
@@ -1517,9 +1539,10 @@ for j=1:n
 Approssimativamente richiede $O(|V|^3)$, nel dettaglio $O(|V|^2+|E||V|)$.
 \section{Search}
 \subsection{Breadth first search}
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=1]{Figures/bfs.JPG}
-\end{center}
+\end{figure}
 Da notare che se al posto della coda si utilizza uno stack si ottiene una depth first search.
 \begin{lstlisting}[tabsize=\lstIndent]
 BFS(Graph G,Vertex v)
@@ -1547,9 +1570,10 @@ Al posto di usare una coda usiamo uno stack. Nel caso di prima l'ordine con cui 
 \item Altrimenti chiamate Seitwärtspfeile.
 \end{itemize}
 Esempio:
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.7]{Figures/edgetype.png}
-\end{center}
+\end{figure}
 Con l'aiuto di questo algoritmo ricorsivo possiamo arrivare a tutte le informazioni:
 \begin{lstlisting}[tabsize=\lstIndent]
 Set<Vertex> B=nullSet
@@ -1693,9 +1717,10 @@ L'algoritmo impiega $O(|E|\log (|V|))$.
 Iniziamo con un nodo e finché non siamo alla fine, quindi $n-1$ passi, scegliamo ogni volta l'arco che possiede un solo nodo nell'albero e con costo minimo. In questo modo impieghiamo $O(|E|+|V|\log (|V|))$.
 \section{Flüsse in Netzwerken (Pag. 637)}
 Innanzitutto si cerca una via che collega $q$ a $s$ (Quelle und Senke). Dopodiché si costruisce un cosiddetto Restgraph nel modo seguente:
-\begin{center}
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.8]{Figures/restgraph.jpg} 
-\end{center}
+\end{figure}
 Le frecce viola indicano la capacità utilizzata, mentre quelle blu ciò che ancora rimane. Finché esiste ancora un percorso nel grafo, che può essere trovato ad esempio tramite breadth first search, è ancora possibile aumentare la capacità su quella via. Intuitivamente si può capire che la capacità massima del flusso è limitata dal taglio minimo (\inline{mincut}), più precisamente essi sono uguali.
 \begin{lstlisting}[tabsize=\lstIndent]
 //initialize
@@ -1779,9 +1804,10 @@ public class MaxFlow {
 \end{lstlisting} 
 \subsection{Maximale Zuordnung in bipartiten Graphen (Pag. 646)}
 Consideriamo il problema del matching ottimale tra due set. Le coppie possibili possono essere semplicemente modellate come un grafo bipartito, che a sua volta può essere trasformato nella forma utilizzata per i flussi:
-\begin{center}
-\includegraphics[scale=0.5]{Figures/matching.jpg}
-\end{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.45]{Figures/matching.jpg}
+\end{figure}
 In questo caso, dato che il costo è sempre 1, la crescita del Restgraph consiste semplicemente nel cambiamento di direzione delle frecce. In un livello di astrazione più concreto questo corrisponde nel liberare una coppia per poterne formare altre due. L'esecuzione dell'algoritmo in questo speciale tipo di grafo richiede solamente $O(\sqrt{|V|}|E|)$.
 \subsection{Teoria sul matching}
 Sia $G=(V,E)$ un grafo non diretto. Un insieme $M\subseteq E$ si chiama matching se ogni coppia $e,e' \in E$ non hanno nessun vertice in comune. Un matching della grandezza $\lceil \frac{|V|}{2} \rceil$ si dice perfetto.
