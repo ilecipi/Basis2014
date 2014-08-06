@@ -1216,20 +1216,20 @@ B & 0 & 0 & 0 & 1 & 1 & 2 \\
 E & 0 & 0 & 0 & 1 & 1 & 2
 \end{array} $$
 \section{Branch and bound}
-\begin{lstlisting}[tabsize=\lstIndent]
+\begin{lstlisting}[tabsize=\lstIndent,numbers=left,numberstyle=\tiny, firstnumber=0]
 BranchAndBound(Problem P )
-1 Berechne globale untere Schranke, falls existent.
-2 while Optimum nicht gefunden do
-3 	if obere Schranke in jedem Blatt <= untere Schranke then
-4		Optimum gefunden. STOP
-5	Waehle Blatt v mit maximaler oberer Schranke
-6	if v hat keine gueltige Erweiterung then
-7		Markiere v als nicht erweiterbar
-8	for each gueltige Erweiterung der an v gespeicherten Teilloesung do
-9		Erzeuge einen Nachfolgerknoten w von v, der die entsprechend erweiterte Teilloesung s w speichert
-10 		Schliesse auf erzwungene Teile von s w
-11		Berechne obere Schranke von s w
-12		Aktualisiere untere Schranke, falls noetig
+ Berechne globale untere Schranke, falls existent.
+ while Optimum nicht gefunden do
+ 	if obere Schranke in jedem Blatt <= untere Schranke then
+		Optimum gefunden. STOP
+	Waehle Blatt v mit maximaler oberer Schranke
+	if v hat keine gueltige Erweiterung then
+		Markiere v als nicht erweiterbar
+	for each gueltige Erweiterung der an v gespeicherten Teilloesung do
+		Erzeuge einen Nachfolgerknoten w von v, der die entsprechend erweiterte Teilloesung s w speichert
+ 		Schliesse auf erzwungene Teile von s w
+		Berechne obere Schranke von s w
+		Aktualisiere untere Schranke, falls noetig
 \end{lstlisting}
 
 \chapter{Geometrische Algorithmen}
