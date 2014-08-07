@@ -12,11 +12,23 @@
 \usepackage{amssymb}%Math Package
 \usepackage{mathtools}%Used for nice := and =: (\defeq and \eqdef)
 \usepackage{amsfonts}
-
+\usepackage[utf8]{inputenc}
 
 \usepackage{enumitem}
 \setlist{itemsep=-2pt}
 
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert} % nice |x|
+\DeclarePairedDelimiter\norm{\lVert}{\rVert} % nice ||x||
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
 
 
 
@@ -248,6 +260,58 @@ $(S_n)_{n \in \N}$, $S_n := \sum_{k=1}^n a_k$ gegen $s$ konvergiert. Es gilt als
 \[ \sum_{k=1}^\infty a_k = s \iff \lim_{n\rightarrow\infty} \sum_{k=1}^n a_k = s \]
 
 \subsection{Konvergenzkriterien}
+ \paragraph{Mittels der Definition}
+\[\sum\limits^{\infty}_{n=0}a_n=\lim\limits_{N\to\infty}\sum\limits^N_{n=0}a_n\]
+
+\paragraph{Reminder!}
+\[\left( \sum\limits_n \left( a_n \pm b_n\right)=\sum\limits_n a_n \pm \sum\limits_n b_n\right)\]
+
+\paragraph{Major- und Minorantenkriterium}
+\begin{itemize}
+\item \textbf{Majorantenkriterium: }Es seien $a_n,b_n>0$ mit $a_n\geq b_n$, $\forall n$ ab einem gewissen $n_0$. Dann gilt \[\sum\limits_n a_n\text{ konvergiert}\Rightarrow \sum\limits_n b_n\text{ konvergiert}\]
+\item \textbf{Majorantenkriterium: }Es seien $a_n,b_n>0$ mit $a_n\geq b_n$, $\forall n$ ab einem gewissen $n_0$. Dann gilt \[\sum\limits_n a_n\text{ divergiert}\Rightarrow \sum\limits_n b_n\text{ divergiert}\]
+\end{itemize}
+\paragraph{Wurzelkriterium}
+\[
+  \lim\limits_{n\to\infty}\sqrt[n]{\left | a_n \right |} \to q \implies
+  \begin{cases}
+    q < 1 & \implies \sum_{n} a_n \text{ konvergiert}\\
+    q = 1 & \implies \text{keine Aussage}\\
+    q > 1 & \implies \sum_{n} a_n \text{ divergiert}
+  \end{cases}
+\]
+
+\paragraph{Satz von Cauchy - d'Alembert}
+Existiert der Grenzwert $\lim\limits_{n\to\infty}\abs{\frac{a_{n+1}}{a_n}}$, so gilt \[\lim\limits_{n\to\infty}\abs{\frac{a_{n+1}}{a_n}}=\lim\limits_{n\to\infty}\sqrt[n]{\abs{a_n}}\]
+
+\paragraph{Absolute Konvergenz}
+Konvergiert $\sum_{n=1}^\infty |a_n|$, so sagen wir die Reihe konvergiert absolut.
+Es gilt $\sum_{n=1}^\infty |a_n|$ konvergent $ \implies \sum_{n=1}^\infty a_n$ konvergent.
+Die Umkehrung gilt i. A. nicht. Bemerkung: die ungeordnete Reihe hat der gleiche Limes nur wenn die Reihe absolut konvergiert.
+
+\paragraph{Uneigentliche Integralen}
+Die Reihe $\sum\limits_{n=p}^\infty a_n$ erfülle 
+\begin{enumerate}
+\vspace{-3mm}
+\item $a_n\geq 0$
+\item $a_n$ monoton fallend (d.h. $a_{n+1}\leq a_n$)
+\end{enumerate}
+Dann gilt:
+$$\sum_{n=p}^{\infty} a_n \mbox{ konvergiert } \iff \int_p^{\infty} a(x)dx \mbox{ konvergiert}$$
+
+\paragraph{Leibnizkriterium}
+Es sei die alternierende Reihe $\sum\limits_n(-1)^na_n$ gegeben. Falls die Folgenden Bedingungen erfüllt sind,
+\begin{enumerate}
+\item $a_n\geq 0$
+\item $\lim\limits_{n\to\infty} a_n=0$
+\item $a_n$ monoton fallend
+\end{enumerate}
+konvergiert die Reihe \[\sum\limits_n(-1)^n a_n\]
+
+\paragraph{Cauchy-Kondensationstest}
+Sei $a_n\geq 0$ und monoton fallend. Dann \[\sum\limits_{n=0}^{\infty}a_n \text{ konvergiert}\Longleftrightarrow\sum\limits_{n=0}^{\infty}2^na_{2^n} \text{ konvergiert} \]
+
+
 
 \paragraph{Nullfolge als Notwendigkeit}
 Falls $(a_n)$ keine Nullfolge, gilt Folgendes nicht und somit konvergiert auch nicht folgende Reihe.
@@ -256,34 +320,9 @@ Falls $(a_n)$ keine Nullfolge, gilt Folgendes nicht und somit konvergiert auch n
 \paragraph{Cauchy-Kriterium}
 $\forall \epsilon > 0: \exists n_0 \in \N: \forall n \geq m \geq n_0 \geq 1: | \sum_{k=1}^n a_k | < \epsilon$
 
-\paragraph{Absolute Konvergenz}
-Konvergiert $\sum_{n=1}^\infty |a_n|$, so sagen wir die Reihe konvergiert absolut.
-Es gilt $\sum_{n=1}^\infty |a_n|$ konvergent $ \implies \sum_{n=1}^\infty a_n$ konvergent.
-Die Umkehrung gilt i. A. nicht. Bemerkung: die ungeordnete Reihe hat der gleiche Limes nur wenn die Reihe absolut konvergiert.
 
-\paragraph{Majorantenkriterium}
-Ist $|a_n| \leq b_n$ und gibt es eine konvergente \emph{Majorante} $\sum_{n=1}^\infty b_n$, so konvergiert $\sum_{n=1}^\infty a_n$ absolut.
 
-\paragraph{Minorantenkriterium}
-Ist $a_n \geq b_n \geq 0$ und gibt es eine divergente \emph{Minorante} $\sum_{n=1}^\infty b_n$, so divergiert $\sum_{n=1}^\infty a_n$.
 
-\paragraph{Leibnizkriterium}
-Wenn folgende 3 Kriterien erfüllt sind, konvergiert $\sum_{n=1}^\infty a_n$.
-\begin{enumerate}[label={(}\arabic*{)}]
-  \item $(a_n)$ ist alternierend, also $\forall n\in\N: a_n < 0 \implies a_{n+1} > 0$
-  \item $a_n \to 0$ oder $|a_n| \to 0$
-  \item $(|a_n|)$ ist monoton fallend
-\end{enumerate}
-
-\paragraph{Wurzelkriterium}
-\[
-  \sqrt[n]{\left | a_n \right |} \to q \implies
-  \begin{cases}
-    q < 1 & \implies \sum_{n=1}^\infty a_n \text{ konvergiert absolut}\\
-    q = 1 & \implies \text{keine Aussage}\\
-    q > 1 & \implies \sum_{n=1}^\infty a_n \text{ divergiert}
-  \end{cases}
-\]
 \paragraph{Quotientenkriterium}
 \[
 \left| \frac{a_{n+1}}{a_n} \right| \to q \implies
@@ -294,8 +333,7 @@ Wenn folgende 3 Kriterien erfüllt sind, konvergiert $\sum_{n=1}^\infty a_n$.
 \end{cases}
 \]
 
-\paragraph{Uneigentliche Integralen}
-$$\sum_b^{\infty} a_n \mbox{ konvergiert } \iff \int_b^{\infty} a(x)dx \mbox{ konvergiert}$$
+
 
 \subsection{Potenzreihe}
 Die \emph{Potenzreihe} hat die allgemeine Form \[ \sum_{n=0}^\infty a_n (x - x_0)^n = \sum_{n=0}^\infty a_n z^n, \]
