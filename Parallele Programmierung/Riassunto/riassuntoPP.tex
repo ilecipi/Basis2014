@@ -2564,6 +2564,41 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \item Processors execute computing threads
 \item New operating mode/HW interface for computing 
 \end{itemize}
+	\item GPGPU Processor Terminology
+		\begin{itemize}
+			\item SPA (device)
+				\begin{itemize}
+					\item \textbf{S}treaming \textbf{P}rocessor \textbf{A}rray
+				\end{itemize}
+			\item SM
+				\begin{itemize}
+					\item \textbf{S}treaming \textbf{M}ultiprocessor 
+					\item Multi-threaded processor core
+					\item Fundamental processing unit for GPU thread block
+				\end{itemize}
+			\item SP
+				\begin{itemize}
+					\item \textbf{S}treaming \textbf{P}rocessor
+					\item Scalar ALU for a single CUDA thread
+				\end{itemize}
+			\begin{center}
+       			\includegraphics[scale=1]{Figures/GPGPUProcessor.jpg}
+        	\end{center}
+		\end{itemize}
+	\item \textbf{CUDA} -`Computer Unified Device Architecture'
+		\begin{itemize}
+			\item General purpose programming model
+				\begin{itemize}
+					\item User kicks off batches of threads on the GPU
+					\item GPU = dedicated super-threaded, massively data parallel co-processor
+				\end{itemize}
+			\item Targeted software stack
+				\begin{itemize}
+					\item Computer oriented drivers, language, and tools
+				\end{itemize}
+			\item Driver for loading computation programs into GPU
+		\end{itemize}
+		\end{itemize}
 \end{itemize}
 \end{itemize}
 
