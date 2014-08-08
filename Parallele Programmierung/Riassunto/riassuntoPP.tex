@@ -43,7 +43,7 @@
 \end{itemize}
 \item Parallel vs. Concurrent: In both cases, one of the difficulties is to actually determine which processes can overlap and which can't:
 \begin{itemize}
-\item Concurrent: Focus on which activities may b executed at the same time (= overlapping execution)
+\item Concurrent: Focus on which activities may be executed at the same time (= overlapping execution)
 \item Parallel: Overlapping execution on a real system with constraints imposed by the execution platform.
 \end{itemize}
 \item Parallel/Concurrent vs. distributed: In addition to parallelism/concurrency, systems can actually be physically distributed (e.g. BOINC)
@@ -376,7 +376,7 @@ S_p&=p-b(p-1)
 \begin{itemize}
 \item More portable (can be executed in machines with more processors)
 \item Better for scheduling 
-\item Parallel slackness (Expressed parallelism >> machine parallelism)
+\item Parallel slackness (Expressed parallelism $>>$ machine parallelism)
 \item BUT: if scheduling overhead is comparable to a single task $\to$ overhead dominates
 \end{itemize}
 \item Guidelines:
@@ -459,7 +459,7 @@ public class Fibonacci {
 \item provably: $T_p=\frac{T_1}{P}+O\left( T_\infty\right)$
 \item empirically: $T_p\approx\frac{T_1}{P}+T_\infty$
 \item $\frac{T_1}{T_\infty}>>P\to$ linear speedup
-\item Parallel slackness: granularity
+\item Parallel slackness: granularity (expressed parallelism $>$ machine parallelism)
 \item Why should the programmer care? A: guideline for parallel programs
 \end{itemize}
 \item Example: Sum the elements of a list, using D\&C\footnote{D\&C: Divide and Conquer}
@@ -526,7 +526,7 @@ Divide and Conquer:
 \begin{itemize}
 \item Operation properties (associativity/commutativity) define the correct executions
 \item Supported in most parallel languages/frameworks
-\item powerful constru\todo{Word is chopped}
+\item powerful construct
 \end{itemize}
 \item Other data types than arrays
 \item similar operation: prefix scan
@@ -670,7 +670,7 @@ class A {
 	constructor {
 	    ...
 	}
-	method_m1 {
+	method_m1 {
 	    ...
 	}
 	method_m2 {
@@ -711,9 +711,9 @@ for (initialization;test;update){
 
 \begin{lstlisting}
 for (int i=1; i<=4; i++){
-    System.out.println(i + `` squared = '' + (i*i));
+    System.out.println(i + " squared = " + (i*i));
   }
-  System.out.println(``Whoo!'');
+  System.out.println("Whoo!");
 \end{lstlisting}
 \begin{multicols}{2}
   Output:\\
@@ -907,7 +907,7 @@ String name = console.next ();
      			\end{itemize}
      	\end{itemize}
      	\item Inheritance\\
-     	Eventhought there are systematic diferences, different kinds of objects often have a certain amount in common with each other.\\ Classes \textit{inherit} commonly used state and behavior from other classes, but specialized behavior and states further \todo{WTF??}
+     	Even thought there are systematic differences, different kinds of objects often have a certain amount in common with each other.\\ Classes \textit{inherit} commonly used state and behaviour from other classes, but specialized behaviour and states further \todo{WTF??}
 \item References and objects
 	\begin{itemize}
 		\item Arrays and objects use reference semantics, because of:
@@ -1032,7 +1032,7 @@ if (words[i] != null){
 		\end{itemize}
 	\item Java access restrictions
 		\begin{itemize}
-			\item \textbf{Packages}: defin a name space
+			\item \textbf{Packages}: define a name space
 			\item Default package used in the absence of a package declaration
 			\item For class members you can specify which other objects can access (read/write or invoke) them
 				\begin{itemize}
@@ -1091,18 +1091,18 @@ classDatum {
 				\item Allows for asynchronous I/O
 					\begin{itemize}
 						\item I/O devices and CPU are truly parallel
-						\item 10ms waitinf for HDD allows other proceses to execute $>10^{10}$ instructions
+						\item 10ms waitinf for HDD allows other processes to execute $>10^{10}$ instructions
 					\end{itemize}
 			\end{itemize}
-		\item Process ontext
+		\item Process context
 			\begin{itemize}
-				\item Multiple concurrent instances of \textbf{same program} (e.g., mutiple browser windows)
+				\item Multiple concurrent instances of \textbf{same program} (e.g., multiple browser windows)
 				\item Multiple applications (=processes) in parallel
 				\item Each process has a \textbf{context}
 					\begin{itemize}
 						\item Instruction counter
 						\item Register content
-						\item Variable vaues
+						\item Variable values
 						\item Stack content
 						\item Resourcing (device access, open files)
 					\end{itemize}
@@ -1113,7 +1113,7 @@ classDatum {
 		\end{center}
 		\item Process management
 			\begin{itemize}
-				\item Proceses need resources
+				\item Processes need resources
 					\begin{itemize}
 						\item CPU time, Memory, etc.
 					\end{itemize}
@@ -1121,7 +1121,7 @@ classDatum {
 					\begin{itemize}
 						\item Starts processes
 						\item Terminates processes (frees resources)
-						\item Controls resource usage (prevents monopolizing CPU tim)
+						\item Controls resource usage (prevents monopolizing CPU time)
 						\item Schedules CPU time
 						\item Synchronizes processes if necessary
 						\item Allows for inter process communication
@@ -1138,13 +1138,13 @@ classDatum {
 			\begin{itemize}
 				\item \textbf{Threads} (of control) are independent sequences of execution, but multiple threads \textbf{share the same address space}
 					\begin{itemize}
-						\item Threads are not shielded from eachother
-						\item Threads share resources and can communicate moer easily
+						\item Threads are not shielded from each other
+						\item Threads share resources and can communicate more easily
 					\end{itemize}
 				\item Context switching between threads is much more efficient for threads
 					\begin{itemize}
 						\item No change of address space
-						\item No autmoatic scheduling
+						\item No automatic scheduling
 						\item No saving / (re-)loading of PCB state
 					\end{itemize}
 				\item Many more thread changes possible than process switches per unit of time
@@ -1172,9 +1172,9 @@ classDatum {
 					\end{itemize}
 				\item Implement \inline{java.lang.Runnable} thread
 					\begin{itemize}
-						\item If already intheriting another class (i.e., JApplet)
+						\item If already inheriting another class (i.e., JApplet)
 						\item Single method: public void run()
-						\item Thread classh implements Runnable
+						\item Thread class implements Runnable
 					\end{itemize}
 			\end{itemize}
 		\item Thread state model in Java
@@ -1220,17 +1220,17 @@ classDatum {
  					\begin{itemize}
  						\item represent invalid conditions in areas outside the immediate control of the program (network outages, absent files)
  						\item are subclasses of Exception
- 						\item a method is obliged to establish a policy for all checked exceptions thrown by its implementation (either pass the checled exception further up the stack, or handle)
+ 						\item a method is obliged to establish a policy for all checked exceptions thrown by its implementation (either pass the checked exception further up the stack, or handle)
  					\end{itemize}
  				\item \textbf{Unchecked} Exceptions:
  					\begin{itemize}
- 						\item represent conditions that reflect errors in your pogram's logic and cannot be recovered from at run time (bugs)
+ 						\item represent conditions that reflect errors in your program’s logic and cannot be recovered from at run time (bugs)
  						\item subclasses of RuntimeException, and are usually implemented using \inline{IllegalArgumentException}, \inline{NullPointerException}, or \inline{IllegalStateException}
  						\item a method is not obliged to establish a policy for the unchecked exceptions thrown by its implementation
  					\end{itemize}
  			\end{itemize}
  		\item Setting UncaughtExceptionHandlers\\
- 			Implementing \inline{UncaughtExceptionHandler} interface allows us to handel unchecked exceptions\\ Three options:
+ 			Implementing \inline{UncaughtExceptionHandler} interface allows us to handle unchecked exceptions\\ Three options:
  			\begin{itemize}
  				\item Register exception handler with Thread object
  				\item Register exception handler with ThreadGroup object
@@ -1242,7 +1242,7 @@ classDatum {
 	\subsection*{Introduction to Locks}
 	\begin{itemize}
 		\item Synchronization is needed in order to avoid race conditions
-		\item Shared state must be protected because they are accessed by threads- Access incudes both reads and writes!
+		\item Shared state must be protected because they are accessed by threads- Access includes both reads and writes!
 			\begin{itemize}
 				\item Concurrent access might lead to inconsistencies
 					\begin{itemize}
@@ -1253,30 +1253,30 @@ classDatum {
 			\end{itemize}
 		\item Race conditions and data races
 			\begin{itemize}
-				\item race condition: THe correctness of a computation depends on relative timing
+				\item race condition: The correctness of a computation depends on relative timing
 				\item data race: unsynchronized access to shared mutable data
 				\item Closely related concepts: most race conditions are due to data races
 				\item but not al race conditions are data races and not all data races are race conditions!
 			\end{itemize}
 		\item To avoid race conditions use synchronized threads via atomic mutual exclusion
-		\item Atomic opreation
+		\item Atomic operation
 			\begin{itemize}
-				\item Opreations \textbf{A} and \textbf{B} are atmoic with respect to each other if:
+				\item Operations \textbf{A} and \textbf{B} are atomic with respect to each other if:
 					\begin{itemize}
 						\item Thread 0 executes A
 						\item Thread 1 executes B
 						\item Thread 0 always perceives either all of B or none of it (nothing in between)
 					\end{itemize}
-				\item An opreation is atomic if is atomic with respect to all opreations on the same state
+				\item An operation is atomic if is atomic with respect to all operations on the same state
  			\end{itemize}	
  		\item Thread safety
- 			\\In order to achieve multi-threaded correctnes of the whole program, one should:	
+ 			\\In order to achieve multi-threaded correctness of the whole program, one should:	
  			\begin{itemize}
- 				\item Apply OO techniquest (encapsulation)
+ 				\item Apply OO techniques (encapsulation)
  					\begin{itemize}
  						\item Design ``thread safe classes''
  							\begin{itemize}
- 								\item they encapsulate any needed synchronization so thath the clients do not need to provide their own
+ 								\item they encapsulate any needed synchronization so that the clients do not need to provide their own
  							\end{itemize}
  						\item Build your program by composing thread-safe classes
  					\end{itemize}
@@ -1287,12 +1287,12 @@ classDatum {
  						\begin{itemize}
  							\item Data-race free
  						\end{itemize}
- 					\item Does not require synchronizatin from users
+ 					\item Does not require synchronization from users
  				\end{itemize}
  			\item Synchronization is not easy
  				\begin{itemize}
- 					\item Concurrent acces breaks many assumptions from sequential programming. Therefore NO assumptions can be made about the relative exection speed of threads
- 					\item Synchornizing with \inline{Sleep()} is wrong 
+ 					\item Concurrent access breaks many assumptions from sequential programming. Therefore NO assumptions can be made about the relative execution speed of threads
+ 					\item Synchronizing with \inline{Sleep()} is wrong 
  				\end{itemize}
  			\item Locks
  				\begin{itemize}
@@ -1307,9 +1307,9 @@ mylock.lock();
 mylock.unlock();
 \end{lstlisting}
  				\end{itemize}
- 			\item Java instrinsic locks
+ 			\item Java intrinsic locks
  				\begin{itemize}
- 					\item Each java bject contains a lock (java built-in mechanism)
+ 					\item Each java object contains a lock (java built-in mechanism)
  					\item These locks can be used via the \inline{synchronized} keyword
  					\begin{lstlisting}
  synchronized (obj){
@@ -1342,7 +1342,7 @@ class Reentrant {
  				\begin{itemize}
  					\item reentrant locks $\to$ per thread acquisition
  						\begin{itemize}
- 							\item requiers a counter
+ 							\item requires a counter
  						\end{itemize}
  					\item non-reentrant locks $\to$ per-invocation acquisition
  						\begin{itemize}
@@ -1366,7 +1366,7 @@ class AtomicCnt{
  			\end{lstlisting}
  			\item Caching results
  				\begin{itemize}
- 					\item cache: unput $\to$ result
+ 					\item cache: input $\to$ result
  						\begin{itemize}
  							\item A mapping of a set of input elements to the corresponding results of a computation
  						\end{itemize}
@@ -1395,15 +1395,15 @@ class AtomicCnt{
 				\item Fine-grained locking introduces the possibility of a deadlock
 				\item A deadlock happens when a number of threads reach a point where they are unable to continue
 					\begin{itemize}
-						\item caused by circulare dependencies
+						\item caused by circular dependencies
 						\item it is a run-time condition
 					\end{itemize}
 			\end{itemize}
 		\item Necessary conditions for a deadlock to occur
 			\begin{itemize}
-				\item Mutual exclusion \\at least one resource must be non-sharable
+				\item Mutual exclusion \\at least one resource must be non-shareable
 				\item Hold an wait \\a thread holds at least a lock that it has already acquired, while waiting for another lock
-				\item No forced lock release \\ locks can only be released voluntairily by the threads
+				\item No forced lock release \\ locks can only be released voluntarily by the threads
 				\item Circular wait:
 				\\$p_1$ waits for $p_2$
 				\\$p_2$ waits for $p_3$
@@ -1421,7 +1421,7 @@ class AtomicCnt{
 		\item Building thread-safe classes
 			\begin{itemize}
 				\item Mutable and shared data need to be protected
-				\item Immutable it thread safe aways after initialization
+				\item Immutable it thread safe always after initialization
 				\item stateless is always thread safe
 				\\
 				\\Try to avoid synchronization when possible; it is difficult to reason about and there are some performance issues
@@ -1438,9 +1438,9 @@ class AtomicCnt{
 			\begin{itemize}
 				\item Its state cannot be modified after construction
 				\item All its fields are final
-				\item It is properly constructedC(while the constructor runs, the object is mutable, there fore it should not be accessed during that time)
+				\item It is properly constructed (while the constructor runs, the object is mutable, there fore it should not be accessed during that time)
 			\end{itemize}
-		\item AtomicReference<V>
+		\item \inline{AtomicReference<V>}
 			\begin{itemize}
 				\item Atomic access to a reference of V
 				\item Operations:
@@ -1469,7 +1469,7 @@ class AtomicCnt{
 			\end{itemize}
 		\item Encapsulation
 			\begin{itemize}
-				\item hide informaton for users of a class
+				\item hide information for users of a class
 				\item general OO technique
 				\item applies to synchronization in parallel programming
 				\item class hides internal state (fields,...)
@@ -1489,7 +1489,7 @@ class AtomicCnt{
 							\begin{itemize}
 								\item state variables are thread-safe
 								\item state variables are independent
-								\item not valid state tranitions
+								\item not valid state transitions
 							\end{itemize}
 						\item Additional synchronization is usually needed
 						\\Counter-example
@@ -1531,10 +1531,10 @@ public class NumberRange {
 \end{itemize}
 \item A condition interface provides the following methods:
 \begin{itemize}
-\item \inline{await()}: the current thread waits until it is signaled. 
+\item \inline{await()}: the current thread waits until it is signalled. 
 \begin{itemize}
 \item Called with the lock held
-\item Releases the lock atomically and waits for thread to be signaled
+\item Releases the lock atomically and waits for thread to be signalled
 \item When returns, it is guaranteed to hold the lock
 \item Thread always needs to check condition
 \end{itemize}
@@ -1677,7 +1677,7 @@ lock:
 	unlock:
         my_t.set(false);
 \end{lstlisting}
-Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thread will be selected.
+Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thread will be selected. This only works for two threads. The entities \inline{my_t}, \inline{other_t} and \inline{me} depends on the thread: for thread0 \inline{my_t=t0, other_t=t1, me=0} and for thread1 is the opposite.
 \end{itemize}
 \item In order to make our life easier, we need rich(er) atomic operations for AtomicInteger: 
 \begin{itemize}
@@ -2053,7 +2053,7 @@ return r2 + t1.join()
 \item Strong isolation: Yes, 
 \begin{itemize}
 \item easier for porting existing code
-\item difficult to implement, overhea
+\item difficult to implement, overhead
 \end{itemize}
 \item Weak isolation: No
 \end{itemize}
@@ -2078,7 +2078,7 @@ return r2 + t1.join()
 \end{itemize}
 \end{enumerate}
 \end{itemize}
-\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement ,too (need to check every memory operation)
+\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement, too (need to check every memory operation)
 \item Reference-based STMs: mutable state is put into special variables
 \begin{itemize}
 \item  these variables can only be modified inside a transaction, everything else is immutable (or not shared; see functional programming)
@@ -2179,7 +2179,7 @@ return r2 + t1.join()
 \begin{itemize}
  \item MVC: (explained better later)
 \begin{itemize}
-\item model (application domain, state and behavior)
+\item model (application domain, state and behaviour)
 \item view (display layout and interaction views)
 \item controller (user input, device interaction)
 \end{itemize}
@@ -2240,7 +2240,7 @@ return r2 + t1.join()
 \end{enumerate}
 \item Example: bank account: 
 \begin{itemize}
-\item sequential programing: single balance
+\item sequential programming: single balance
 \item PP shared state: single balance \& protection
 \item PP distributed state: each thread has a local balance (budget), threads share balance coarsely 
 \end{itemize}
