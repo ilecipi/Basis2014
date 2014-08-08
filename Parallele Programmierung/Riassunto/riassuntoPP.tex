@@ -84,7 +84,11 @@ For example, when adding vectors (load $\to$ operation(s) $\to$ store)
 \item Normal: 1-at-a-time
 \item Vectors: N-at-a-time (bigger registers)
 \end{itemize}
-\item Pipelining\footnote{Think laundry: you can either wash, dry, fold and repeat, or while the $n$ load is drying, the $n+1$ load can start washing}\todo[inline]{maybe add diagram from slides?}
+\item Pipelining\footnote{Think laundry: you can either wash, dry, fold and repeat, or while the $n$ load is drying, the $n+1$ load can start washing}
+\begin{center}
+\includegraphics[scale=0.4]{Figures/pipelineTimeStages.jpg}
+\end{center}
+
 \begin{itemize}
 \item Multiple stages (CPU Functional Units)
 \begin{itemize}
@@ -144,7 +148,12 @@ For example, when adding vectors (load $\to$ operation(s) $\to$ store)
 \item Now: Programmers need to worry about (parallel) performance
 \end{itemize}
 \end{itemize}
-\item Shared memory architectures \todo[inline]{Maybe add picture form slides, page 34 form 2 - parallel architectures; ADD PICTURES FOR EACH OF THE DIFFERENT TYPES OF SMA}
+\item Shared memory architectures 
+
+\begin{center}
+\includegraphics[scale=0.4]{Figures/sharedDistributedMemoryArchitectures.jpg}
+\end{center}
+
 \begin{itemize}
 \item SMT (Hyperthreading)
 \begin{itemize}
@@ -178,7 +187,11 @@ For example, when adding vectors (load $\to$ operation(s) $\to$ store)
 \end{itemize}
 \end{itemize}
 \item Flynn's Taxonomy 
-\todo[inline]{Add diagram from page 49 of 2 - parallel architectures}
+
+\begin{center}
+\includegraphics[scale=0.4]{Figures/flynnsTaxionomy.jpg}
+\end{center}
+
 \item GPUs
 \begin{itemize}
 \item Graphical Processing Units 
@@ -305,7 +318,18 @@ S_p&=p-b(p-1)
 \item Concurrent programming is suitable for parallelism
 \end{itemize}
 \end{itemize}
-\todo[inline]{Add views of different architectures} 
+
+
+\item Architectural view: CPU and Memory
+\begin{center}
+\includegraphics[scale=0.2]{Figures/architecturalViewCpuAndMemory.jpg}
+\end{center}
+
+\item Programmer's view: Core and Data
+\begin{center}
+\includegraphics[scale=0.2]{Figures/programmersViewCoreAndData.jpg}
+\end{center}
+
 \item Concerns in Parallel programming
 \begin{itemize}
 \item Expressing parallelism
