@@ -196,6 +196,7 @@ For example, when adding vectors (load $\to$ operation(s) $\to$ store)
 \begin{itemize}
 \item Graphical Processing Units 
 \begin{itemize}
+\item SIMD
 \item Scene description $\to$ pixels
 \item Highly data-parallel process
 \end{itemize}
@@ -428,8 +429,8 @@ S_p&=p-b(p-1)
 \end{itemize}
 \item Example primitives:
 \begin{itemize}
-\item \emph{barrier}
-\item \emph{send()/receive()}
+\item \inline{barrier}
+\item \inline{send()}/\inline{receive()}
 \end{itemize}
 \item All tasks need to reach the barrier before they can proceed
 \end{itemize}
@@ -722,7 +723,7 @@ class B {
 
 \section{Loops/Objects/Classes}
     \begin{itemize}
-      \item The \textit{\inline{for}} loop
+      \item The {\inline{for}} loop
         \begin{itemize}
           \item The for loop statement performs a task many times
           \item syntax:
@@ -767,7 +768,7 @@ for (int i=1; i<=4; i++){
         \item The \inline{for} loops we have seen are definite loops
           \begin{itemize}
             \item Print ``Hello'' 10 times.
-            \item FInd all the prime numbers up to an integer n.
+            \item Find all the prime numbers up to an integer $n$.
             \item Print each odd number between 5 and 127
           \end{itemize}
       \end{itemize}
@@ -845,7 +846,7 @@ name[index] = value;   //modify
         \begin{itemize}
         \item Legal indexes: between \textbf{0} and the \textbf{array's length -1}.
           \begin{itemize}
-            \item Reading or writing any index outisde this range will throw an \textit{ArrayIndexOutOfBoundsException}
+            \item Reading or writing any index outisde this range will throw an \inline{ArrayIndexOutOfBoundsException}
           \end{itemize}
         \end{itemize}
   \end{itemize}
@@ -853,7 +854,7 @@ name[index] = value;   //modify
     \begin{itemize}
       \item \textbf{String}: An object storing a sequence of text characters
         \begin{itemize}
-          \item Unlike most other objects, a \textit{String} is not create with \textit{new}.
+          \item Unlike most other objects, a \inline{String} is not create with \inline{new}.
           \item Syntax:
 \begin{lstlisting}
 String name = ``text'';
@@ -866,7 +867,7 @@ String name = expression;
       \item Characters of a string are numbered with 0-based \textit{indexes}:
       \begin{itemize}
         \item First character's index: 0
-        \item Last character's index: 1 less than th string's length
+        \item Last character's index: 1 less than the string's length
         \item The individual characters are values of type chars
       \end{itemize}
       \end{itemize}
@@ -877,7 +878,7 @@ String name = expression;
       This methods are called using the dot notation
   \item Comparing strings
     \begin{itemize}
-      \item ``=='' compares objects by \textit{references}, so it often gives \textit{false} even when two \textit{Strings} have the same letters
+      \item ``=='' compares objects by \textit{references}, so it often gives \inline{false} even when two \inline{Strings} have the same letters
       \item Example:\\
       \begin{center}
         \includegraphics[scale=1.2]{Figures/StringExample.jpg}
@@ -895,24 +896,24 @@ String name = console.next ();
       System.out.println(``Lets talk about meta!``);
   }
   \end{lstlisting}
-  \item Extract from Java API
+  \item Extracted from Java API
     \begin{itemize}
       \item \inline{compareTo}
         \begin{itemize}
           \item \inline{public int compareTo(String anotherString)}\\Compares two strings lexicographically
-          \item \textbf{Parameters}:\\anotherString - the String to be compared
+          \item \textbf{Parameters}:\\\inline{anotherString} - the String to be compared
           \item \textbf{Returns}:\\The value 0 if the argument strings is equal to this string, less tha 0 if it is lexicographically less than the string argument, value greater than 0 otherwise
         \end{itemize}
-        \item \textbf{concat}
+        \item \inline{concat}
           \begin{itemize}
             \item \inline{public String concat(String str)}\\Concatenates the string argument to the end of this string.
-            \item \textbf{Parameters};\\str - the String which is concatenated to the end of this String
+            \item \textbf{Parameters};\\\inline{str} - the String which is concatenated to the end of this String
             \item \textbf{Returns}: A string that represents the concatenation of this object's characters followed by the string argument's characters
           \end{itemize}
           \item \inline{copyValueOf}
             \begin{itemize}
               \item \inline{public static String copyValueOf(char data[])}
-              \item \textbf{Parameters}:\\data - the character array
+              \item \textbf{Parameters}:\\\inline{data} - the character array
               \item \textbf{Returns}:\\A string that contains the characters of the array
             \end{itemize}
     \end{itemize}
@@ -942,7 +943,7 @@ String name = console.next ();
      			\end{itemize}
      	\end{itemize}
      	\item Inheritance\\
-     	Even thought there are systematic differences, different kinds of objects often have a certain amount in common with each other.\\ Classes \textit{inherit} commonly used state and behaviour from other classes, but specialized behaviour and states further \todo{WTF??}
+     	Even though there are systematic differences, different kinds of objects often have a certain amount in common with each other.\\ Classes \textit{inherit} commonly used state and behaviour from other classes, but specialized behaviour and states further \todo{WTF??}
 \item References and objects
 	\begin{itemize}
 		\item Arrays and objects use reference semantics, because of:
@@ -959,7 +960,7 @@ panel2.setBackground(Color.CYAN);
 	\end{itemize}
 	\item Objects as parameters
 		\begin{itemize}
-			\item When an object is passed as a parameter, th object is \textit{not} copied. The parameter refers to the same object.
+			\item When an object is passed as a parameter, the object is \textit{not} copied. The parameter refers to the same object.
 				\begin{itemize}
 					\item If the parameter is modified, it \textit{will} affect the original object.
 					\begin{lstlisting}
@@ -1186,8 +1187,8 @@ classDatum {
 			\end{itemize}
 		\item Advantages of Multithreading
 			\begin{itemize}
-				\item Reactive systems-constantly monitoring
-				\item More responsive to user input-GUI application can interrupt a time-consuming task
+				\item Reactive systems: constantly monitoring
+				\item More responsive to user input: GUI application can interrupt a time-consuming task
 				\item Server can handle multiple clients simultaneously
 				\item Can take advantage of parallel processing
 			\end{itemize}
@@ -1199,16 +1200,16 @@ classDatum {
 			\begin{itemize}
 				\item Extend \inline{java.lang.Thread} class
 					\begin{itemize}
-						\item Override run method (must be overridden
-						\item run() is called when execution of the thread begins
-						\item A thread terminates when run() returns
-						\item start() method invokes run()
-						\item Calling run() does not create a new thread
+						\item Override run method (must be overridden)
+						\item \inline{run()} is called when execution of the thread begins
+						\item A thread terminates when \inline{run()} returns
+						\item \inline{start()} method invokes \inline{run()}
+						\item Calling \inline{run()} does not create a new thread
 					\end{itemize}
 				\item Implement \inline{java.lang.Runnable} thread
 					\begin{itemize}
 						\item If already inheriting another class (i.e., JApplet)
-						\item Single method: public void run()
+						\item Single method: \inline{public void run()}
 						\item Thread class implements Runnable
 					\end{itemize}
 			\end{itemize}
@@ -1264,7 +1265,7 @@ classDatum {
  						\item a method is not obliged to establish a policy for the unchecked exceptions thrown by its implementation
  					\end{itemize}
  			\end{itemize}
- 		\item Setting UncaughtExceptionHandlers\\
+ 		\item Setting \inline{UncaughtExceptionHandlers}\\
  			Implementing \inline{UncaughtExceptionHandler} interface allows us to handle unchecked exceptions\\ Three options:
  			\begin{itemize}
  				\item Register exception handler with Thread object
@@ -1456,10 +1457,10 @@ class AtomicCnt{
 		\item Building thread-safe classes
 			\begin{itemize}
 				\item Mutable and shared data need to be protected
-				\item Immutable it thread safe always after initialization
+				\item Immutable is always thread safe after initialization
 				\item stateless is always thread safe
 				\\
-				\\Try to avoid synchronization when possible; it is difficult to reason about and there are some performance issues
+				\\Try to avoid synchronization when possible; it is difficult to reason about it, and there are some performance issues
 
 			\end{itemize}
 		\item The Java \inline{final} keyword
@@ -1496,7 +1497,7 @@ class AtomicCnt{
 						\item This is specified by the Java memory model
 						\item They do not require safe publication
 					\end{itemize}
-				\item Non-Immutable objects need to b \textbf{safely published}
+				\item Non-Immutable objects need to be \textbf{safely published}
 					\begin{itemize}
 						\item no ordering guarantees provided by the memory model
 						\item A thread might observe a non-safely published object in an inconsistent state
@@ -1560,7 +1561,7 @@ public class NumberRange {
 \begin{itemize}
 \item can be used for data-flow parallel programs, e.g. pipelines where a mean to transfer X from the producer to the consumer is needed
 \item There might be multiple producers or (not xor) multiple consumers
-\item For an implementation a circular buffer (with a fixed size) can be used with simple \textbf{dequeue()}/\textbf{enqueue()} and an “in” and “out” counter. Both functions use a shared (reentrant) lock and rely on helper functions to check for full/empty queue\footnote{Note: If you have a try-catch-finally block and there is a return statement (assume it will be called no matter what) in the ``try'' part and an unlock() in the ``finally'' part, the finally part will always be executed (and thus also the lock released!).}
+\item For an implementation a circular buffer (with a fixed size) can be used with simple \inline{dequeue()}/\inline{enqueue()} and an “in” and “out” counter. Both functions use a shared (reentrant) lock and rely on helper functions to check for full/empty queue\footnote{Note: If you have a try-catch-finally block and there is a return statement (assume it will be called no matter what) in the ``try'' part and an unlock() in the ``finally'' part, the finally part will always be executed (and thus also the lock released!).}
 \item If you use a busy wait (while loop) there is a chance of a deadlock (and CPU running high). Using sleep for synchronization as another approach is generally discouraged
 \item The solution is a condition variable which (ideally) notifies the threads upon change
 \end{itemize}
@@ -1622,8 +1623,8 @@ public class NumberRange {
 \item Building a lock with a semaphore:
 \begin{itemize}
 \item mutex\footnote{Mutual Exclusion Locks: make sure that at most one thread owns the lock} = Semaphore(1); Initialize mutex using a semaphore, and set it to unlocked (1)
-\item lock mutex $\to$ mutex.acquire(); only one thread is allowed into the critical section
-\item unlock mutex $\to$ mutex.release(); One other thread will be woken up
+\item lock mutex $\to$ \inline{mutex.acquire()}; only one thread is allowed into the critical section
+\item unlock mutex $\to$ \inline{mutex.release()}; One other thread will be woken up
 \item Semaphore number:
 \begin{itemize}
 \item $1=$ unlocked
@@ -1662,7 +1663,7 @@ barrier.acquire()
 barrier.release()
 \end{lstlisting}
 \end{itemize}
-\item If you want a reusable barrier for n threads (aka 2-phase barrier) with semaphores, you need a count, a mutex and two barriers for it to be thread-safe.
+\item If you want a reusable barrier for $n$ threads (aka 2-phase barrier) with semaphores, you need a count, a mutex and two barriers for it to be thread-safe.
 \begin{lstlisting}
 count=0; mutex = Semaphore(1); bar0 = Semaphore(0); bar1 = Semaphore(1);
 
@@ -1712,7 +1713,7 @@ lock:
 	unlock:
         my_t.set(false);
 \end{lstlisting}
-Two AtomicBooleans (one per thread) and an AtomicInteger which decides which thread will be selected. This only works for two threads. The entities \inline{my_t}, \inline{other_t} and \inline{me} depends on the thread: for thread0 \inline{my_t=t0, other_t=t1, me=0} and for thread1 is the opposite.
+Two \inline{AtomicBooleans} (one per thread) and an \inline{AtomicInteger} which decides which thread will be selected. This only works for two threads. The entities \inline{my_t}, \inline{other_t} and \inline{me} depends on the thread: for thread0 \inline{my_t=t0, other_t=t1, me=0} and for thread1 is the opposite.
 \end{itemize}
 \item In order to make our life easier, we need rich(er) atomic operations for AtomicInteger: 
 \begin{itemize}
@@ -1855,9 +1856,9 @@ Interface implemented by ReentrantLock
 \item Java collections
 \begin{itemize}
 \item Aggregate Objects: Objects that group multiple elements into a single unit
-\item Interfaces (e.g. Collection, List, Set, SortedSet,\dots)
-\item Implementations (e.g. ArrayList and LinkedList for List)
-\item Algorithms (e.g. Sort)
+\item Interfaces (e.g. \inline{Collection, List, Set, SortedSet},\dots)
+\item Implementations (e.g. \inline{ArrayList} and \inline{LinkedList} for \inline{List})
+\item Algorithms (e.g. \inline{Sort})
 \end{itemize}
 $\to$ Based on Java Generics
 \item Synchronized Collections: 
@@ -1865,11 +1866,11 @@ $\to$ Based on Java Generics
 \item Vector, HashTable (JDK 1.0)
 \item java.util.collections (JDK 1.2):
 \begin{itemize}
-\item synchronizedList(List$<$T$>$ list)
-\item synchronizedMap(Map$<$K,V$>$ m)
-\item synchronizedSet(Set$<$T$>$ s)
-\item synchronizedSortedMap(SortedMap$<$K,V$>$ m)
-\item synchronizedCollection(Collection$<$T$>$ c)
+\item \inline{synchronizedList(List<T> list)}
+\item \inline{synchronizedMap(Map<K,V> m)}
+\item \inline{synchronizedSet(Set<T> s)}
+\item \inline{synchronizedSortedMap(SortedMap<K,V> m)}
+\item \inline{synchronizedCollection(Collection<T> c)}
 \end{itemize}
 \item They are synchronized wrapper classes
 \item Wrap every public method in a synchronized block
@@ -1888,15 +1889,15 @@ $\to$ Based on Java Generics
 \end{itemize}
 \item Examples:
 \begin{itemize}
-\item ConcurrentHashMap 
+\item \inline{ConcurrentHashMap} 
 \begin{itemize}
 \item As a replacement for synchronized hash-based map
 \end{itemize}
-\item ConcurrentSkipListMap, ConcurrentSkipListSet
+\item \inline{ConcurrentSkipListMap}, \inline{ConcurrentSkipListSet}
 \begin{itemize}
 \item As a replacement for synchronized tree-based impls.
 \end{itemize}
-\item CopyOnWriteArrayList, CopyOnWriteArrayList
+\item \inline{CopyOnWriteArrayList}, \inline{CopyOnWriteArrayList}
 \begin{itemize}
 \item Frequent reads, infrequent writes
 \end{itemize}
@@ -1904,14 +1905,14 @@ $\to$ Based on Java Generics
 \end{itemize}
 \item Queues: 
 \begin{itemize}
-\item BlockingQueue
+\item \inline{BlockingQueue}
 \begin{itemize}
-\item ArrayBlockingQueue, LinkedBlockingQueue (FIFO)
-\item PriorityBlockingQueue (ordered)
+\item \inline{ArrayBlockingQueue}, \inline{LinkedBlockingQueue} (FIFO)
+\item \inline{PriorityBlockingQueue} (ordered)
 \end{itemize}
-\item TransferQueue: allows to wait until a consumer receives item; 
-\item SynchronousQueue: hand-of, no internal capacity 
-\item Dequeue/BlockingDeque: 
+\item \inline{TransferQueue}: allows to wait until a consumer receives item; 
+\item \inline{SynchronousQueue}: hand-of, no internal capacity 
+\item \inline{Dequeue}/\inline{BlockingDeque}: 
 \begin{itemize}
 \item Allows efficient removal/insertion at both ends (head/tail)
 \item Work stealing pattern
@@ -1920,18 +1921,17 @@ $\to$ Based on Java Generics
 \item Synchronizers: 
 \begin{itemize}
 \item Semaphores
-\item CyclicBarrier (Java's barrier)
-\item CountDownLatch (thread wait until countdown reaches zero)
+\item \inline{CyclicBarrier} (Java's barrier)
+\item \inline{CountDownLatch} (thread wait until countdown reaches zero)
 \begin{itemize}
 \item \inline{CountDownLatch(int count)} - initialize latch
 \item \inline{.await()} - wait for event
 \item \inline{.countDown()} - decrement count
 \end{itemize}
 \end{itemize}
-\item Future: \\
-interface Future$<$V$>$
+\item Future: \inline{interface Future<V>}
 \begin{itemize}
-\item Represents a result (type T) for an asynchronous computation
+\item Represents a result (type \inline{T}) for an asynchronous computation
 \item \inline{.get()} - wait for result
 \item \inline{.isDone()} - check if task is completed
 \item \inline{.cancel()} - attempt to cancel computation
@@ -1964,7 +1964,7 @@ public static int sum(int[] xs) {
 \item Scheduled by the OS
 \item Generally Inefficient!
 \end{itemize}
-\item \textbf{ExecutorService}: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
+\item \inline{ExecutorService}: A (huge) amount of tasks is handled by an interface which assigns a thread from a thread pool to each task and returns a Future
 \item Future (\inline{interface Future<V>}):
 \begin{itemize}
 \item represents a result (Type \inline{T}) for an asynchronous computation
@@ -1985,7 +1985,7 @@ public static int sum(int[] xs) {
 \item The array to be summed
 \item The region for which the task is responsible for
 \end{itemize}
-\item Additionally, an instance to the ExecutorService is passed so that the task can spawn other tasks
+\item Additionally, an instance to the \inline{ExecutorService} is passed so that the task can spawn other tasks
 \item Problems (observation: no result returned): 
 \begin{itemize}
 \item Tasks create other tasks and then wait for results
@@ -2009,7 +2009,7 @@ public static int sum(int[] xs) {
 \item \inline{.invoke()}: executes task without spawning a new task (in-place)
 \item subclasses need to define \inline{compute()}
 \end{itemize}
-Note \inline{fork()}, , \inline{join()}, \inline{join()} don't work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
+Note \inline{fork()}, \inline{join()}, \inline{join()} don't work (well) in Java, solved by using\footnote{``+'' is in this case the arithmetic addition but can also be something else of a combining nature}
 \begin{lstlisting}
 t1.fork(), r2 = t2.compute()
 return r2 + t1.join()
@@ -2025,7 +2025,6 @@ return r2 + t1.join()
 \end{itemize}
 
 \section{Transactional Memory (TM)}
-\todo[inline]{REM1: If I remember correctly, this was already discussed, maybe remove?}
 \begin{itemize}
 \item Problems using locks:
 \begin{itemize}
@@ -2034,7 +2033,6 @@ return r2 + t1.join()
 \item Locks are pessimistic
 \item Locking mechanism is hard-wired to the program
 \end{itemize}
-\todo[inline]{END REM1}
 
 \item Aims at removing the burden of having to deal with locks from the programmer and place it on the system instead
 \item With TM, the programmer explicitly defines atomic code sections and is only concerned with the \textsl{what} and not the \textsl{how} (declarative approach)
@@ -2113,7 +2111,7 @@ return r2 + t1.join()
 \end{itemize}
 \end{enumerate}
 \end{itemize}
-\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement, too (need to check every memory operation)
+\item The more variables are part of a transaction (and thus protected) the easier it gets to port existing code but the more difficult to implement (need to check every memory operation)
 \item Reference-based STMs: mutable state is put into special variables
 \begin{itemize}
 \item  these variables can only be modified inside a transaction, everything else is immutable (or not shared; see functional programming)
@@ -2481,7 +2479,7 @@ $\theta_i=\arctan\frac{altitude_i-altitude_0}{i}$
 \end{itemize}
 \item Data parallel programming in Java 8:
 \begin{itemize}
-\item Done using streams, 
+\item Done using streams 
 \item Providing means to manipulate data in a declarative way
 \item Allowing for transparent parallel processing
 \end{itemize}
