@@ -1,7 +1,7 @@
 \documentclass[a4paper, 9pt, DIV=24]{scrartcl}
 \usepackage[utf8]{inputenc}
 
-\usepackage[english]{babel}
+\usepackage[german]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -223,11 +223,19 @@ $\sqrt{2\pi n}(\frac{n}{e})^n \approx n!$
 \paragraph{Gruppieren von Gliedern}
 
 \paragraph{Wurzel}
+\begin{eqnarray*}
+&& \sqrt{n^2+1}-\sqrt{n^2-2n-1} \\ &=&(\sqrt{n^2+1}-\sqrt{n^2-2n-1})\frac{\sqrt{n^2+1}+\sqrt{n^2-2n-1}}{\sqrt{n^2+1}+\sqrt{n^2-2n-1}}\\
+  &=& \frac{2n+2}{\sqrt{n^2+1}+\sqrt{n^2-2n-1}} \\
+  &=&\frac{n(2+2/n}{n(\sqrt{1+1/n^2}+\sqrt{1-2/n-1/n^2}}\\
+  &\rightarrow & \lim_{n\rightarrow \infty} \frac{2}{2}=1
+\end{eqnarray*}
 
 \paragraph{Bruch}
 
 \paragraph{$n$ im Exponent}
-
+$$\lim_{n\rightarrow \infty} \left(1+\frac{1}{n}\right)^n=e^{\lim_{n\rightarrow \infty} \log(1+\frac{1}{n})n} = $$
+Wir setzen $n=\frac{1}{t}$. Dann:
+$$=e^{\lim_{t\rightarrow 0} \log(1+t)/t}=e^{\lim_{t\rightarrow 0} \frac{1}{1+t}}=e$$
 \paragraph{Satz von l'Hospital}
 $$ \lim \frac{f(x)}{g(x)}=\lim \frac{f'(x)}{g'(x)} \mbox{ nur im Fälle } \frac{0}{0} \mbox{ oder } \frac{\infty}{\infty}$$
 
