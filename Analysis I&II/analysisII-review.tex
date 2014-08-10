@@ -1,0 +1,157 @@
+\documentclass[11pt,a4paper]{book}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\begin{document}
+
+\subsection{Differentiation in many variables}
+A function $f:\Omega \subset \mathbb{R}^n \rightarrow \mathbb{R}$ is (total) differentiable in $x_0$ if it exists a linear map $A:\mathbb{R}^n \rightarrow \mathbb{R}$ such that $$f(x)=f(x_0)+A(x-x_0)+R(x_0,x)$$
+Where $\lim_{x\rightarrow x_0} \frac{R(x_0,x)}{|x-x_0|}=0$.
+In this case A is called the differential of $f$ at $x_0$ and it's denoted as $(df)(x_0)$.
+
+Let $(A_1, A_2, ... , A_n)$ be a matrix representation of the linear map $A:\mathbb{R}^n \rightarrow \mathbb{R}$ (wrt to the standard Basis). Then $f$ differentiable at $x_0$ means:
+$$f(x)=f(x_0)+A_1(x^1-x_0^1)+A_2(x^2-x_0^2)+...+A_n(x^n-x_0^n)+R(x,x_0)$$
+
+$P(x,x_0)=f(x_0)+\begin{bmatrix}
+A_1 & ... & A_n
+\end{bmatrix} \begin{bmatrix}
+x^1-x_0^1 \\ 
+... \\ 
+x^n-x_0^n
+\end{bmatrix} $
+is the equation of the tangent plane at the point $f(x_0)$ on the surface formed by the graph of $f$.
+\paragraph*{Fact}
+if $f:\Omega \rightarrow \mathbb{R}$ is differentiable in $x_0 \in \Omega$ then the partial derivative exist and the differential $df(x_0)$ has the matrix representation $$\begin{pmatrix}
+\frac{\partial f}{\partial x}(x_0) & ... & \frac{\partial f}{\partial x^n}(x_0) \end{pmatrix} = \nabla f$$ the gradient of $f$.
+\paragraph*{Fact} $f$ differentiable in $x_0 \Rightarrow f$ is continuous in $x_0$.
+\paragraph*{Fact} If all partial derivatives of $f$ are continuous then $f$ is differentiable.
+
+Using these last two facts and the definition of differentiability one can study if a given function is differentiable or not. 
+
+\subsubsection{Differentiation rules}
+Let $f,g:\Omega \rightarrow \mathbb{R}$ be differentiable in $x_0$. Then:
+\begin{enumerate}
+\item $d(f\pm g)(x_0)=df(x_0)\pm dg(x_0)$
+\item $d(fg)(x_0)=g(x_0)df(x_0)+f(x_0)dg(x_0)$
+\item $d(f/g)(x_0)=\frac{g(x_0)df(x_0)-f(x_0)dg(x_0)}{(g(x_0))^2}$
+\item Let $h:\mathbb{R} \rightarrow \mathbb{R}$ be differentiable in $g(x_0)$, then
+$$d(h o g)(x_0)=h'(g(x_0))dg(x_0)$$
+\item Let $H:I\subset \mathbb{R} \rightarrow \Omega \subset \mathbb{R}^n$ be differentiable in $t_0 \in \mathbb{R}$ and $f$ differentiable in $H(t_0)$. Then 
+$$\frac{d}{dt} (f o H)(t_0)=df(H(t_0))H'(t_0)$$ where $H(t)=(H_1(t),...,H_n(t))$ and $H'(t)=(H_1'(t), ..., H_n'(t))$
+\end{enumerate}
+
+\subsubsection{Directional derivative}
+The directional derivative of $f$ in the direction of a unit vector $e \in \mathbb{R}^n-\{0\}$ is given by 
+$d_ef(x_0)=\nabla f(x_0) \cdot e$. 
+
+\subsubsection{Particular higher derivatives}
+One can similarly define higher derivatives order partial derivatives for functions $f \in C^m(\Omega)$.
+\paragraph*{Fact (Schwarz)} if $f \in C^2(\Omega)$ then $\frac{\partial^2 f}{\partial x^i \partial x^j}=\frac{\partial^2 f}{\partial x^j \partial x^i}$
+and in general for $f \in C^m(\Omega)$ all $n$  partial derivatives of $f$ of order $\leq m$ are independent of the order of differentiation.
+Using higher order derivatives one can analogous to the 1-dimensional case define a Taylor approximation of $f$.
+
+\paragraph*{Fact} Let $f \in C^m(\Omega), f:\Omega \rightarrow \mathbb{R}, \Omega \in \mathbb{R}$ and $x_1,x_0 \in \Omega$. Then 
+$$f(x_1)=f(x_0)+\nabla f(x_0)(x_1-x_0)+\frac{1}{2}\sum_{i,j=1}^2 \frac{\partial^2 f}{\partial x^i \partial x^j}(x_0)(x_i^i-x_0^i)(x_1^j-x_0^j) + R_3(f,x_1,x_0)$$ 
+Where $\lim_{x_1 \rightarrow x_0} \frac{R(f,x_1,x_0)}{||x_1-x_0||}=0$
+
+The analogue of the second derivative is given by the matrix of partial derivatives of order 2. This matrix is called the Hesse-matrix of $f$.
+$$\mbox{Hess}(f)=\nabla^2 f=\left(\frac{\partial^2 f}{\partial x^i \partial x^j}\right)_{i,j=1,...,n}$$
+
+\subsubsection{The extrema of a function $f:\Omega \rightarrow \mathbb{R}$}
+\paragraph*{Definition} A point $x \in \Omega$ is called a critical point if $\nabla f(x)=0$.
+\paragraph*{Fact} $f$ differentiable, $x_0$ is called local extrema of $f$ then $x_0$ is a critical point.
+\paragraph*{Fact} Let $x_0$ be a critical point of $f$. Then we have three different cases:
+\begin{enumerate}
+\item $x_0$ is a local minima if $\nabla^2 f(x_0)$ is positive definite.
+\item $x_0$ is a local maxima if $\nabla^2 f(x_0)$ is negative definite.
+\item Otherwise it is a saddle point (Sattelpunkt).
+\end{enumerate}
+\paragraph*{Fact} Let $f:\Omega \rightarrow \mathbb{R}$ be continuous and differentiable on an open set $\Omega \subset \mathbb{R}^n$. Let $\partial \Omega$ be the boundary of $\Omega$. Then every global extrema of $f$ is either a critical point of $f$ in $\Omega$ or a global extremal point of $f|_{\partial \Omega}$ (f restricted to the boundary).
+
+\paragraph*{Example (FS 2011)}
+Sei $f(x,y)=4x^2y^2-x^2-4y^2+1$. Bestimme die globalen Extrema von $f$ auf dem Gebiet $\Omega=\{(x,y)=\frac{x^2}{4}+y^2\leq 1, y\geq0\}$.
+\subparagraph*{Solution}
+We first find the critical points:
+$$\nabla f=\begin{pmatrix} 8xy^2-2x \\ 8x^2y-8y \end{pmatrix} =  \begin{pmatrix}
+0 \\ 
+0
+\end{pmatrix} $$
+\begin{align*}
+2x(4y^2-1)=0 \Rightarrow & x=0 \mbox{ or } y=\pm \frac{1}{2} \\
+8y(x^2-1)=0 \Rightarrow & x=\pm 1 \mbox{ or } y=0
+\end{align*}
+$(0,0), (\pm 1, \pm \frac{1}{2})$ are the critical points of $f$. Since $y\geq 0$ we only take $P_1=(0,0), P_{2,3}=(\pm 1, \frac{1}{2})$. Then we need to compute Hes(f).
+$$\mbox{Hess}(f)=\begin{pmatrix}
+8y^2-2 & 16xy \\ 
+16xy & 8x^2-8
+\end{pmatrix} $$
+$$\mbox{Hess}(f)(0,0)=\begin{pmatrix}
+-2 & 0 \\ 
+0 & -8
+\end{pmatrix} \Rightarrow \mbox{ negative definite } \Rightarrow \mbox{ local maxima}$$ 
+$$\mbox{Hess}(f)(1,\frac{1}{2})=\begin{pmatrix}
+0 & 8 \\ 
+8 & 0
+\end{pmatrix} \Rightarrow \mbox{ indefinite }$$ 
+$$\mbox{Hess}(f)(-1,\frac{1}{2})=\begin{pmatrix}
+0 & -8 \\ 
+-8 & 0
+\end{pmatrix} \Rightarrow \mbox{ indefinite }$$ 
+To find global extrema we need to look at $f$ on the boundary of $\Omega$, which is the curve $\frac{x^2}{4}+y^2=1$ and the line $y=0$. First on the line $y=0$ let $g=f|_{y=0}=-x^2+1$. $$g'(x)=-2x \Rightarrow x=0, P_1(0,0) \mbox{ is a point we need to check}$$
+We also need to check the corners $P_{4,5}=(\pm 2,0)$. On the ellipse: let $h=f|_{\frac{x^2}{4}+y^2=1}=-x^4+4x^2-3$.
+$$h'(x)=-4x^3+8x=0 \Rightarrow P_6=(0,1), P_{7,8}=(\pm \sqrt{2}, \frac{1}{\sqrt{2}})$$
+Now we look at the values of $f$ at these points. $f(P_1)=f(0,0)=1, f(P_{2,3})=0, f(P_{4,5})=-3, f(P_6)=-3, f(P_{7,8})=1$. $f$ has also a minima at $(\pm 2,0), (0,1)$ and a maxima at $(0,0), (\pm \sqrt{2}, \frac{1}{\sqrt{2}})$.
+
+\paragraph*{Example (FS 2010)}
+\begin{enumerate}
+\item Bestimme das Taylorpolynom erster Ordnung der Funktion $f(x,y)=e^{x^2}(x+y)$ um dem Punkt $(1,1)$.
+\item Bestimme $c \in \mathbb{R}$ so dass der Vektor $\begin{pmatrix}
+1 \\ 
+-1 \\ 
+c
+\end{pmatrix} $ tangential an den Graphen $g(f)=\{(x,y,f(x,y)):(x,y)\in \mathbb{R}^2$ im Punkt $(1,1,z)$ liegt.
+\end{enumerate}
+\subparagraph*{Solution}
+\begin{enumerate}
+\item
+$\nabla f=\begin{pmatrix}
+2xe^{x^2}(x+y)+e^{x^2} \\ 
+e^{x^2}
+\end{pmatrix}, \nabla f(1,1)=\begin{pmatrix} 5e \\ e \end{pmatrix}, f(1,1)=2e$
+$$f(x,y)=2e+\begin{pmatrix} 5e \\ e \end{pmatrix}(x-1,y-1)+r_2(x,y)=2e+5e(x-1)+e(y-1)+(x-1)(\nabla^2 f)(t)\begin{pmatrix} x-1 \\ y-1 \end{pmatrix}$$
+The Taylor polynomial of order 1 is $z=2e+5e(x-1)+e(y-1)$
+\item The vector $(1, -1, c)^T$ must be perpendicular to the normal vector of the plane, that is (from part 1) $n=(5e, e, -1)^T$. Hence
+$$(1, -1, c) \cdot (5e, e, -1)=0 \Rightarrow 4e-c=0 \Rightarrow c=4e$$
+\end{enumerate}
+
+\subsection{Line(Weg)  integral}
+Let $v:\Omega \rightarrow \mathbb{R}^n$ be a vector field and $\gamma$ a curve with parametrization $\gamma: [a,b]\rightarrow \Omega, t\rightarrow \gamma(t)$. Then the line integral of $v$ along $\gamma$ is defined as 
+$$\int_{\gamma} v ds= \int_a^b <v(\gamma(t)),\gamma '(t)> dt$$
+
+\paragraph*{Facts}
+\begin{enumerate}
+\item $\int_{\gamma} vds$ is independent of the parametrization of the path.
+\item $\int_{\gamma_1+\gamma_2} vds=\int_{\gamma_1} vds+ \int_{\gamma_2} vds$
+\item $\int_{\gamma} vds= -\int_{-\gamma} vds$
+\item If v  is the gradient vector field associated to a function $f$ i.e. $v=df$ then $\int_{\gamma} vds=f(\gamma(b))-f(\gamma(a))$, where $\gamma: [a,b] \rightarrow \Omega$.
+\end{enumerate}
+Equivalent one can change everything in terms of 1-forms $\lambda=\lambda_1 dx^1+\lambda_2 dx^2+ ... + \lambda_n dx^n$. Then $$\int_{\gamma} \lambda = \int_a^b \lambda(\gamma(t))\gamma '(t)dt$$
+\paragraph*{Fact}
+$\lambda: \Omega \rightarrow L(\mathbb{R^n}, \mathbb{R})$ a constant 1-form, then the following are equivalent:
+\begin{enumerate}
+\item $\exists f \in C'(\Omega) : df=\lambda$
+\item For every 2 continuous C'-paths $\gamma_1, \gamma_2$ with $\gamma_i:[a_i,b_i]\rightarrow \Omega$ with the same beginning and ending points:
+$$\int_{\gamma_1} \lambda=\int_{\gamma_2} \lambda$$
+\item For every closed curve $\gamma$, $\int_{\gamma}=0$
+\end{enumerate}
+\paragraph*{Definition} A vector field $V:\Omega \rightarrow \mathbb{R}^n$ is called conservative if $\int_{\gamma} Vds=0$ for every closed curve $\gamma$.
+
+\paragraph*{Fact} For a simply connected region $\Omega$, we have
+$$\mbox{ V is conservative } \iff v=\nabla f \mbox{ for some function } f$$
+\end{document}
