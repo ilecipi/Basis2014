@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{makeidx}
+\usepackage{todonotes}
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
@@ -154,4 +155,56 @@ $$\int_{\gamma_1} \lambda=\int_{\gamma_2} \lambda$$
 
 \paragraph*{Fact} For a simply connected region $\Omega$, we have
 $$\mbox{ V is conservative } \iff v=\nabla f \mbox{ for some function } f$$
+
+\paragraph*{Example (FS 2010)}
+Berechne das Wegintegral $\int_\gamma vds$ entlang das eingezeichneten Weg \todo{add picture} für das Vektorfeld $v(x,y)=\begin{pmatrix}
+xy^2 \\ 
+-y
+\end{pmatrix} $
+\subparagraph*{Solution}
+$int_\gamma vds=\int_{\gamma_1+\gamma_2+\gamma_3+\gamma_4} vds$. We first parametrize the curves:
+\begin{enumerate}
+\item $\gamma_1=(1,t), t \in [0,e] \Rightarrow \gamma_1 '=(0,1)$
+\item $-\gamma_2=(t,e^t), t \in [0,1] \Rightarrow -\gamma_2 '=(1, e^t)$
+\item $\gamma_3=(0,1-t), t\in [0,1] \Rightarrow \gamma_3 '=(0,-1)$
+\item $\gamma_4=(t,-t) t\in [0,1] \Rightarrow \gamma_4 '=(1,-1)$
+\end{enumerate}
+$$\int_{\gamma} vds= \int_0^e (t^2, -t)\cdot(0, 1)dt+\int_1^0(te^{2t}, -e^t)\cdot (1, e^t)dt + ...$$
+See the last example of Green's theorem for the rest.
+
+\subsection{Integration in $\mathbb{R}^n$}
+The Riemann integral in $\mathbb{R}^n$ is constructed in analogue way to the case in n=1. With Riemann sums over subintervals is replaced with sums over "sub-rectangles". $dx$ is replaced with an n-dimensional volume element $dvol_n$ which we denote also by $d\mu(x)$.
+\paragraph*{Fact} For a normal-region $$D=\{(x,y) \in \mathbb{R}^2 : a\leq x\leq b, \phi (x)<y< \psi (x)\}$$
+Where $\phi, \psi$ are continuous functions: $\mathbb{R} \rightarrow \mathbb{R}$ we have
+$$\int_D fd\mu(x)= \int_a^b \int_{\phi(x)}^{\psi(x)} f(x,y) dy dx$$ 
+\paragraph*{Fact} For a rectangle $Q=[a,b]\times[c,d] \in \mathbb{R}^2$
+$$\int_Q f d\mu =\int_a^b \int_c^d f dy dx = \int_c^d \int_a^b f dx dy$$
+
+\subsubsection{Substitution in $\mathbb{R}^n$}
+Let $u,v \in \mathbb{R}^n$ open intervals, $\Phi : u \rightarrow v$ bijective continuous differentiable with $\det(d\Phi (y)) \neq 0 \forall y \in u$. Then for $f: v\rightarrow \mathbb{R}$ continuous we have
+$$\int_v f(x) d\mu (x)= \int_u f(\Phi(y)) |\det(d\Phi(y))| d\mu(y)$$   
+
+\paragraph*{Example (FS 2010)}
+Bestimme das Integral $\int_\Omega x\sqrt{x^2+y^2} \log(\sqrt{x^2+y^2}) d\mu(x,y)$
+wobei \todo{add picture}
+\subparagraph*{Solution}
+Given the symmetry of the region it's better to use polar coordinates. Let $$\begin{pmatrix}
+x \\ 
+y
+\end{pmatrix}= \begin{pmatrix}
+r \cos(\sigma) \\ 
+r \sin(\sigma)
+\end{pmatrix}  \Rightarrow dxdy=rdrd\sigma$$
+The region in $(r,\sigma)$ domain is simply $1\leq r\leq 2, \frac{\pi}{4}\leq \sigma \leq \frac{7\pi}{4}$.
+\begin{align*}
+& \int_\Omega x\sqrt{x^2+y^2} \log \sqrt{x^2+y^2} d\mu(x,y)= \int_{\frac{\pi}{4}}^{\frac{7\pi}{4}} \int_1^2 r \cos (\sigma) r \log(r) r dr d\sigma = \\
+& = \int_{\frac{\pi}{4}}^{\frac{7\pi}{4}} \cos(\sigma)d\sigma \int_1^2 r^3 \log(r) dr = \left[-\sqrt{2}+\frac{1}{4}x^4\log(x) -\frac{x^4}{16} \right]_1^2= \log(16)-\frac{15}{16}
+\end{align*}
+
+\subsection{Green's theorem}
+Let $\Omega \subset \mathbb{R}^2$ whose boundary $\partial \Omega$ has a $C'$ parametrization. Let $U\subset \Omega$ and $f=\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}$ where $P,Q \in C'(U)$. Then
+$$\int \int_\Omega \left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right) d\mu = \int_{\partial \Omega} Pdx+Qdy$$
+Let $V=(P,Q)$ be a vectorfield then $$\int_{\partial \Omega} V ds= \int \int_\Omega (rot(V) d\mu$$
+Where $rot(V)=\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}$ and the line integral is taken around the boundary of $\Omega$ in positive sense.
+\todo{add last example (it's either in my notes nor in her)}
 \end{document}
