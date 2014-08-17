@@ -462,11 +462,12 @@ Die \emph{Taylorreihe} von $f$ um den Punkt $x_0$ ist definiert durch:
 \[ T f(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}\cdot a}{n!}(x-x_0)^n \]
 Insbesondere nennen wir die \emph{Linearisierung der Taylorreihe} mit Grad $m$ das \emph{$m$-te Taylorpolynom}.
 Es ist also:
-\[ T_m f(x) = \sum_{i=0}^{m} \dfrac{f^{(n)}\cdot a}{n!}(x-x_0)^n = f(x_0) + \dfrac{f'(x_0)}{1} + \dfrac{f''(x_0)}{2} + \cdots\]
+\[ T_m f(x;x_0) = \sum_{i=0}^{m} \dfrac{f^{(n)}(x_0)}{n!}(x-x_0)^n = f(x_0) + \dfrac{f'(x_0)}{1} + \dfrac{f''(x_0)}{2} + \cdots\]
 
 \paragraph{Restglied}
 
-\[ R_{m}(x) = \frac{f^{(m+1)}(x)}{(m+1)!}(x-a)^{m+1} \]
+\[ R_{m}(x) = \frac{f^{(m+1)}(a)}{(m+1)!}(x-x_0)^{m+1} \]
+für ein a zwischen $x$ und $x_0$.
 
 \paragraph{Rechenregeln}
 \begin{enumerate}[label={(}\arabic*{)}]
@@ -558,7 +559,7 @@ Man berechne die Eigenwerte $\lambda_1, \dots, \lambda_l$ mit Vielfachheiten $c_
 Es gilt jetzt:
 \[ f(x) = \sum_{i=1}^{l}\sum_{j=1}^{c_l}k_{i,j}x^{j-1}e^{\lambda_l x} \]
 \[ = k_{1,0}e^{\lambda_1 x} + k_{1,1}xe^{\lambda_1 x} + \dots + k_{1,c_1-1}x^{c_1-1}e^{\lambda_l x} + \cdots \]
-
+Wenn man ein komplexes $\lambda$ erhaltet, kann man zur Basis $e^{\alpha x}(c_1\cos(\beta x)+c_2\sin(\beta x))$ wählen, wobei $\alpha=\Re(\lambda) \mbox{ und } \beta=\Im(\lambda)$
 \paragraph{Inhomogene DGL}
 Sei jetzt $a_n y^{(n)}(x)+...+a_0 y(x) = f(x)$. Zuerst lösen wir das homogene System und wir finden $y_h$. Nachher machen wir eine Ansatz und einsetzen wir es in die DGL, um die spezielle Lösung $y_s$ zu finden. Dann ist die allgemeine Lösung: $y(x)=y_h+y_s$.
  
@@ -721,6 +722,10 @@ Sei $f(x,y) = z$ und der Punkt $(x_0, y_0, f(x_0, y_0)) = (x_0, y_0, z_0)$ gegeb
 Setzt man $F(x,y,z) = f(x,y) - z = 0$, lässt sich die \emph{Tangentialgleichung} auch wie folgt (in Normalform) darstellen.
 \[ \langle (r - (x_0, y_0, z_0)), \grad(F) \rangle = 0, \grad(F) = \begin{pmatrix}f_x \\ f_y \\ -1\end{pmatrix} \]
 
+\subsubsection{Lagrangian-Multiplikatoren}
+Gegeben sei eine Funktion $f$. Wir suchen die globale Extrema der Funktion auf dem Gebiet $g$. Dann erhalten wir das System:
+$$\begin{cases} \nabla f= \lambda \nabla g \\ g=0 \end{cases} $$
+
 \subsection{Potentialbestimmung}
 Im Prinzip ist das Bestimmen eines Potential auch eine Art Integration.
 
@@ -779,6 +784,12 @@ Dies nutzen wir aus, um Integrale durch geeignete Wahl von $\Phi$ zu vereinfache
 Dabei ist $J_\Phi(x)$ die Jacobi-Matrix von $\Phi$, siehe oben.
 Für Kugel- und Zylinderkoordinaten, siehe Anhang \emph{Formeln und Tafeln}.
 
+\subsubsection{Satz von Green}
+Let $\Omega \subset \mathbb{R}^2$ whose boundary $\partial \Omega$ has a $C'$ parametrization. Let $U\subset \Omega$ and $f=\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}$ where $P,Q \in C'(U)$. Then
+$$\int \int_\Omega \left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right) d\mu = \int_{\partial \Omega} Pdx+Qdy$$
+Let $V=(P,Q)$ be a vectorfield then $$\int_{\partial \Omega} V ds= \int \int_\Omega rot(V) d\mu$$
+Where $rot(V)=\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}$ and the line integral is taken around the boundary of $\Omega$ in positive sense.
+
 \subsubsection{Satz von Gauß}
 Sei $\Omega \subseteq \R^n$ eine kompakte Menge mit ``glattem'' Rand $S := \partial\Omega$.
 Sei weiter $F: \Omega \rightarrow \R^n$ ein stetig differenzierbares Vektorfeld. Es gilt
@@ -797,6 +808,8 @@ Wobei die Masse $M$ gegeben ist durch:
 
 \emph{Bemerkung} Bei homogen-dichten Körpern, also Körper, bei dem überall die gleiche Dichte gegeben ist,
 lässt sich $\rho$ vor das Integral ziehen.
+
+
 
 \clearpage
 \section{Formeln und Tafeln}
