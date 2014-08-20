@@ -374,6 +374,9 @@ $f:\lbrack a,b\rbrack\to\lbrack c,d\rbrack$ ist bijektiv und $f^{-1}:\lbrack c,d
 \paragraph{Kompaktheit}
 Eine Teilmenge $K\subset \mathbb{R}$ heisst kompakt, falls jede Folge von Punkte aus $K$ einen Häufungspunkt in $K$ besistzt. Kompakt impliziert beschränkt, das heisst ein kompaktes Intervall besitzt ein Maximum und ein Minimum.
 
+\paragraph{Satz 4.12}
+Sei $f: K \rightarrow \mathbb{R}^n$, $K$ kompakt. Dann ist $f(K)$ kompakt und $f$ nimmt Supremum und Infimum an. Das heisst $$\exists c_{+}, c_{-} \in K : f(c_{-})\leq f(x) \leq f(c_{+}) \forall x \in K$$
+
 
 \paragraph{Gleichmäßige Stetigkeit}
 $f$ heißt \emph{gleichmäßig stetig}, wenn gilt:
@@ -448,6 +451,15 @@ Insbesondere ist der Graph einer konvexen Funktion \emph{linksgekrümmt} und der
 \end{enumerate}
 Alternative Definition (aus der Vorlesung): eine Funktion heisst konvex falls $\forall x_0\leq x_1, t\in [0,1]$:
 $$f(tx_0+(1-t)x_1)\leq tf(x_0)+(1-t)f(x_1)$$
+
+\paragraph{Jensen's Ungleichung}
+Sei $f:]a,b[\rightarrow \mathbb{R}$ konvex $\forall x_1, ..., x_n \in ]a,b[$ und $t_1, ..., t_n \in [0,1]$ mit $\sum t_i=1$. Dann gilt
+$$f\left( \sum_{i=1 }^n t_i x_i \right) \leq \sum_{i=1}^n t_i f(x_i)$$
+Aus diese Ungleichung folgt dass $\left(\prod_{i=1}^n x_i \right)^{\frac{1}{n}} \leq \frac{1}{n} \sum_{i=1}^n x_1$.
+Im Fall von $n=2$ gilt: $\frac{x_1+x_2}{2} \geq \sqrt{x_1x_2}$. 
+
+\paragraph{Bemerkung} Die Exponetialfunktion ist konvex. 
+
 \paragraph{Extremstellen}
 Für Extremstellen -- also Sattelpunkte, Minima und Maxima -- von $f$ gilt $f'(x_0) = 0$.
 Weitere Eigenschaften sind folgend zusammengefasst.
