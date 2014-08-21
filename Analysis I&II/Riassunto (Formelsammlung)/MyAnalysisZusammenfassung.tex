@@ -217,7 +217,12 @@ $(1+x)^n \geq 1 + nx, x \geq -1, n \in \N.$
 $\sqrt{2\pi n}(\frac{n}{e})^n \approx n!$
 \subsubsection{Wichtige Limes}
 \begin{itemize}
-\item $\lim_{n\rightarrow \infty} \left( 1+\frac{1}{n} \right)^n=e$
+\item $\lim_{n\rightarrow \infty} \left( 1+\frac{a}{n} \right)^n=e^a$
+\item $\lim_{n\rightarrow 0} \frac{\sin(n)}{n}=1$
+\item $\lim_{n\rightarrow 0} \frac{1-\cos(n)}{n}=0$
+\item $\lim_{n\rightarrow 0} \frac{1-\cos(n)}{n^2}=\frac{1}{2}$
+\item $\lim_{n\rightarrow 0} \frac{\log_a(1+n)}{n}=\frac{1}{\log(a)}$
+\item $\lim_{n\rightarrow 0} \frac{a^n-1}{n}=\log(a)$
 \end{itemize}
 \subsubsection{Tipps an Beispielen}
 \paragraph{Gruppieren von Gliedern}
@@ -426,6 +431,8 @@ Ist $f$ auf $[a,b]$ stetig und in $]a,b[$ differenzierbar, so gibt es ein $c \in
 \[ \dfrac{f(b) - f(a)}{b-a} = f'(c) \]
 Anders gesagt gibt es ein $c$, an dem die Steigung gerade die mittlere Steigung beträgt.\\
 \emph{Bemerkung:} Der Mittelwertsatz kommt häufig bei Ungleichungen zur Anwendung.
+\paragraph{Folgerung} 
+Sei $f$ auf dem Intervall $[a,b]$ differenzierbar. Falls die Funktion $x$ Nulstellen im Intervall besitzt, so muss $f'$ mindestens $x-1$ Nulstellen haben.
 
 \paragraph{Monotonie}
 Das Monotonie-Verhaltens lässt sich anhand der 1. Ableitung bestimmen.
@@ -506,6 +513,10 @@ Im Folgenden seien $F, f$ definiert auf $]a,b[$.
  \item \textbf{Hauptsatz:} $F(y) = \int_{a}^{y}f(x)dx, y \in\ ]a,b[ \implies F' = f.$
 \end{enumerate}
 
+\paragraph*{Beispiel: Hauptsatz und Kettenregel}
+Berechnen sie die Ableitung der Funktion $f(x)=\int_0^{x^3} \cos(t)^3 dt$. Man kann die Funktion $f$ in zwei Funktionen wie folgt zerlegen: $g(s)=\int_0^s \cos(t)^3 dt$ und $h(x)=x^3$. Dann aus der Kettenregel und der Hauptsatz der Intergralrechnung folgt:
+$$f'(x)=(g(h(x))'=g'(h(x))h'(x)= 3\cos(x^3)^3 x^2$$
+
 \subsubsection{Rechenregeln}
 Das Integral ist ein \emph{lineares} und \emph{monotones} Funktional, wie folgende zwei Sätze zeigen!
 \paragraph{Linearität}
@@ -535,6 +546,14 @@ Ableitungsregel $\frac{d}{dx}f(x)g(x) = f'(x)g(x) + f(x)g'(x)$ eine Integrations
 \[ = \int_{x_0}^{x_1}f'(x)g(x)dx + \int_{x_0}^{x_1}f(x)g'(x)dx \]
 \[ \iff \int_{x_0}^{x_1}f'(x)g(x)dx = f(x)g(x)|_{x_0}^{x_1} - \int_{x_0}^{x_1}f(x)g'(x)dx. \]
 
+\paragraph{Bogenlänge und Volumina eines Kurvenstücks}
+Sei $f$ eine differenzierbare Funktion auf dem Intervall $[a,b]$. Dann ist die Bogenlänge gegeben durch:
+$$L=\int_a^b \sqrt{1+(f'(x))^2} dx$$
+Das Volumen der Rotation der Figur auf der $0x$ Achse ist gegeben durch:
+$$V=\pi \int_a^b (f(x))^2 dx$$
+Die laterale Oberfläche ist: $A=2\pi \int_a^b f(x)\sqrt{1+(f'(x))^2} dx$
+
+\clearpage
 \subsection{Differentialgleichungen}
 
 \subsubsection{DGL erster Ordnung}
@@ -636,8 +655,21 @@ $$df(x_0)=\left( \frac{\partial f}{\partial x^1}(x_0),..., \frac{\partial f}{\pa
 $$d(\mbox{f o g})(x_0)=f'(g(x_o))dg(x_0)$$
 Sei $g: \R \rightarrow \Omega, f: \Omega \rightarrow \R$, ... Dann
 $$\frac{d}{dt}(\mbox{f o g})(x_0)=df(g(x_0))g'(x_0)$$
+
+\paragraph*{Anwendung} Sei eine Funktion wie folgt gegeben: $f(t)=u(x(t),y(t))$. 
+Dann ist $\frac{df}{dt}(t)=u_x (x(t),y(t))x'(t)+ u_y (x(t),y(t))y'(t)$.
+
+\paragraph*{Beispiel}
+Berechnen sie die Ableitung der Funktion $g(x)=\int_0^x \sin(xt^2)dt$. Wir benutzen, dass $g(x)=f(x,x)=f(x(x),y(x))$. Dann
+\begin{align*}
+\frac{dg}{dx}(x)&=\frac{df}{dx}(x(x),y(x))=f_x(x,x)\frac{d}{dx}(x)+f_y(x,x)\frac{d}{dx}(x) \\
+&= \sin(x^3)+\int_0^x t^2\cos(xt^2)dt
+\end{align*}
+
+
 \paragraph*{Integrale durch partielle Ableitungen}
 $$u(t)=\int_a^b h(s,t)ds \implies u'(t)=\int_a^b \frac{\partial h}{\partial t}(s,t)ds$$
+
 
 \subsubsection*{Topologie}
 \paragraph*{Wegzusammenhängend} Je zwei Punkte im Bereich konnen verbunden werden.
@@ -739,6 +771,9 @@ Sei $f(x,y) = z$ und der Punkt $(x_0, y_0, f(x_0, y_0)) = (x_0, y_0, z_0)$ gegeb
 Setzt man $F(x,y,z) = f(x,y) - z = 0$, lässt sich die \emph{Tangentialgleichung} auch wie folgt (in Normalform) darstellen.
 \[ \langle (r - (x_0, y_0, z_0)), \grad(F) \rangle = 0, \grad(F) = \begin{pmatrix}f_x \\ f_y \\ -1\end{pmatrix} \]
 
+\subsubsection{Niveaulineen}
+$f(x,y)=c$ auflösen, wobei $c$ die Koordinate auf der Achse Oz entspricht.
+
 \subsubsection{Lagrangian-Multiplikatoren}
 Gegeben sei eine Funktion $f$. Wir suchen die globale Extrema der Funktion auf dem Gebiet $g$. Dann erhalten wir das System:
 $$\begin{cases} \nabla f= \lambda \nabla g \\ g=0 \end{cases} $$
@@ -773,6 +808,8 @@ Das \emph{Wegintegral 1. Art} über ein stetiges Skalarfeld $f: \R^n\rightarrow\
 ist definiert durch
 \[ \int_\gamma f(s)ds := \int_a^b f(\gamma(t))\|\gamma'(t)\|_2dt. \]
 Dabei ist $\|a\|_2 = \sqrt{\sum_{i=1}^n a_i^2}$ die Euklidische Norm.
+Im Fall eines 1-Norm $\lambda(x)= f_1 dx_1+ f_2 dx_2 + ... + f_n x_n$ ist das Wegintegral definiert durch:
+$$\int_{\gamma} \lambda = \int_a^b \lambda (\gamma (t)) \gamma '(t) dt$$
 
 \subsubsection{2. Art -- Wegintegral über Vektorfeld}
 Das \emph{Wegintegral 2. Art} über ein stetiges Vektorfeld $F: \R^n\rightarrow\R^n$ entlang eines stetig differenzierbaren Weges $\gamma: [a,b]\rightarrow\R^n$
@@ -837,6 +874,9 @@ Hier ist alles nur aufgelistet, für Begründungen an der jeweiligen Stelle nach
 \[ \binom{n}{k} = \frac{n!}{k!(n-k!)} = \binom{n}{n-k},\ 0 \leq k \leq n \]
 \paragraph*{Binomscher Lehrsatz}
 $$\left(x+y\right)^n=\sum_{k=0}^{n} \binom{n}{k} x^{n-k}y^k$$
+
+\paragraph*{Rekursive Formula}
+$$ \binom{m}{k} + \binom{m}{k+1} = \binom{m+1}{k+1}$$
 
 \subsubsection{Mitternachtsformel}
 \[ ax^2 + bx + c = 0 \iff x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \]
@@ -928,7 +968,7 @@ x &=& \left(e^{i(\pi +2k\pi)}\right)^\frac{1}{4}
 \subsection{Trigonometrische Funktionen}
 \paragraph{Wichtige Werte}
 \begin{center}
-\begin{tabular}[m]{r|ccccccccc}
+\begin{tabular}[m]{l|ccccccccc}
 Winkel & $\frac{1}{6}\pi$ & $\frac{1}{4}\pi$ & $\frac{1}{3}\pi$ & $\frac{1}{2}\pi$ & $\frac{2}{3}\pi$ & $\frac{3}{4}\pi$ & $\pi$ & $\frac{3}{2}\pi$ & $2\pi$ \\[.1em]
 in Grad & $30$ & $45$ & $60$ & $90$ & $120$ & $135$ & $180$ & $270$ & $360$ \\\hline
 $\sin(x)$ & $\frac{\sqrt{1}}{2}$ & $\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{3}}{2}$ & $1$ & $\frac{\sqrt{3}}{2}$ & $\frac{\sqrt{2}}{2}$ & $0$ & $-1$ & $0$ \\[.1em]
@@ -948,8 +988,8 @@ $\tan(x)$ & $\frac{1}{\sqrt{3}}$ & $1$ & $\sqrt{3}$ & $0$ & $-\sqrt{3}$ & $-1$ &
  \item $\cos(x \pm y) = \cos(x)\cos(y) \mp \sin(x)\sin(y)$
  \item $\tan(x \pm y) = \frac{\tan(x)\pm\tan(y)}{1\mp\tan(x)\tan(y)}$
  \item $\sin(2x) = 2\sin(x)\cos(x)$
- \item $\cos(2x) = 2\sin(x)\cos(x)$
- \item $\tan(2x) = \cos(x)^2 - \sin(x)^2 = 2\cos(x)^2 - 1 = 1 - 2\sin(x)^2$
+ \item $\cos(2x) = \cos(x)^2 - \sin(x)^2 = 2\cos(x)^2 - 1 = 1 - 2\sin(x)^2$
+ \item $\tan(2x) = \frac{2\tan(x)}{1-tan^2(x)}$
  \item $\sin(x \pm \frac{\tau}{4}) = \sin(x\pm\frac{\pi}{2}) = \pm\cos(x)$
  \item $\cos(x \pm \frac{\tau}{4}) = \cos(x\pm\frac{\pi}{2}) = \mp\sin(x)$
  \item $\sin(x \pm \frac{\tau}{2}) = \sin(x\pm\pi) = -\sin(x)$
@@ -957,13 +997,18 @@ $\tan(x)$ & $\frac{1}{\sqrt{3}}$ & $1$ & $\sqrt{3}$ & $0$ & $-\sqrt{3}$ & $-1$ &
  \item $\cos(x)\sin(y)=\frac{1}{2} (\cos(x+y)+\cos(x-y))$
  \item $\cos(x)\sin(y)=\frac{1}{2} (\sin(x+y)-\sin(x-y))$
  \item $\sin(x)\sin(y)=\frac{1}{2} (\cos(x-y)-\cos(x+y))$
+ \item $\cos(x)+\cos(y)=2\cos \left( \frac{x+y}{2} \right) \cos \left( \frac{x-y}{2} \right)$
+ \item $\mathrm{sen}\,\alpha+\mathrm{sen}\,\beta=2\,\mathrm{sen} \frac {\alpha+\beta}{2}\cos \frac {\alpha-\beta}{2}$
+ \item $\mathrm{sen}\,\alpha-\mathrm{sen}\,\beta=2\cos \frac {\alpha+\beta}{2} \,\mathrm{sen} \frac {\alpha-\beta}{2}$
+ \item $\cos\alpha-\cos\beta=-2 \,\mathrm{sen} \frac {\alpha+\beta}{2} \,\mathrm{sen} \frac {\alpha-\beta}{2}$
+ \item $\tan\alpha\pm\tan\beta=\frac {\mathrm{sen}(\alpha\pm\beta)} {\cos\alpha \cos\beta}$
 \end{enumerate}
 
 \subsection{Hyperbelfunktionen}
 \begin{enumerate}[label={(}\arabic*{)}]
  \item $\sinh(x) := \frac{1}{2}(e^x-e^{-x}) = -i\sin(ix)$
  \item $\cosh(x) := \frac{1}{2}(e^x+e^{-x}) = \cos(ix)$
- \item $\tan(x) := \frac{\sin(x)}{\cos(x)} = 1 - \frac{2}{e^{2x}+1}$
+ \item $\tanh(x) := \frac{\sinh(x)}{\cosh(x)} = 1 - \frac{2}{e^{2x}+1}$
  \item $\arcsinh(x) := \sinh^{-1}(x) = \ln(x + \sqrt{x^2+1})$
  \item $\arccosh(x) := \cosh^{-1}(x) = \ln(x + \sqrt{x^2-1})$
  \item $\arctanh(x) := \tanh^{-1}(x) = \frac{1}{2}\ln(\frac{1+x}{1-x})$
@@ -1039,7 +1084,7 @@ Im Folgenden sei $f(x) \rightarrow g(x)$ Abkürzung für $\frac{d}{dx} f(x) = g(
  \item $\sin(x) \rightarrow \cos(x)$
  \item $\cos(x) \rightarrow -\sin(x)$
  \item $\sin(ax+b) \rightarrow a\cos(ax+b)$
- \item $\tan(x) \rightarrow \frac{1}{(\cos(x))^2}$
+ \item $\tan(x) \rightarrow \frac{1}{(\cos(x))^2}=1+\tan^2(x)$
  \item $\arcsin(x) \rightarrow \frac{1}{\sqrt{1-x^2}}$
  \item $\arccos(x) \rightarrow \frac{-1}{\sqrt{1-x^2}}$
  \item $\arctan(x) \rightarrow \frac{1}{x^2+1}$
@@ -1178,12 +1223,38 @@ $a,b,c$ nennt man dabei die \emph{Halbachsen} der Ellipse.
 \paragraph{Volumina und Oberflächen}
 
 \begin{tabular}{lll}
- \textbf{Körper} & $V$ \\\hline
- Kugel & $\frac{4\pi}{3}r^3$ \\
+ \textbf{Körper} & $V$ & $A$\\\hline
+ Kugel & $\frac{4\pi}{3}r^3$ & $4\pi r^2$\\
  Ellipsoid & $\frac{4\pi}{3}abc$ \\
- Zylinder & $\pi r^2h$ \\
+ Zylinder & $\pi r^2h$ & $2 \pi r^2 + 2 \pi rh$\\
  Pyramide & $\frac{1}{3}Gh$ \\
- Kegel & $\frac{\pi}{3}r^2h$ \\
+ Kegel & $\frac{\pi}{3}r^2h$ & $\pi r (r+a) $\\
 \end{tabular}
 
+Wobei $G$ die Oberfläche der Basis entspricht.
+
+\paragraph{Ellipse}
+Parametrisierung: 
+\[
+\begin{pmatrix}
+ x \\ y
+\end{pmatrix}
+=
+\begin{pmatrix}
+ a\cos(\varphi) \\
+ b\sin(\varphi) \\
+
+\end{pmatrix}
+\]
+Wobei $a,b$ die Halbachsen sind.
+Oberfläche: $A=\pi ab$
+
+\paragraph{Kreis}
+\begin{itemize}
+\item Umfang=$2\pi r$
+\item Oberfläche=$r^2 \pi$
+\end{itemize}
+
+\paragraph{Dreieck}
+$$A=\frac{1}{2} ab\sin(\gamma)$$
 \end{document}
